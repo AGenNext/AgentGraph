@@ -129,7 +129,6 @@ docker pull ghcr.io/agennext/agent-registry:latest
 ## 📞 Support
 
 - Issues: [GitHub Issues](https://github.com/AGenNext/AGenNext-Enterprise/issues)
-- Email: info@agennext.io
 
 ---
 
