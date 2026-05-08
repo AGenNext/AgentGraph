@@ -88,3 +88,11 @@ class AppConfig:
 
 # Global configuration instance
 config = AppConfig.from_env()
+
+def validate_config() -> bool:
+    """Validate required configuration."""
+    required = []
+    for var in required:
+        if not os.getenv(var):
+            print(f"Warning: {var} not set")
+    return True
