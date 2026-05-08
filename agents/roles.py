@@ -2,7 +2,7 @@
 Enterprise Agent Roles.
 
 Each role has preferred orchestrator and LLM - configurable.
-Employee Assistant: employee email in config, employee can override.
+Employee Assistant: IT admin sets defaults, employee can override.
 """
 
 from enum import Enum
@@ -20,7 +20,7 @@ class AgentRole(Enum):
 
 @dataclass
 class AgentRoleConfig:
-    """Config for agent role - all fields configurable."""
+    """Config for agent role - IT admin defaults, employee overrides."""
     role: AgentRole
     
     # Reporting
@@ -34,37 +34,23 @@ class AgentRoleConfig:
     engages_with: List[str] = field(default_factory=list)
     manages: List[str] = field(default_factory=list)
     
-    # Employee Assistant - employee email
+    # Employee Assistant - IT admin sets defaults, employee overrides
     employee_email: Optional[str] = None
-    employee_overrides: dict = field(default_factory=dict)
+    it_admin_defaults: dict = field(default_factory=dict)  # IT admin sets
+    employee_overrides: dict = field(default_factory=dict) # Employee overrides
     
-    # Runtime - configurable (defaults provided)
+    # Runtime
     orchestrator: str = "langgraph"
     llm: Optional[str] = None
 
 
 # Default orchestrator and LLM per role
 ROLE_DEFAULTS = {
-    AgentRole.PROJECT_DRIVER: {
-        "orchestrator": "langgraph",
-        "llm": "gpt-4o",
-    },
-    AgentRole.PRODUCT_LEAD: {
-        "orchestrator": "langgraph", 
-        "llm": "gpt-4o",
-    },
-    AgentRole.GROUP_ADMIN: {
-        "orchestrator": "langgraph",
-        "llm": "gemini-2.0-flash",
-    },
-    AgentRole.TEAM_LEAD: {
-        "orchestrator": "langgraph",
-        "llm": "gpt-4",
-    },
-    AgentRole.EMPLOYEE_ASSISTANT: {
-        "orchestrator": "langgraph",
-        "llm": "gemini-2.0-flash",
-    },
+    AgentRole.PROJECT_DRIVER: {"orchestrator": "langgraph", "llm": "gpt-4o"},
+    AgentRole.PRODUCT_LEAD: {"orchestrator": "langgraph", "llm": "gpt-4o"},
+    AgentRole.GROUP_ADMIN: {"orchestrator": "langgraph", "llm": "gemini-2.0-flash"},
+    AgentRole.TEAM_LEAD: {"orchestrator": "langgraph", "llm": "gpt-4"},
+    AgentRole.EMPLOYEE_ASSISTANT: {"orchestrator": "langgraph", "llm": "gemini-2.0-flash"},
 }
 
 
