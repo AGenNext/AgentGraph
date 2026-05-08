@@ -1,11 +1,11 @@
 # Content Writing Multi-Agent Team 🤖
 
-A collaborative AI agent team powered by multiple SDKs with LangGraph orchestration and A2A protocol support.
+A collaborative AI agent team powered by multiple SDKs with LangChain Deep Agent orchestration and A2A protocol support.
 
 ## Features
 
 - **15+ SDK Agents** - OpenAI, Salesforce, Microsoft, Google, Docker, GitHub, OpenHands, LlamaIndex, LangChain, Snowflake, Azure AI Foundry, AutoGen, CrewAI, and more
-- **LangGraph Orchestration** - Graph-based workflow for multi-agent collaboration
+- **LangChain Deep Agent Orchestration** - Graph-based workflow for multi-agent collaboration
 - **A2A Protocol** - Agent-to-Agent communication for task delegation
 - **Flexible LLM** - Works with OpenAI-compatible APIs (Ollama, LM Studio, custom endpoints)
 - **Content Types** - Code, configs, documentation, blog posts, SQL, and more
@@ -48,7 +48,7 @@ python main.py --mode a2a         # A2A protocol demo
 | 11 | Azure Foundry | Azure AI | deployments |
 | 12 | AutoGen | Microsoft | multi-agent |
 | 13 | CrewAI | CrewAI | crew orchestration |
-| 14 | Team Coordinator | LangGraph | orchestration |
+| 14 | Team Coordinator | LangChain Deep Agent | orchestration |
 
 ## Environment Variables
 
