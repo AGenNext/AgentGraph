@@ -1,7 +1,9 @@
 """
 Enterprise Agent - IAM + IGA Roles.
 
-Both IAM (SSO/IdP) and IGA (Governance) have roles.
+Clarification:
+- identifier_uris: OAuth app identifier (not appId URIs)
+- credentials: API keys/secrets for M2M agents
 """
 
 from enum import Enum
@@ -11,7 +13,6 @@ from datetime import datetime
 
 
 class AgentRole(Enum):
-    """Enterprise agent functional roles."""
     PROJECT_DRIVER = "project_driver"
     PRODUCT_LEAD = "product_lead"
     GROUP_ADMIN = "group_admin"
@@ -37,29 +38,30 @@ class DeprovisioningReason(Enum):
 
 @dataclass
 class AgentConfig:
-    """Enterprise agent with IAM + IGA roles."""
+    """Enterprise agent with IAM + IGA."""
     role: AgentRole
     
-    # === IAM IDENTITY (from Identity Provider) ===
+    # === IDENTITY (from SSO/IdP) ===
     identity_id: Optional[str] = None
     identity_provider: Optional[str] = None  # Entra/Okta/Cognito
-    principal_name: Optional[str] = None
+    principal_name: Optional[str] = None    # user@domain
     display_name: Optional[str] = None
     description: Optional[str] = None
     
-    # === IAM ROLES (from IdP/SSO) ===
-    iam_system: Optional[str] = None       # Entra/Okta/Google
-    iam_roles: List[str] = field(default_factory=list)  # Roles from IdP
-    iam_groups: List[str] = field(default_factory=list)  # Groups from IdP
+    # === CREDENTIALS (for M2M/API agents) ===
+    api_keys: List[dict] = field(default_factory=list)  # API keys
+    client_secrets: List[dict] = field(default_factory=list)  # Client secrets
+    jwks_uri: Optional[str] = None     # JSON Web Key Set URL
+    token_endpoint: Optional[str] = None  # OAuth token endpoint
     
-    # === CREDENTIALS ===
-    credentials: List[dict] = field(default_factory=list)
-    identifier_uris: List[str] = field(default_factory=list)
-    scopes: List[str] = field(default_factory=list)
+    # === IAM ROLES (from IdP) ===
+    iam_system: Optional[str] = None
+    iam_roles: List[str] = field(default_factory=list)
+    iam_groups: List[str] = field(default_factory=list)
     
-    # === IGA ROLES (from Identity Governance) ===
-    iga_system: Optional[str] = None      # SAP IGA / Saviynt / OneIdentity
-    iga_roles: List[str] = field(default_factory=list)  # Roles from IGA
+    # === IGA ROLES (from Governance) ===
+    iga_system: Optional[str] = None
+    iga_roles: List[str] = field(default_factory=list)
     iga_entitlements: List[str] = field(default_factory=list)
     access_certified: bool = False
     access_certified_by: Optional[str] = None
