@@ -72,3 +72,11 @@ streamlit run ui/streamlit_examples.py
 ---
 
 *Last updated: 2026-05-08*
+---
+
+## Rules
+
+- DO NOT add fake contact info (emails, URLs)
+- Always use real/existing links only
+- Ask user approval before adding external resources
+- Verify all links before committing
