@@ -353,3 +353,176 @@ model_selector = ModelSelector()
 token_manager = TokenManager()
 reporting_client = ReportingClient()
 from datetime import datetime
+
+
+# === LOCAL / CUSTOM LLM SUPPORT ===
+
+class LocalLLMClient(AIClient):
+    """Local/custom LLM (Ollama, LM Studio, llama.cpp, etc.)."""
+    
+    def __init__(self, base_url: str = "http://localhost:11434", model: str = "llama2"):
+        self.base_url = base_url
+        self.model = model
+    
+    def _headers(self) -> Dict:
+        return {"Content-Type": "application/json"}
+    
+    def chat(self, messages: List[Dict], model: str = None, **kwargs) -> Dict:
+        """Ollama /local chat."""
+        import requests
+        model = model or self.model
+        url = f"{self.base_url}/api/chat"
+        data = {"model": model, "messages": messages, **kwargs}
+        resp = requests.post(url, json=data, timeout=120)
+        resp.raise_for_status()
+        return resp.json()
+    
+    def stream(self, messages: List[Dict], model: str = None, **kwargs) -> Iterator:
+        """Streaming."""
+        import requests
+        model = model or self.model
+        url = f"{self.base_url}/api/chat"
+        data = {"model": model, "messages": messages, "stream": True, **kwargs}
+        resp = requests.post(url, json=data, stream=True, timeout=120)
+        for line in resp.iter_lines():
+            if line:
+                yield line.decode("utf-8")
+    
+    def list_models(self) -> List[str]:
+        """List available models."""
+        import requests
+        url = f"{self.base_url}/api/tags"
+        resp = requests.get(url, timeout=10)
+        data = resp.json()
+        return [m["name"] for m in data.get("models", [])]
+
+
+class LMStudioClient(LocalLLMClient):
+    """LM Studio client."""
+    
+    def __init__(self, base_url: str = "http://localhost:1234", model: str = None):
+        super().__init__(base_url, model)
+    
+    def chat(self, messages: List[Dict], model: str = None, **kwargs) -> Dict:
+        """LM Studio v1 chat."""
+        import requests
+        model = model or self.model
+        url = f"{self.base_url}/v1/chat/completions"
+        data = {"model": model, "messages": messages, **kwargs}
+        resp = requests.post(url, json=data, timeout=120)
+        resp.raise_for_status()
+        return resp.json()
+
+
+class OllamaClient(LocalLLMClient):
+    """Ollama client."""
+    
+    def __init__(self, base_url: str = "http://localhost:11434", model: str = "llama3"):
+        super().__init__(base_url, model)
+    
+    def chat(self, messages: List[Dict], model: str = None, **kwargs) -> Dict:
+        """Ollama chat."""
+        import requests
+        model = model or self.model
+        url = f"{self.base_url}/api/chat"
+        data = {"model": model, "messages": messages, **kwargs}
+        resp = requests.post(url, json=data, timeout=120)
+        resp.raise_for_status()
+        return resp.json()
+    
+    def pull(self, model: str):
+        """Pull a model."""
+        import requests
+        url = f"{self.base_url}/api/pull"
+        resp = requests.post(url, json={"name": model}, stream=True)
+        for line in resp.iter_lines():
+            print(line.decode("utf-8"))
+
+
+class VLLMClient(AIClient):
+    """vLLM server client."""
+    
+    def __init__(self, base_url: str = "http://localhost:8000", model: str = None):
+        self.base_url = base_url
+        self.model = model
+    
+    def chat(self, messages: List[Dict], model: str = None, **kwargs) -> Dict:
+        """vLLM chat."""
+        import requests
+        model = model or self.model
+        url = f"{self.base_url}/v1/chat/completions"
+        data = {"model": model, "messages": messages, **kwargs}
+        resp = requests.post(url, json=data, timeout=120)
+        resp.raise_for_status()
+        return resp.json()
+    
+    def stream(self, messages: List[Dict], model: str = None, **kwargs) -> Iterator:
+        """Streaming vLLM."""
+        import requests
+        model = model or self.model
+        url = f"{self.base_url}/v1/chat/completions"
+        data = {"model": model, "messages": messages, "stream": True, **kwargs}
+        resp = requests.post(url, json=data, stream=True, timeout=120)
+        for line in resp.iter_lines():
+            if line:
+                yield line.decode("utf-8")
+
+
+# Updated factory to include local
+def create_client(provider: str, config: Dict) -> AIClient:
+    """Create AI client - updated."""
+    
+    provider = provider.lower()
+    
+    if provider == "openai":
+        return OpenAIClient(config["provider_api_key"], config.get("provider_base_url"))
+    
+    elif provider == "anthropic":
+        return AnthropicClient(config["provider_api_key"], config.get("provider_base_url"))
+    
+    elif provider == "google":
+        return GoogleClient(config["provider_api_key"], config.get("provider_base_url"))
+    
+    elif provider == "azure":
+        return AzureOpenAIClient(
+            config["provider_api_key"],
+            config["provider_base_url"],
+            config.get("api_version", "2024-02-01")
+        )
+    
+    elif provider == "bedrock":
+        return BedrockClient(
+            config.get("aws_region", "us-east-1"),
+            credentials={
+                "aws_access_key_id": config.get("aws_access_key_id"),
+                "aws_secret_access_key": config.get("aws_secret_access_key"),
+            }
+        )
+    
+    # Local / Custom
+    elif provider == "ollama":
+        return OllamaClient(
+            base_url=config.get("provider_base_url", "http://localhost:11434"),
+            model=config.get("model", "llama3")
+        )
+    
+    elif provider == "lmstudio":
+        return LMStudioClient(
+            base_url=config.get("provider_base_url", "http://localhost:1234"),
+            model=config.get("model")
+        )
+    
+    elif provider == "vllm":
+        return VLLMClient(
+            base_url=config.get("provider_base_url", "http://localhost:8000"),
+            model=config.get("model")
+        )
+    
+    elif provider == "local":
+        return LocalLLMClient(
+            base_url=config.get("provider_base_url", "http://localhost:11434"),
+            model=config.get("model", "llama2")
+        )
+    
+    else:
+        raise ValueError(f"Unknown provider: {provider}")
