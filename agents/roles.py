@@ -1,8 +1,12 @@
 """
-Enterprise Agent - IAM + IGA Roles.
+Enterprise Agent - Credentials managed by system, not set at creation.
 
-OAuth scopes: what the agent CAN access (API permissions).
-api_keys/secrets: how the agent authenticates.
+Credentials (api_keys, client_secrets) should be:
+- Managed by identity system (auto-generated)
+- Referenced (not hardcoded)
+- Rotated automatically
+
+Admin sets references, system manages values.
 """
 
 from enum import Enum
@@ -37,23 +41,24 @@ class DeprovisioningReason(Enum):
 
 @dataclass
 class AgentConfig:
-    """Enterprise agent config."""
+    """Enterprise agent config - credentials managed by system."""
     role: AgentRole
     
     # === IDENTITY (from SSO/IdP) ===
     identity_id: Optional[str] = None
     identity_provider: Optional[str] = None  # Entra/Okta/Cognito
-    principal_name: Optional[str] = None    # user@domain
+    principal_name: Optional[str] = None
     display_name: Optional[str] = None
     description: Optional[str] = None
     
-    # === CREDENTIALS (how authenticate) ===
-    api_keys: List[dict] = field(default_factory=list)  # API keys
-    client_secrets: List[dict] = field(default_factory=list)  # OAuth secrets
+    # === CREDENTIALS (system-managed references) ===
+    credential_refs: List[dict] = field(default_factory=list)  # Secrets manager refs
+    credential_rotation: Optional[str] = None  # auto/manual
+    credential_expires_at: Optional[datetime] = None
     
     # === OAUTH SCOPES (what can access) ===
-    oauth_scopes: List[str] = field(default_factory=list)  # e.g., "read:users", "write:files"
-    resources: List[str] = field(default_factory=list)  # e.g., "https://graph.microsoft.com"
+    oauth_scopes: List[str] = field(default_factory=list)
+    resources: List[str] = field(default_factory=list)
     
     # === IAM ROLES (from IdP) ===
     iam_system: Optional[str] = None
@@ -87,7 +92,7 @@ class AgentConfig:
     expires_at: Optional[datetime] = None
     renewal_required: bool = True
     
-    # === SCOPE (business) ===
+    # === SCOPE ===
     projects: List[str] = field(default_factory=list)
     products: List[str] = field(default_factory=list)
     groups: List[str] = field(default_factory=list)
