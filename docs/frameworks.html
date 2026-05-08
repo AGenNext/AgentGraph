@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Framework Integrations - Content Writing Team</title>
+  <style>
+    :root { --primary: #2563eb; --bg: #f8fafc; --text: #1e293b; }
+    body { font-family: system-ui; line-height: 1.6; max-width: 900px; margin: 0 auto; padding: 2rem; background: var(--bg); color: var(--text); }
+    h1 { color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 0.5rem; }
+    h2 { margin-top: 2rem; color: var(--primary); }
+    code { background: #1e293b; color: #a5b4fc; padding: 0.2rem 0.4rem; border-radius: 4px; }
+    pre { background: #1e293b; color: #e2e8f0; padding: 1rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; }
+    pre code { background: none; padding: 0; }
+    .framework { background: white; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    .badge { display: inline-block; background: var(--primary); color: white; padding: 0.25rem 0.75rem; border-radius: 1rem; font-size: 0.85rem; margin-right: 0.5rem; }
+    a { color: var(--primary); }
+  </style>
+</head>
+<body>
+  <header>
+    <p><a href="docs/">← Back to Main</a></p>
+  </header>
+
+  <h1>Framework Integrations</h1>
+  <p>This project integrates with 13+ agent frameworks and SDKs.</p>
+
+  <section class="framework" id="openai">
+    <h2><span class="badge">1</span> OpenAI SDK</h2>
+    <p><strong>Package:</strong> <code>openai</code></p>
+    <p><strong>Agent:</strong> OpenAIAgent</p>
+    <p><strong>Environment:</strong> <code>OPENAI_API_KEY</code></p>
+    <p><strong>Default Model:</strong> gpt-4o</p>
+    <pre><code>from agents import OpenAIAgent
+
+agent = OpenAIAgent()
+result = agent.run("Write a blog post")
+print(result.content)</code></pre>
+  </section>
+
+  <section class="framework" id="anthropic">
+    <h2><span class="badge">2</span> Anthropic SDK</h2>
+    <p><strong>Package:</strong> <code>anthropic</code></p>
+    <p><strong>Agent:</strong> AnthropicAgent</p>
+    <p><strong>Environment:</strong> <code>ANTHROPIC_API_KEY</code></p>
+    <p><strong>Default Model:</strong> claude-3.5-sonnet</p>
+    <pre><code>from agents import AnthropicAgent
+
+agent = AnthropicAgent()
+result = agent.run("Analyze this text")</code></pre>
+  </section>
+
+  <section class="framework" id="google">
+    <h2><span class="badge">3</span> Google ADK</h2>
+    <p><strong>Package:</strong> <code>google-genai</code></p>
+    <p><strong>Agent:</strong> GoogleAgent</p>
+    <p><strong>Environment:</strong> <code>GOOGLE_API_KEY</code></p>
+    <p><strong>Default Model:</strong> gemini-2.0-flash</p>
+    <pre><code>from agents import GoogleAgent
+
+agent = GoogleAgent()
+result = agent.run("Research AI trends")</code></pre>
+  </section>
+
+  <section class="framework" id="microsoft">
+    <h2><span class="badge">4</span> Microsoft Azure AI Foundry</h2>
+    <p><strong>Package:</strong> <code>azure-ai-foundry</code></p>
+    <p><strong>Agent:</strong> MicrosoftAgent</p>
+    <p><strong>Environment:</strong> <code>AZURE_OPENAI_KEY</code>, <code>AZURE_OPENAI_ENDPOINT</code></p>
+    <p><strong>Default Model:</strong> gpt-4</p>
+    <pre><code>from agents import MicrosoftAgent
+
+agent = MicrosoftAgent()
+result = agent.run("Enterprise documentation")</code></pre>
+  </section>
+
+  <section class="framework" id="salesforce">
+    <h2><span class="badge">5</span> Salesforce SDK</h2>
+    <p><strong>Package:</strong> <code>simple-salesforce</code></p>
+    <p><strong>Agent:</strong> SalesforceAgent</p>
+    <p><strong>Environment:</strong> <code>SALESFORCE_*</code></p>
+    <pre><code>from agents import SalesforceAgent
+
+agent = SalesforceAgent()
+result = agent.run("Generate CRM SQL queries")</code></pre>
+  </section>
+
+  <section class="framework" id="langchain">
+    <h2><span class="badge">6</span> LangChain</h2>
+    <p><strong>Package:</strong> <code>langchain</code></p>
+    <p><strong>Agent:</strong> LangChainAgent</p>
+    <pre><code>from agents import LangChainAgent
+
+agent = LangChainAgent()
+result = agent.run("Tool-augmented task")</code></pre>
+  </section>
+
+  <section class="framework" id="llamaindex">
+    <h2><span class="badge">7</span> LlamaIndex</h2>
+    <p><strong>Package:</strong> <code>llama-index</code></p>
+    <p><strong>Agent:</strong> LlamaIndexAgent</p>
+    <pre><code>from agents import LlamaIndexAgent
+
+agent = LlamaIndexAgent()
+result = agent.run("Index and query documents")</code></pre>
+  </section>
+
+  <section class="framework" id="autogen">
+    <h2><span class="badge">8</span> AutoGen</h2>
+    <p><strong>Package:</strong> <code>pyautogen</code></p>
+    <p><strong>Agent:</strong> AutoGenAgent</p>
+    <pre><code>from agents import AutoGenAgent
+
+agent = AutoGenAgent()
+result = agent.run("Multi-agent collaboration")</code></pre>
+  </section>
+
+  <section class="framework" id="crewai">
+    <h2><span class="badge">9</span> CrewAI</h2>
+    <p><strong>Package:</strong> <code>crewai</code></p>
+    <p><strong>Agent:</strong> CrewAIAgent</p>
+    <pre><code>from agents import CrewAIAgent
+
+agent = CrewAIAgent()
+result = agent.run("Orchestrate crew workflow")</code></pre>
+  </section>
+
+  <section class="framework" id="docker">
+    <h2><span class="badge">10</span> Docker SDK</h2>
+    <p><strong>Package:</strong> <code>docker</code></p>
+    <p><strong>Agent:</strong> DockerAgent</p>
+    <pre><code>from agents import DockerAgent
+
+agent = DockerAgent()
+result = agent.run("Create Docker configuration")</code></pre>
+  </section>
+
+  <section class="framework" id="github">
+    <h2><span class="badge">11</span> GitHub SDK</h2>
+    <p><strong>Package:</strong> <code>pygithub</code></p>
+    <p><strong>Agent:</strong> GitHubAgent</p>
+    <pre><code>from agents import GitHubAgent
+
+agent = GitHubAgent()
+result = agent.run("Create GitHub Actions workflow")</code></pre>
+  </section>
+
+  <section class="framework" id="snowflake">
+    <h2><span class="badge">12</span> Snowpark</h2>
+    <p><strong>Package:</strong> <code>snowflake-snowpark-python</code></p>
+    <p><strong>Agent:</strong> SnowflakeAgent</p>
+    <pre><code>from agents import SnowflakeAgent
+
+agent = SnowflakeAgent()
+result = agent.run("Generate analytics SQL")</code></pre>
+  </section>
+
+  <section class="framework" id="openhands">
+    <h2><span class="badge">13</span> OpenHands SDK</h2>
+    <p><strong>Package:</strong> <code>openhands</code></p>
+    <p><strong>Agent:</strong> OpenHandsAgent</p>
+    <pre><code>from agents import OpenHandsAgent
+
+agent = OpenHandsAgent()
+result = agent.run("Automate development task")</code></pre>
+  </section>
+
+  <h2>Adding New Frameworks</h2>
+  <pre><code># agents/my_framework.py
+from agents.base_agent import BaseAgent
+
+class MyFrameworkAgent(BaseAgent):
+    def __init__(self):
+        self.agent_id = "my-framework"
+        self.name = "My Framework Agent"
+        self.capabilities = ["..."]
+    
+    def run(self, task: str, **kwargs):
+        # Implement agent logic
+        return result</code></pre>
+</body>
+</html>

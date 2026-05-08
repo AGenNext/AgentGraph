@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Content Writing Multi-Agent Team - Documentation</title>
+  <meta name="description" content="Multi-agent content writing team with LangGraph orchestration and A2A Protocol">
+  <link rel="canonical" href="https://agennext.github.io/AGenNext-Registry/docs/">
+  <script type="application/ld+json" src="api-schema.jsonld"></script>
+  <style>
+    :root { --primary: #2563eb; --secondary: #7c3aed; --bg: #f8fafc; --surface: #ffffff; --text: #1e293b; --text-light: #64748b; --border: #e2e8f0; --code-bg: #1e293b; --success: #22c55e; --warning: #f59e0b; }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; line-height: 1.7; color: var(--text); background: var(--bg); }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 1.5rem; }
+    header { background: var(--surface); border-bottom: 1px solid var(--border); padding: 1rem 0; position: sticky; top: 0; z-index: 100; }
+    header .container { display: flex; justify-content: space-between; align-items: center; }
+    .logo { font-size: 1.25rem; font-weight: 700; color: var(--primary); text-decoration: none; }
+    .logo span { color: var(--text); }
+    nav a { margin-left: 1.5rem; color: var(--text-light); text-decoration: none; font-size: 0.95rem; }
+    nav a:hover { color: var(--primary); }
+    .hero { background: linear-gradient(135deg, var(--primary), var(--secondary)); color: white; padding: 4rem 0; text-align: center; }
+    .hero h1 { font-size: 2.5rem; margin-bottom: 1rem; }
+    .hero p { font-size: 1.25rem; opacity: 0.9; max-width: 600px; margin: 0 auto 2rem; }
+    .hero .badge { display: inline-block; background: rgba(255,255,255,0.2); padding: 0.5rem 1rem; border-radius: 2rem; font-size: 0.9rem; margin: 0.5rem; }
+    .content { background: var(--surface); padding: 3rem 0; border-bottom: 1px solid var(--border); }
+    .content h2 { font-size: 1.75rem; margin: 2rem 0 1rem; color: var(--primary); }
+    .content h3 { font-size: 1.25rem; margin: 1.5rem 0 0.75rem; }
+    .content p { margin: 1rem 0; }
+    .content ul, .content ol { margin: 1rem 0; padding-left: 1.5rem; }
+    .content li { margin: 0.5rem 0; }
+    code { background: var(--code-bg); color: #a5b4fc; padding: 0.2rem 0.5rem; border-radius: 4px; font-size: 0.9em; font-family: 'Fira Code', monospace; }
+    pre { background: var(--code-bg); color: #e2e8f0; padding: 1.25rem; border-radius: 8px; overflow-x: auto; margin: 1.25rem 0; }
+    pre code { background: none; padding: 0; color: inherit; }
+    .card { background: var(--bg); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin: 1rem 0; }
+    .card h4 { font-size: 1.1rem; margin-bottom: 0.75rem; color: var(--text); }
+    .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; margin: 1.5rem 0; }
+    .endpoint { display: flex; align-items: center; gap: 1rem; margin: 1rem 0; flex-wrap: wrap; }
+    .method { font-weight: 700; padding: 0.35rem 0.75rem; border-radius: 4px; font-size: 0.8rem; text-transform: uppercase; }
+    .get { background: var(--success); color: white; }
+    .post { background: var(--primary); color: white; }
+    .put { background: var(--warning); color: white; }
+    .delete { background: #ef4444; color: white; }
+    .path { font-family: 'Fira Code', monospace; font-size: 1em; }
+    table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; }
+    th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+    th { background: var(--bg); font-weight: 600; }
+    tr:hover { background: var(--bg); }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    footer { background: var(--surface); padding: 2rem 0; text-align: center; color: var(--text-light); border-top: 1px solid var(--border); }
+    footer a { color: var(--primary); }
+    @media (max-width: 768px) {
+      .hero h1 { font-size: 1.75rem; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container">
+      <a href="https://github.com/AGenNext/AGenNext-Registry" class="logo">🤖 <span>Content Writing Team</span></a>
+      <nav>
+        <a href="#overview">Overview</a>
+        <a href="#getting-started">Getting Started</a>
+        <a href="#api">API</a>
+        <a href="#agents">Agents</a>
+        <a href="#providers">Providers</a>
+        <a href="#docker">Docker</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container">
+      <h1>Content Writing Multi-Agent Team</h1>
+      <p>Collaborative AI agents powered by multiple SDKs with LangGraph orchestration and A2A Protocol</p>
+      <div>
+        <span class="badge">🤖 15+ SDK Agents</span>
+        <span class="badge">📊 LangGraph</span>
+        <span class="badge">🔗 A2A Protocol</span>
+        <span class="badge">📄 OpenAPI 3.0</span>
+      </div>
+    </div>
+  </section>
+
+  <section class="content" id="overview">
+    <div class="container">
+      <h2>Overview</h2>
+      <p>The Content Writing Multi-Agent Team is a collaborative AI agent framework that coordinates multiple specialized agents to handle complex content creation tasks. Built on LangGraph for workflow orchestration and A2A Protocol for agent-to-agent communication.</p>
+      
+      <h3>Key Features</h3>
+      <div class="grid">
+        <div class="card">
+          <h4>🤖 Multiple SDK Support</h4>
+          <p>Built-in support for OpenAI, Salesforce, Microsoft, Google, and 10+ other agent frameworks.</p>
+        </div>
+        <div class="card">
+          <h4>📊 LangGraph Workflows</h4>
+          <p>Graph-based task orchestration with parallel and sequential execution strategies.</p>
+        </div>
+        <div class="card">
+          <h4>🔗 A2A Protocol</h4>
+          <p>Standardized agent-to-agent communication for task delegation and results sharing.</p>
+        </div>
+        <div class="card">
+          <h4>📄 OpenAPI 3.0</h4>
+          <p>REST API specification for easy integration and documentation.</p>
+        </div>
+      </div>
+
+      <h3>Architecture</h3>
+      <pre><code>┌─────────────────────────────────────────────────────────┐
+│                    Content Team API                        │
+├─────────────────────────────────────────────────────────┤
+│  ┌──────────┐  ┌──────────┐  ┌──────────┐              │
+│  │ OpenAI   │  │Salesforce│  │ Microsoft│  ...        │
+│  │  Agent  │  │  Agent  │  │  Agent   │              │
+│  └────┬────┘  └────┬────┘  └────┬────┘              │
+│       │            │            │                        │
+│       └────────────┼────────────┘                        │
+│                  │                                    │
+│           ┌──────┴──────┐                          │
+│           │  LangGraph   │                          │
+│           │ Orchestrator │                          │
+│           └──────┬──────┘                          │
+│                  │                                    │
+│           ┌─────┴─────┐                            │
+│           │ A2A Server │                            │
+│           └───────────┘                            │
+└─────────────────────────────────────────────────────────┘</code></pre>
+    </div>
+  </section>
+
+  <section class="content" id="getting-started">
+    <div class="container">
+      <h2>Getting Started</h2>
+      
+      <h3>1. Installation</h3>
+      <pre><code>git clone https://github.com/AGenNext/AGenNext-Registry.git
+cd AGenNext-Registry
+pip install -r requirements.txt</code></pre>
+
+      <h3>2. Environment Variables</h3>
+      <pre><code># Create .env file
+cp .env.example .env
+
+# Edit with your API keys
+OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-ant-...
+GOOGLE_API_KEY=...
+AZURE_OPENAI_KEY=...</code></pre>
+
+      <h3>3. Quick Start</h3>
+      <pre><code># View all agent cards
+python main.py --mode cards
+
+# Single agent demo
+python main.py --mode demo --agent openai --topic "AI Writing"
+
+# Multi-agent team demo
+python main.py --mode team --topic "Cloud Computing"
+
+# A2A protocol demo
+python main.py --mode a2a</code></pre>
+
+      <h3>4. Run the Server</h3>
+      <pre><code># Start A2A server
+python main.py --mode server --port 8000</code></pre>
+    </div>
+  </section>
+
+  <section class="content" id="api">
+    <div class="container">
+      <h2>API Reference</h2>
+      <p>Full OpenAPI specification available in <a href="openapi.yaml">openapi.yaml</a></p>
+      
+      <h3>Base URL</h3>
+      <pre><code>Local:     http://localhost:8000
+Production: https://your-domain.com</code></pre>
+
+      <h3>Endpoints</h3>
+      
+      <h4>Health Check</h4>
+      <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="path">/health</span>
+      </div>
+      <p>Check if the service is running.</p>
+      <pre><code>curl http://localhost:8000/health
+
+# Response
+{"status": "ok", "timestamp": "2026-05-08T01:55:10Z"}</code></pre>
+
+      <h4>List Agents</h4>
+      <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="path">/agents</span>
+      </div>
+      <p>Get all available agent cards.</p>
+      <pre><code>curl http://localhost:8000/agents
+
+# Response
+[{"agentId": "openai", "name": "OpenAI Agent", ...}, ...]</code></pre>
+
+      <h4>Run Agent Task</h4>
+      <div class="endpoint">
+        <span class="method post">POST</span>
+        <span class="path">/agents/{agentId}/run</span>
+      </div>
+      <p>Execute a task with a specific agent.</p>
+      <pre><code>curl -X POST http://localhost:8000/agents/openai/run \
+  -H "Content-Type: application/json" \
+  -d '{
+    "task": "Write a blog post about AI",
+    "content_type": "blog"
+  }'
+
+# Response
+{
+  "agent_id": "openai",
+  "content": "# AI Writing...\n\n...",
+  "content_type": "blog",
+  "quality_score": 0.92
+}</code></pre>
+
+      <h4>Run Team Workflow</h4>
+      <div class="endpoint">
+        <span class="method post">POST</span>
+        <span class="path">/team/run</span>
+      </div>
+      <p>Execute multi-agent team collaboration.</p>
+      <pre><code>curl -X POST http://localhost:8000/team/run \
+  -H "Content-Type: application/json" \
+  -d '{
+    "task": "Create a complete project",
+    "strategy": "parallel"
+  }'
+
+# Response
+{
+  "results": [...],
+  "quality_score": 0.95,
+  "duration": 12.5
+}</code></pre>
+
+      <h4>A2A Task Operations</h4>
+      <div class="endpoint">
+        <span class="method post">POST</span>
+        <span class="path">/a2a/tasks</span>
+      </div>
+      <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="path">/a2a/tasks/{taskId}</span>
+      </div>
+      <p>Create and manage A2A protocol tasks.</p>
+      <pre><code># Create task
+curl -X POST http://localhost:8000/a2a/tasks \
+  -H "Content-Type: application/json" \
+  -d '{
+    "id": "task-001",
+    "message": {"role": "user", "parts": [{"type": "text", "text": "Write docs"}]}
+  }'
+
+# Check status
+curl http://localhost:8000/a2a/tasks/task-001
+# {"state": "completed", "result": "..."}</code></pre>
+
+      <h3>Error Responses</h3>
+      <table>
+        <tr><th>Code</th><th>Meaning</th><th>Description</th></tr>
+        <tr><td>400</td><td>Bad Request</td><td>Invalid request parameters</td></tr>
+        <tr><td>401</td><td>Unauthorized</td><td>Missing or invalid API key</td></tr>
+        <tr><td>404</td><td>Not Found</td><td>Agent or endpoint not found</td></tr>
+        <tr><td>429</td><td>Rate Limited</td><td>Too many requests</td></tr>
+        <tr><td>500</td><td>Server Error</td><td>Internal service error</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="content" id="agents">
+    <div class="container">
+      <h2>Agents</h2>
+      <p>Each agent is specialized for different content types and integrates with specific SDKs.</p>
+      
+      <table>
+        <tr><th>Agent</th><th>SDK</th><th>Specialization</th><th>Content Types</th></tr>
+        <tr><td>OpenAIAgent</td><td>OpenAI SDK</td><td>Coding, reasoning</td><td>Code, configs</td></tr>
+        <tr><td>SalesforceAgent</td><td>Salesforce SDK</td><td>CRM automation</td><td>SQL, reports</td></tr>
+        <tr><td>MicrosoftAgent</td><td>Azure AI Foundry</td><td>Enterprise</td><td>Docs, presentations</td></tr>
+        <tr><td>GoogleAgent</td><td>Google ADK</td><td>Research, multimodal</td><td>Research, blogs</td></tr>
+        <tr><td>LangChainAgent</td><td>LangChain</td><td>Tool use</td><td>Code, SQL</td></tr>
+        <tr><td>LlamaIndexAgent</td><td>LlamaIndex</td><td>RAG, indexing</td><td>Documentation</td></tr>
+        <tr><td>DockerAgent</td><td>Docker SDK</td><td>Container configs</td><td>Dockerfiles, compose</td></tr>
+        <tr><td>GitHubAgent</td><td>GitHub SDK</td><td>Repository ops</td><td>GitHub Actions, PRs</td></tr>
+        <tr><td>OpenHandsAgent</td><td>OpenHands SDK</td><td>Automation</td><td>Scripts, workflows</td></tr>
+        <tr><td>AutoGenAgent</td><td>AutoGen</td><td>Multi-agent</td><td>Complex tasks</td></tr>
+        <tr><td>CrewAIAgent</td><td>CrewAI</td><td>Crew orchestration</td><td>Multi-step</td></tr>
+        <tr><td>SnowflakeAgent</td><td>Snowpark</td><td>Data queries</td><td>SQL, analytics</td></tr>
+      </table>
+
+      <h3>Using Agents Programmatically</h3>
+      <pre><code>from agents import OpenAIAgent, SalesforceAgent, GoogleAgent
+
+# Create agent
+agent = OpenAIAgent()
+
+# Run task
+result = agent.run(
+    task="Write a Python function",
+    content_type="code"
+)
+print(result.content)</code></pre>
+    </div>
+  </section>
+
+  <section class="content" id="providers">
+    <div class="container">
+      <h2>LLM Providers</h2>
+      <p>Flexibility to use different LLM providers with a unified API.</p>
+      
+      <table>
+        <tr><th>Provider</th><th>Default Model</th><th>Tools</th><th>Environment</th></tr>
+        <tr><td>OpenAI</td><td>gpt-4o</td><td>code_interpreter, file_search</td><td>OPENAI_API_KEY</td></tr>
+        <tr><td>Anthropic</td><td>claude-3.5-sonnet</td><td>computer_use</td><td>ANTHROPIC_API_KEY</td></tr>
+        <tr><td>Google</td><td>gemini-2.0-flash</td><td>code_execution</td><td>GOOGLE_API_KEY</td></tr>
+        <tr><td>Azure OpenAI</td><td>gpt-4</td><td>enterprise</td><td>AZURE_OPENAI_*</td></tr>
+        <tr><td>AWS Bedrock</td><td>claude-3</td><td>knowledge_base</td><td>AWS_*</td></tr>
+        <tr><td>Mistral</td><td>mixtral-8x7b</td><td>code generation</td><td>MISTRAL_API_KEY</td></tr>
+        <tr><td>Cohere</td><td>command-r</td><td>generation</td><td>COHERE_API_KEY</td></tr>
+        <tr><td>Ollama</td><td>llama3</td><td>local</td><td>Local only</td></tr>
+        <tr><td>HuggingFace</td><td>meta-llama</td><td>inference</td><td>HF_TOKEN</td></tr>
+      </table>
+
+      <h3>Using Custom Providers</h3>
+      <pre><code>from core.llm_client import create_llm_client
+
+# OpenAI
+client = create_llm_client("openai", model="gpt-4o")
+
+# Anthropic
+client = create_llm_client("anthropic", model="claude-3-opus")
+
+# Local Ollama
+client = create_llm_client("ollama", base_url="http://localhost:11434")
+
+# OpenAI-compatible (LM Studio, etc.)
+client = create_llm_client(
+    "openai-compatible",
+    base_url="http://localhost:1234/v1"
+)</code></pre>
+    </div>
+  </section>
+
+  <section class="content" id="docker">
+    <div class="container">
+      <h2>Docker</h2>
+      
+      <h3>Build Image</h3>
+      <pre><code>docker build -t content-writers .</code></pre>
+
+      <h3>Run Container</h3>
+      <pre><code>docker run -d \
+  -p 8000:8000 \
+  -e OPENAI_API_KEY=sk-... \
+  -e ANTHROPIC_API_KEY=sk-ant-... \
+  content-writers</code></pre>
+
+      <h3>Use Pre-built Image</h3>
+      <pre><code># GitHub Container Registry
+docker pull ghcr.io/agennext/agennext-registry:latest
+docker run -p 8000:8000 ghcr.io/agennext/agennext-registry:latest</code></pre>
+
+      <h3>Docker Compose</h3>
+      <pre><code>version: '3.8'
+services:
+  api:
+    image: ghcr.io/agennext/agennext-registry:latest
+    ports:
+      - "8000:8000"
+    environment:
+      - OPENAI_API_KEY=${OPENAI_API_KEY}
+      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY}
+    volumes:
+      - ./data:/app/data</code></pre>
+    </div>
+  </section>
+
+  <section class="content" id="configuration">
+    <div class="container">
+      <h2>Configuration</h2>
+      
+      <h3>Environment Variables</h3>
+      <table>
+        <tr><th>Variable</th><th>Required</th><th>Default</th><th>Description</th></tr>
+        <tr><td>OPENAI_API_KEY</td><td>No</td><td>-</td><td>OpenAI API key</td></tr>
+        <tr><td>ANTHROPIC_API_KEY</td><td>No</td><td>-</td><td>Anthropic API key</td></tr>
+        <tr><td>GOOGLE_API_KEY</td><td>No</td><td>-</td><td>Google API key</td></tr>
+        <tr><td>AZURE_OPENAI_KEY</td><td>No</td><td>-</td><td>Azure OpenAI key</td></tr>
+        <tr><td>AZURE_OPENAI_ENDPOINT</td><td>No</td><td>-</td><td>Azure endpoint</td></tr>
+        <tr><td>A2A_HOST</td><td>No</td><td>localhost</td><td>A2A server host</td></tr>
+        <tr><td>A2A_PORT</td><td>No</td><td>8000</td><td>A2A server port</td></tr>
+        <tr><td>ENABLE_PARALLEL</td><td>No</td><td>true</td><td>Enable parallel execution</td></tr>
+      </table>
+
+      <h3>AppConfig</h3>
+      <pre><code>from config import AppConfig
+
+# Load from environment
+config = AppConfig.from_env()
+
+# Or create manually
+config = AppConfig(
+    openai_api_key="sk-...",
+    openai_model="gpt-4o",
+    a2a_port=8000
+)</code></pre>
+    </div>
+  </section>
+
+  <section class="content" id="testing">
+    <div class="container">
+      <h2>Testing</h2>
+      
+      <h3>Run Tests</h3>
+      <pre><code># All tests
+pytest
+
+# Specific test file
+pytest tests/test_core.py
+
+# With coverage
+pytest --cov=. --cov-report=html</code></pre>
+
+      <h3>Test Types</h3>
+      <table>
+        <tr><th>File</th><th>Tests</th><th>Description</th></tr>
+        <tr><td>test_core.py</td><td>7</td><td>Core modules</td></tr>
+        <tr><td>test_integration.py</td><td>10</td><td>Integration tests</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="content" id="contributing">
+    <div class="container">
+      <h2>Contributing</h2>
+      <p>See <a href="https://github.com/AGenNext/AGenNext-Registry">GitHub</a> for contribution guidelines.</p>
+      
+      <h3>Adding New Agents</h3>
+      <pre><code># 1. Create agent class in agents/
+# 2. Inherit from BaseAgent
+# 3. Register in agents/__init__.py
+# 4. Add tests
+
+from agents.base_agent import BaseAgent
+
+class MyAgent(BaseAgent):
+    def __init__(self):
+        self.agent_id = "my-agent"
+        self.name = "My Agent"
+        self.capabilities = ["coding", "reasoning"]</code></pre>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>🤖 Content Writing Multi-Agent Team · <a href="https://github.com/AGenNext/AGenNext-Registry">GitHub</a> · MIT License</p>
+      <p>Built with LangGraph + A2A Protocol</p>
+    </div>
+  </footer>
+</body>
+</html>

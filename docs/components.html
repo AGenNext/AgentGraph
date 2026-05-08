@@ -1,0 +1,310 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Components - Content Writing Team</title>
+  <style>
+    :root { --primary: #2563eb; --secondary: #7c3aed; --bg: #f8fafc; --text: #1e293b; --code-bg: #1e293b; }
+    body { font-family: -apple-system, BlinkMacSystemFont, system-ui, sans-serif; line-height: 1.7; max-width: 1000px; margin: 0 auto; padding: 2rem; background: var(--bg); color: var(--text); }
+    h1 { font-size: 2rem; color: var(--primary); border-bottom: 2px solid var(--primary); padding-bottom: 0.5rem; margin-bottom: 2rem; }
+    h2 { font-size: 1.5rem; color: var(--secondary); margin: 2.5rem 0 1rem; }
+    h3 { font-size: 1.2rem; margin: 1.5rem 0 0.75rem; }
+    code { background: var(--code-bg); color: #a5b4fc; padding: 0.2rem 0.4rem; border-radius: 4px; font-size: 0.9em; }
+    pre { background: var(--code-bg); color: #e2e8f0; padding: 1.25rem; border-radius: 8px; overflow-x: auto; margin: 1rem 0; }
+    pre code { background: none; padding: 0; color: inherit; }
+    .component { background: white; padding: 1.5rem; border-radius: 8px; margin: 1.5rem 0; box-shadow: 0 2px 8px rgba(0,0,0,0.08); }
+    .component h3 { display: flex; align-items: center; gap: 0.75rem; margin-top: 0; }
+    .tag { display: inline-block; background: var(--primary); color: white; padding: 0.2rem 0.6rem; border-radius: 1rem; font-size: 0.75rem; }
+    .path { color: #64748b; font-size: 0.9em; }
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
+    th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid #e2e8f0; }
+    th { background: #f1f5f9; font-weight: 600; }
+    a { color: var(--primary); text-decoration: none; }
+    ul { margin: 0.5rem 0; padding-left: 1.5rem; }
+    li { margin: 0.25rem 0; }
+  </style>
+</head>
+<body>
+  <p><a href="docs/">← Back to Main</a></p>
+
+  <h1>Components</h1>
+  <p>The Content Writing Team consists of modular components for LLM management, agent orchestration, and A2A communication.</p>
+
+  <!-- CORE MODULES -->
+  <h2>Core Modules</h2>
+
+  <div class="component">
+    <h3><span class="tag">core</span> LLM Client <span class="path">core/llm_client.py</span></h3>
+    <p>Unified client for 40+ LLM providers with OpenAI-compatible API.</p>
+    <table>
+      <tr><th>Provider</th><th>Default Model</th><th>Tools</th></tr>
+      <tr><td>openai</td><td>gpt-4o</td><td>code_interpreter, file_search</td></tr>
+      <tr><td>anthropic</td><td>claude-3.5-sonnet</td><td>computer_use</td></tr>
+      <tr><td>google</td><td>gemini-2.0-flash</td><td>code_execution</td></tr>
+      <tr><td>azure</td><td>gpt-4</td><td>enterprise</td></tr>
+    </table>
+    <pre><code>from core.llm_client import create_llm_client
+
+# Create provider client
+client = create_llm_client("openai", model="gpt-4o")
+
+# Generate content
+result = client.generate("Write about AI")
+print(result.content)</code></pre>
+  </div>
+
+  <div class="component">
+    <h3><span class="tag">core</span> Registry <span class="path">core/registry.py</span></h3>
+    <p>Central registry for skills, prompts, tools using DID format.</p>
+    <pre><code>from core.registry import get_registry
+
+reg = get_registry()
+
+# List available skills
+skills = reg.list_skills()
+print(skills)
+
+# Get specific skill
+skill = reg.get_skill("coding")
+print(skill.description)</code></pre>
+  </div>
+
+  <div class="component">
+    <h3><span class="tag">core</span> Router <span class="path">core/router.py</span></h3>
+    <p>Routes tasks to appropriate agents based on content type and requirements.</p>
+    <pre><code>from core.router import ContentRouter
+
+router = ContentRouter()
+
+# Route task to agent
+agent = router.route(
+    task="Write code",
+    content_type="code"
+)
+print(agent.agent_id)</code></pre>
+  </div>
+
+  <div class="component">
+    <h3><span class="tag">core</span> Aggregator <span class="path">core/aggregator.py</span></h3>
+    <p>Aggregates responses from multiple agents.</p>
+    <pre><code>from core.aggregator import ResponseAggregator
+
+agg = ResponseAggregator()
+
+# Aggregate results
+combined = agg.aggregate([result1, result2])
+print(combined.content)</code></pre>
+  </div>
+
+  <div class="component">
+    <h3><span class="tag">core</span> Quality Scorer <span class="path">core/scorer.py</span></h3>
+    <p>Scores quality of generated content.</p>
+    <pre><code>from core.scorer import QualityScorer
+
+scorer = QualityScorer()
+
+# Score content
+score = scorer.score(content)
+print(f"Quality: {score.quality_score}")</code></pre>
+  </div>
+
+  <div class="component">
+    <h3><span class="tag">core</span> Synthesizer <span class="path">core/synthesizer.py</span></h3>
+    <p>Synthesizes final output from multiple agent responses.</p>
+    <pre><code>from core.synthesizer import ResultSynthesizer
+
+synth = ResultSynthesizer()
+
+# Synthesize
+final = synth.synthesize(results)
+print(final.content)</code></pre>
+  </div>
+
+  <div class="component">
+    <h3><span class="tag">core</span> Schema <span class="path">core/schema.py</span></h3>
+    <p>Defines standard skills, capabilities, and tools.</p>
+    <pre><code>from core.schema import (
+    STANDARD_SKILLS,
+    STANDARD_CAPABILITIES,
+    STANDARD_TOOLS
+)
+
+# Access defined schemas
+print(STANDARD_SKILLS)
+print(STANDARD_CAPABILITIES)</code></pre>
+  </div>
+
+  <!-- A2A PROTOCOL -->
+  <h2>A2A Protocol</h2>
+
+  <div class="component">
+    <h3><span class="tag">a2a</span> Agent Card <span class="path">a2a/card.py</span></h3>
+    <p>Agent metadata following A2A protocol specification.</p>
+    <pre><code>from a2a.card import AgentCard, Skill, Capability
+
+card = AgentCard(
+    agentId="openai-agent",
+    name="OpenAI Agent",
+    description="Coding and reasoning agent",
+    url="http://localhost:8000",
+    version="1.0.0",
+    capabilities=[
+        Capability(name="coding", description="Write code"),
+        Capability(name="reasoning", description="Logical reasoning")
+    ],
+    skills=[
+        Skill(id="coding", name="Coding", description="Software development")
+    ]
+)</code></pre>
+  </div>
+
+  <div class="component">
+    <h3><span class="tag">a2a</span> Messages <span class="path">a2a/messages.py</span></h3>
+    <p>Message types for A2A communication.</p>
+    <pre><code>from a2a.messages import (
+    Message,
+    MessageRole,
+    Task,
+    TaskStatus,
+    TaskState
+)
+
+# Create message
+msg = Message(
+    role=MessageRole.USER,
+    parts=[...]
+)
+
+# Create task
+task = Task(id="task-001", message=msg)
+
+# Check status
+print(task.status.state)</code></pre>
+  </div>
+
+  <div class="component">
+    <h3><span class="tag">a2a</span> Client <span class="path">a2a/client.py</span></h3>
+    <p>A2A client for agent-to-agent communication.</p>
+    <pre><code>from a2a import A2AClient
+
+client = A2AClient(agent_url="http://remote-agent:8000")
+
+# Send task
+result = client.send_task("Write documentation")
+print(result.content)</code></pre>
+  </div>
+
+  <div class="component">
+    <h3><span class="tag">a2a</span> Protocol <span class="path">a2a/protocol.py</span></h3>
+    <p>A2A protocol definitions and constants.</p>
+    <pre><code>from a2a.protocol import (
+    A2A_VERSION,
+    DEFAULT_PORT,
+    TaskStates
+)
+
+print(f"A2A Version: {A2A_VERSION}")</code></pre>
+  </div>
+
+  <!-- AGENTS -->
+  <h2>Agents</h2>
+
+  <div class="component">
+    <h3><span class="tag">agent</span> Base Agent <span class="path">agents/base_agent.py</span></h3>
+    <p>Base class for all agents.</p>
+    <pre><code>from agents.base_agent import BaseAgent
+
+class MyAgent(BaseAgent):
+    def __init__(self):
+        self.agent_id = "my-agent"
+        self.name = "My Agent"
+        self.capabilities = ["coding"]
+    
+    def run(self, task: str, **kwargs):
+        # Implementation
+        return result</code></pre>
+  </div>
+
+  <div class="component">
+    <h3><span class="tag">agent</span> OpenAI Agent <span class="path">agents/openai_agent.py</span></h3>
+    <p>OpenAI SDK integration.</p>
+    <pre><code>from agents import OpenAIAgent
+
+agent = OpenAIAgent()
+result = agent.run("Write Python code")
+print(result.content)</code></pre>
+  </div>
+
+  <div class="component">
+    <h3><span class="tag">agent</span> Salesforce Agent <span class="path">agents/salesforce_agent.py</span></h3>
+    <p>Salesforce CRM integration.</p>
+    <pre><code>from agents import SalesforceAgent
+
+agent = SalesforceAgent()
+result = agent.run("Generate SOQL query")</code></pre>
+  </div>
+
+  <!-- ORCHESTRATOR -->
+  <h2>Orchestrator</h2>
+
+  <div class="component">
+    <h3><span class="tag">orch</span> LangGraph Workflow <span class="path">orchestrator/langgraph_workflow.py</span></h3>
+    <p>LangGraph-based workflow orchestration.</p>
+    <pre><code>from orchestrator.langgraph_workflow import create_workflow, run_team_workflow
+
+# Create workflow
+workflow = create_workflow()
+
+# Run team workflow
+result = run_team_workflow(task="Write content")
+print(result)</code></pre>
+
+    <h4>Workflow Nodes</h4>
+    <ul>
+      <li><code>route</code> - Route task to appropriate agent</li>
+      <li><code>execute</code> - Execute agent task</li>
+      <li><code>aggregate</code> - Aggregate results</li>
+      <li><code>score</code> - Quality score results</li>
+      <li><code>synthesize</code> - Final synthesis</li>
+    </ul>
+  </div>
+
+  <!-- CONFIG -->
+  <h2>Configuration</h2>
+
+  <div class="component">
+    <h3><span class="tag">config</span> App Config <span class="path">config.py</span></h3>
+    <p>Application configuration management.</p>
+    <pre><code>from config import AppConfig, validate_config
+
+# Load from environment
+config = AppConfig.from_env()
+
+# Validate
+validate_config()
+
+# Access settings
+print(config.openai_model)
+print(config.a2a_port)</code></pre>
+  </div>
+
+  <!-- MAIN -->
+  <h2>Entry Points</h2>
+
+  <div class="component">
+    <h3><span class="tag">main</span> Main CLI <span class="path">main.py</span></h3>
+    <p>Command-line interface.</p>
+    <pre><code># View agents
+python main.py --mode cards
+
+# Demo modes
+python main.py --mode demo --agent openai
+python main.py --mode team
+python main.py --mode a2a
+
+# Server mode
+python main.py --mode server --port 8000</code></pre>
+  </div>
+</body>
+</html>
