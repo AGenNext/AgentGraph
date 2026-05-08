@@ -24,8 +24,8 @@ Enterprise Multi-Agent Team Platform with support for:
 
 ```bash
 # Clone
-git clone https://github.com/AGenNext/AGenNext-Registry.git
-cd AGenNext-Registry
+git clone https://github.com/AGenNext/AGenNext-Enterprise.git
+cd AGenNext-Enterprise
 
 # Install
 pip install -r requirements.txt
@@ -128,7 +128,7 @@ docker pull ghcr.io/agennext/agent-registry:latest
 
 ## 📞 Support
 
-- Issues: [GitHub Issues](https://github.com/AGenNext/AGenNext-Registry/issues)
+- Issues: [GitHub Issues](https://github.com/AGenNext/AGenNext-Enterprise/issues)
 - Email: info@agennext.io
 
 ---

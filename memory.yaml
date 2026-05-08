@@ -4,7 +4,7 @@ project:
   name: "AGenNext Registry"
   version: "0.1.0"
   status: "ALPHA"
-  repository: "https://github.com/AGenNext/AGenNext-Registry"
+  repository: "https://github.com/AGenNext/AGenNext-Enterprise"
 
 sdks:
   openai:

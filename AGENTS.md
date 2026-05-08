@@ -2,7 +2,7 @@
 
 ## Project Context
 
-**Repository:** https://github.com/AGenNext/AGenNext-Registry
+**Repository:** https://github.com/AGenNext/AGenNext-Enterprise
 **Status:** ALPHA (0.1.0)
 
 ---

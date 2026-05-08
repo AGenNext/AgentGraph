@@ -171,7 +171,7 @@ Q4 -----------------------------------------------
 
 ```bash
 # 1. Clone
-git clone https://github.com/AGenNext/AGenNext-Registry.git
+git clone https://github.com/AGenNext/AGenNext-Enterprise.git
 
 # 2. Install
 pip install -r requirements.txt
@@ -188,7 +188,7 @@ python ui/examples.py chat
 |----------|------|
 | Documentation | README.md |
 | UI Spec | platform-ui/SPEC.md |
-| Issues | github.com/AGenNext/AGenNext-Registry/issues |
+| Issues | github.com/AGenNext/AGenNext-Enterprise/issues |
 
 ---
 
