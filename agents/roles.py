@@ -1,12 +1,13 @@
 """
-Enterprise Agent Config - Own registries.
+Enterprise Agent Config - capabilities from AI provider based on model.
 
-We own: MCP, Memory System, RAG, Capabilities, Tools, Skills.
-External: Identity (SSO), Secret (Secret Manager).
+We own: MCP, Memory, RAG, Tools, Skills.
+AI Provider: provides capabilities based on model.
+External: Identity, Secret.
 """
 
 from enum import Enum
-from typing import Optional, List
+from typing import Optional, List, Dict
 from dataclasses import dataclass, field
 
 
@@ -18,10 +19,69 @@ class AgentRole(Enum):
     EMPLOYEE_ASSISTANT = "assistant"
 
 
-# === REGISTRIES (we own these) ===
+# === AI PROVIDER REGISTRY ===
+
+class AIProvider:
+    """AI Provider - capabilities based on model."""
+    
+    # Model -> capabilities mapping
+    MODEL_CAPABILITIES = {
+        # GPT-4o family
+        "gpt-4o": ["vision", "function-calling", "json", "streaming"],
+        "gpt-4o-mini": ["function-calling", "json", "streaming"],
+        
+        # Claude family  
+        "claude-3-5-sonnet": ["vision", "function-calling", "json", "streaming", "thinking"],
+        "claude-3-opus": ["vision", "function-calling", "json", "streaming", "thinking"],
+        
+        # Gemini family
+        "gemini-2.0-flash": ["vision", "function-calling", "json", "streaming", "native-tools"],
+        "gemini-2.0-flash-lite": ["function-calling", "json", "streaming"],
+        
+        # Azure OpenAI
+        "azure-gpt-4o": ["vision", "function-calling", "json"],
+        "azure-claude": ["vision", "function-calling"],
+        
+        # Groq
+        "groq-llama-3": ["function-calling", "streaming"],
+        "groq-mixtral": ["function-calling", "streaming"],
+    }
+    
+    def __init__(self):
+        self._providers = {}
+        self._models = {}
+    
+    def register(self, provider_name: str, api_key: str, base_url: str = None):
+        """Register AI provider."""
+        self._providers[provider_name] = {
+            "api_key": api_key,
+            "base_url": base_url,
+        }
+    
+    def add_model(self, provider_name: str, model_name: str, capabilities: List[str] = None):
+        """Add model to provider."""
+        if model_name not in self.MODEL_CAPABILITIES:
+            self._models[model_name] = {
+                "provider": provider_name,
+                "capabilities": capabilities or [],
+            }
+    
+    def get_capabilities(self, model_name: str) -> List[str]:
+        """Get capabilities for a model."""
+        return self.MODEL_CAPABILITIES.get(model_name, [])
+    
+    def get_provider(self, model_name: str) -> Optional[str]:
+        """Get provider name for a model."""
+        return self._models.get(model_name, {}).get("provider")
+
+
+ai_provider = AIProvider()
+
+
+# === MCP REGISTRY ===
 
 class MCPRegistry:
-    """MCP - Model Context Protocol registry."""
+    """MCP registry."""
     def __init__(self):
         self._tools = {}
         self._resources = {}
@@ -35,63 +95,44 @@ class MCPRegistry:
         self._prompts[name] = prompt
 
 
+# === MEMORY SYSTEM ===
+
 class MemorySystem:
-    """Memory system - session, context, history."""
+    """Memory system."""
     def __init__(self):
         self._sessions = {}
-        self._context = {}
-        self._history = {}
-    
     def create_session(self, session_id: str):
         self._sessions[session_id] = {"id": session_id, "messages": []}
-    def add_message(self, session_id: str, role: str, content: str):
-        if session_id in self._sessions:
-            self._sessions[session_id]["messages"].append({"role": role, "content": content})
 
+
+# === RAG REGISTRY ===
 
 class RAGRegistry:
-    """RAG - Knowledge base registry."""
+    """RAG registry."""
     def __init__(self):
         self._knowledge_bases = {}
-        self._embeddings = {}
-        self._retrievers = {}
-    
     def register_kb(self, name: str, kb_config: dict):
         self._knowledge_bases[name] = kb_config
-    def register_retriever(self, name: str, retriever_fn):
-        self._retrievers[name] = retriever_fn
 
+
+# === TOOL REGISTRY ===
 
 class ToolRegistry:
-    """Tool registry - function calls, APIs."""
+    """Tool registry."""
     def __init__(self):
         self._tools = {}
-    
     def register(self, name: str, tool_fn, description: str = ""):
         self._tools[name] = {"fn": tool_fn, "description": description}
 
 
-class CapabilityRegistry:
-    """Capability registry - LLM features."""
-    def __init__(self):
-        self._capabilities = {}
-    
-    def register(self, name: str, capability_fn):
-        self._capabilities[name] = capability_fn
-
+# === SKILL REGISTRY ===
 
 class SkillRegistry:
-    """Skill registry - agent skills."""
+    """Skill registry."""
     def __init__(self):
         self._skills = {}
-        self._skills_by_role = {}
-    
     def register(self, name: str, skill_config: dict, role: str = None):
         self._skills[name] = skill_config
-        if role:
-            if role not in self._skills_by_role:
-                self._skills_by_role[role] = []
-            self._skills_by_role[role].append(name)
 
 
 # === GLOBAL REGISTRIES ===
@@ -99,7 +140,6 @@ mcp_registry = MCPRegistry()
 memory_system = MemorySystem()
 rag_registry = RAGRegistry()
 tool_registry = ToolRegistry()
-capability_registry = CapabilityRegistry()
 skill_registry = SkillRegistry()
 
 
@@ -107,17 +147,15 @@ skill_registry = SkillRegistry()
 
 @dataclass
 class AgentConfig:
-    """Enterprise agent config - we own MCP/Memory/RAG/Tools/Capabilities/Skills."""
+    """Enterprise agent config."""
     role: AgentRole
     
-    # === IDENTITY (external) ===
-    identity_id: str          # From SSO/IdP
-    identity_provider: str   # entra/okta/google
+    # === EXTERNAL ===
+    identity_id: str
+    identity_provider: str
+    secret_ref: str
     
-    # === SECRET (external) ===
-    secret_ref: str          # From secret manager
-    
-    # === GOVERNANCE (required) ===
+    # === GOVERNANCE ===
     owner: str
     sponsor: str
     
@@ -129,29 +167,18 @@ class AgentConfig:
     engages_with: List[str] = field(default_factory=list)
     manages: List[str] = field(default_factory=list)
     
+    # === AI PROVIDER (capabilities from model) ===
+    ai_provider_name: str = "openai"
+    model: str = "gpt-4o"
+    
     # === OUR REGISTRIES ===
-    
-    # MCP (our tools, resources, prompts)
     mcp_tools: List[str] = field(default_factory=list)
-    mcp_resources: List[str] = field(default_factory=list)
-    mcp_prompts: List[str] = field(default_factory=list)
-    
-    # Memory (our session/context)
-    memory_type: str = "session"  # session/context/echoic
-    
-    # RAG / Knowledge (our knowledge bases)
+    memory_type: str = "session"
     knowledge_bases: List[str] = field(default_factory=list)
-    
-    # Capabilities (our LLM features)
-    capabilities: List[str] = field(default_factory=list)
-    
-    # Tools (our function calls)
     tools: List[str] = field(default_factory=list)
-    
-    # Skills (our agent skills)
     skills: List[str] = field(default_factory=list)
     
-    # Employee Assistant
+    # === EMPLOYEE ASSISTANT ===
     employee_email: Optional[str] = None
     it_admin_defaults: dict = field(default_factory=dict)
     employee_overrides: dict = field(default_factory=dict)
@@ -159,6 +186,11 @@ class AgentConfig:
     # === RUNTIME ===
     orchestrator: str = "langgraph"
     llm: Optional[str] = None
+
+
+def get_capabilities(model: str) -> List[str]:
+    """Get capabilities for model from AI provider."""
+    return ai_provider.get_capabilities(model)
 
 
 ROLE_DEFAULTS = {
@@ -177,30 +209,3 @@ ROLE_BEHAVIORS = {
     AgentRole.TEAM_LEAD: {"behavior": "leads", "manages": True, "coaches": True},
     AgentRole.EMPLOYEE_ASSISTANT: {"behavior": "assists", "supports": True},
 }
-
-
-# === REGISTRY FUNCTIONS ===
-
-def create_mcp_tool(name: str, tool_fn):
-    """Register an MCP tool."""
-    mcp_registry.register_tool(name, tool_fn)
-
-def create_session(session_id: str):
-    """Create agent memory session."""
-    memory_system.create_session(session_id)
-
-def register_knowledge_base(name: str, kb_config: dict):
-    """Register a knowledge base."""
-    rag_registry.register_kb(name, kb_config)
-
-def register_tool(name: str, tool_fn, description: str = ""):
-    """Register a tool."""
-    tool_registry.register(name, tool_fn, description)
-
-def register_capability(name: str, capability_fn):
-    """Register a capability."""
-    capability_registry.register(name, capability_fn)
-
-def register_skill(name: str, skill_config: dict, role: str = None):
-    """Register a skill."""
-    skill_registry.register(name, skill_config, role)
