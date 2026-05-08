@@ -4,8 +4,8 @@ LangGraph Runtime Engine.
 Workflow execution using runtime from config.
 """
 
-def execute_workflow(task: str, agents: list = None, **config):
-    """Execute workflow using configured runtime."""
+def initiate_agents(task: str, agents: list = None, **config):
+    """Initiate agents using configured runtime."""
     from config import get_runtime
     
     runtime = get_runtime()  # Set via RUNTIME= env var
