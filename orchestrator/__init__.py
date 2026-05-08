@@ -1,13 +1,11 @@
 """
 Enterprise Agent Orchestrator.
 
-Owner & Sponsor are MANDATORY for every agent creation.
+Agent ID, Owner & Sponsor are MANDATORY for every agent.
 """
 
 from config import get_runtime
 
-
-# Valid domains for owner/sponsor
 VALID_DOMAINS = ["company.com", "corp.com"]
 
 
@@ -16,7 +14,14 @@ def validate_email(email: str) -> bool:
     return "@" in email and any(email.endswith(d) for d in VALID_DOMAINS)
 
 
+def validate_agent_id(agent_id: str) -> bool:
+    """Validate agent ID format."""
+    # AgentID Format: role-purpose-dept (e.g., assistant-sales-eastus)
+    return len(agent_id) >= 5 and "-" in agent_id
+
+
 def create_agent(
+    agent_id: str,  # MANDATORY - now required
     name: str,
     role: str,
     config: dict = None,
@@ -25,11 +30,17 @@ def create_agent(
     """
     Create an enterprise agent.
     
-    MANDATORY: owner and sponsor must be provided.
+    MANDATORY: agent_id, owner, sponsor must be provided by IT admin.
     """
     from agents.roles import AgentRole, AgentRoleConfig, ROLE_DEFAULTS
     
     cfg = config or {}
+    
+    # MANDATORY: agent_id
+    if not agent_id:
+        raise ValueError("agent_id is REQUIRED - IT admin must assign agent ID")
+    if not validate_agent_id(agent_id):
+        raise ValueError("agent_id must be role-purpose-dept format (e.g., assistant-sales-eastus)")
     
     # MANDATORY: owner and sponsor
     owner = cfg.get("owner")
@@ -72,6 +83,7 @@ def create_agent(
         from .langgraph_workflow import TeamCoordinator
         coordinator = TeamCoordinator(agents=[name])
         return {
+            "agent_id": agent_id,  # Now in response
             "name": name,
             "role": role,
             "owner": owner,
