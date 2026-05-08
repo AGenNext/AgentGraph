@@ -1,74 +1,83 @@
 """
 Enterprise Agent Orchestrator.
 
-Create and manage enterprise agents with specific roles.
+Owner & Sponsor are MANDATORY for every agent creation.
 """
 
-from agents.roles import AgentRole, AgentRoleConfig, ROLE_BEHAVIORS
+from config import get_runtime
+
+
+# Valid domains for owner/sponsor
+VALID_DOMAINS = ["company.com", "corp.com"]
+
+
+def validate_email(email: str) -> bool:
+    """Validate email format."""
+    return "@" in email and any(email.endswith(d) for d in VALID_DOMAINS)
 
 
 def create_agent(
     name: str,
-    role: str = "assistant",
+    role: str,
     config: dict = None,
     **options
 ):
     """
-    Create an enterprise agent with a specific role.
+    Create an enterprise agent.
     
-    Args:
-        name: Agent name/id
-        role: project_driver | product_lead | assistant
-        config: Role configuration
-        **options: Additional options
-    
-    Returns:
-        Configured agent instance
+    MANDATORY: owner and sponsor must be provided.
     """
-    from config import get_runtime
-    from .langgraph_workflow import TeamCoordinator
+    from agents.roles import AgentRole, AgentRoleConfig, ROLE_DEFAULTS
     
-    # Map role string to enum
+    cfg = config or {}
+    
+    # MANDATORY: owner and sponsor
+    owner = cfg.get("owner")
+    sponsor = cfg.get("sponsor")
+    
+    if not owner:
+        raise ValueError("owner is REQUIRED - IT admin must assign agent owner")
+    if not sponsor:
+        raise ValueError("sponsor is REQUIRED - IT admin must assign budget/sponsor")
+    
+    if not validate_email(owner):
+        raise ValueError(f"owner must be valid email (@{VALID_DOMAINS})")
+    if not validate_email(sponsor):
+        raise ValueError(f"sponsor must be valid email (@{VALID_DOMAINS})")
+    
     role_enum = AgentRole(role)
-    behavior = ROLE_BEHAVIORS[role_enum]
+    defaults = ROLE_DEFAULTS.get(role_enum, {})
     
     agent_config = AgentRoleConfig(
         role=role_enum,
-        reports_to=config.get("reports_to") if config else None,
-        team_size=config.get("team_size", 0) if config else 0,
-        priority=config.get("priority", 1) if config else 1,
-        owns=config.get("owns", []) if config else [],
+        owner=owner,
+        sponsor=sponsor,
+        reports_to=cfg.get("reports_to"),
+        priority=cfg.get("priority", 1),
+        projects=cfg.get("projects", []),
+        products=cfg.get("products", []),
+        groups=cfg.get("groups", []),
+        engages_with=cfg.get("engages_with", []),
+        manages=cfg.get("manages", []),
+        employee_email=cfg.get("employee_email"),
+        it_admin_defaults=cfg.get("it_admin_defaults", {}),
+        employee_overrides=cfg.get("employee_overrides", {}),
+        orchestrator=cfg.get("orchestrator", defaults.get("orchestrator", "langgraph")),
+        llm=cfg.get("llm") or defaults.get("llm"),
     )
     
     runtime = get_runtime()
     
     if runtime == "langgraph":
+        from .langgraph_workflow import TeamCoordinator
         coordinator = TeamCoordinator(agents=[name])
         return {
-            "agent": name,
+            "name": name,
             "role": role,
-            "behavior": behavior,
+            "owner": owner,
+            "sponsor": sponsor,
             "config": agent_config,
             "coordinator": coordinator,
         }
-    
-    raise ValueError(f"Unknown runtime: {runtime}")
-
-
-def initiate_agents(task: str = None, agents: list = None, config: dict = None, **kwargs):
-    """
-    Initiate agents (legacy - for task-based workflows).
-    
-    For enterprise use, use create_agent() instead.
-    """
-    from config import get_runtime
-    
-    runtime = get_runtime()
-    
-    if runtime == "langgraph":
-        from .langgraph_workflow import create_workflow, TeamCoordinator
-        coordinator = TeamCoordinator(agents=agents)
-        wf = create_workflow(coordinator)
-        return wf.invoke({"topic": task or ""})
     
     raise ValueError(f"Unknown runtime: {runtime}")
