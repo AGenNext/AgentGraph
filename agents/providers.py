@@ -526,3 +526,154 @@ def create_client(provider: str, config: Dict) -> AIClient:
     
     else:
         raise ValueError(f"Unknown provider: {provider}")
+
+
+# === CUSTOM PROVIDER / CUSTOM LLM ===
+
+class CustomLLMClient(AIClient):
+    """Custom LLM - user-defined provider."""
+    
+    def __init__(self, config: Dict):
+        self.config = config
+        self.base_url = config.get("provider_base_url")
+        self.model = config.get("model")
+        self.api_key = config.get("provider_api_key")
+        self.extra_headers = config.get("extra_headers", {})
+        
+        # Custom request/response handlers
+        self.request_transformer = config.get("request_transformer")
+        self.response_transformer = config.get("response_transformer")
+    
+    def chat(self, messages: List[Dict], model: str = None, **kwargs) -> Dict:
+        """Custom chat with transformer hooks."""
+        import requests
+        model = model or self.model
+        
+        # Build request
+        data = {"model": model, "messages": messages, **kwargs}
+        
+        # Transform request if provided
+        if self.request_transformer:
+            data = self.request_transformer(data)
+        
+        # Headers
+        headers = {"Content-Type": "application/json"}
+        if self.api_key:
+            headers["Authorization"] = f"Bearer {self.api_key}"
+        headers.update(self.extra_headers)
+        
+        # Call API
+        resp = requests.post(self.base_url, json=data, headers=headers, timeout=60)
+        resp.raise_for_status()
+        result = resp.json()
+        
+        # Transform response if provided
+        if self.response_transformer:
+            result = self.response_transformer(result)
+        
+        return result
+    
+    def stream(self, messages: List[Dict], model: str = None, **kwargs) -> Iterator:
+        """Streaming."""
+        import requests
+        model = model or self.model
+        data = {"model": model, "messages": messages, "stream": True, **kwargs}
+        
+        headers = {"Content-Type": "application/json"}
+        if self.api_key:
+            headers["Authorization"] = f"Bearer {self.api_key}"
+        headers.update(self.extra_headers)
+        
+        resp = requests.post(self.base_url, json=data, headers=headers, stream=True, timeout=60)
+        for line in resp.iter_lines():
+            if line:
+                yield line.decode("utf-8")
+
+
+class CustomProviderRegistry:
+    """Registry for custom providers."""
+    
+    def __init__(self):
+        self._providers = {}
+        self._auth = {}
+    
+    def register(self, name: str, config: Dict):
+        """Register custom provider."""
+        self._providers[name] = config
+    
+    def get(self, name: str) -> Optional[Dict]:
+        """Get provider config."""
+        return self._providers.get(name)
+    
+    def list(self) -> List[str]:
+        """List providers."""
+        return list(self._providers.keys())
+    
+    def register_auth(self, name: str, auth_config: Dict):
+        """Register auth for provider."""
+        self._auth[name] = auth_config
+    
+    def get_auth(self, name: str) -> Optional[Dict]:
+        """Get auth config."""
+        return self._auth.get(name)
+
+
+class CustomModelRegistry:
+    """Registry for custom models."""
+    
+    def __init__(self):
+        self._models = {}
+    
+    def register(self, model_name: str, model_config: Dict):
+        """Register custom model."""
+        self._models[model_name] = model_config
+    
+    def get(self, model_name: str) -> Optional[Dict]:
+        """Get model config."""
+        return self._models.get(model_name)
+    
+    def list(self) -> List[str]:
+        """List models."""
+        return list(self._models.keys())
+
+
+# Global registries
+custom_provider_registry = CustomProviderRegistry()
+custom_model_registry = CustomModelRegistry()
+
+
+# Updated factory
+def create_client(provider: str, config: Dict) -> AIClient:
+    """Create AI client - with custom support."""
+    
+    p = provider.lower()
+    
+    if p == "openai":
+        return OpenAIClient(config.get("provider_api_key"), config.get("provider_base_url"))
+    if p == "anthropic":
+        return AnthropicClient(config.get("provider_api_key"), config.get("provider_base_url"))
+    if p == "google":
+        return GoogleClient(config.get("provider_api_key"), config.get("provider_base_url"))
+    if p == "azure":
+        return AzureOpenAIClient(config["provider_api_key"], config["provider_base_url"], config.get("api_version"))
+    if p == "bedrock":
+        return BedrockClient(config.get("aws_region"), config.get("credentials"))
+    if p == "ollama":
+        return OllamaClient(config.get("provider_base_url"), config.get("model"))
+    if p == "lmstudio":
+        return LMStudioClient(config.get("provider_base_url"), config.get("model"))
+    if p == "vllm":
+        return VLLMClient(config.get("provider_base_url"), config.get("model"))
+    if p == "local":
+        return LocalLLMClient(config.get("provider_base_url"), config.get("model"))
+    
+    # Custom provider
+    if p == "custom":
+        return CustomLLMClient(config)
+    
+    # Check custom registry
+    custom = custom_provider_registry.get(p)
+    if custom:
+        return CustomLLMClient({**custom, **config})
+    
+    raise ValueError(f"Unknown provider: {provider}")
