@@ -1,50 +1,74 @@
 """
-LangGraph Runtime Engine.
+Enterprise Agent Orchestrator.
 
-Initiate agents using runtime from config.
+Create and manage enterprise agents with specific roles.
 """
 
-def initiate_agents(task: str, agents: list = None, config: dict = None, **kwargs):
+from agents.roles import AgentRole, AgentRoleConfig, ROLE_BEHAVIORS
+
+
+def create_agent(
+    name: str,
+    role: str = "assistant",
+    config: dict = None,
+    **options
+):
     """
-    Initiate agents at runtime using configured runtime.
+    Create an enterprise agent with a specific role.
     
     Args:
-        task: Task to execute
-        agents: List of agent names (auto-select if None)
-        config: Agent configuration dict
-        **kwargs: Additional runtime options
+        name: Agent name/id
+        role: project_driver | product_lead | assistant
+        config: Role configuration
+        **options: Additional options
     
     Returns:
-        dict with result, quality_score
+        Configured agent instance
     """
     from config import get_runtime
+    from .langgraph_workflow import TeamCoordinator
     
-    runtime = get_runtime()  # Set via RUNTIME= env var
-    agent_config = config or {}
+    # Map role string to enum
+    role_enum = AgentRole(role)
+    behavior = ROLE_BEHAVIORS[role_enum]
+    
+    agent_config = AgentRoleConfig(
+        role=role_enum,
+        reports_to=config.get("reports_to") if config else None,
+        team_size=config.get("team_size", 0) if config else 0,
+        priority=config.get("priority", 1) if config else 1,
+        owns=config.get("owns", []) if config else [],
+    )
+    
+    runtime = get_runtime()
     
     if runtime == "langgraph":
-        from .langgraph_workflow import create_workflow, TeamCoordinator
-        
-        coordinator = TeamCoordinator(
-            agents=agents,
-            max_agents=agent_config.get("max_agents", 5),
-        )
-        workflow = create_workflow(coordinator)
-        
-        state = {
-            "topic": task,
-            "content_type": agent_config.get("content_type", "general"),
-            "style": agent_config.get("style", "professional"),
-            "length": agent_config.get("length", "medium"),
+        coordinator = TeamCoordinator(agents=[name])
+        return {
+            "agent": name,
+            "role": role,
+            "behavior": behavior,
+            "config": agent_config,
+            "coordinator": coordinator,
         }
-        state.update(kwargs)
-        
-        return workflow.invoke(state)
     
     raise ValueError(f"Unknown runtime: {runtime}")
 
 
-def create_workflow(agent_ids: list = None):
-    """Create workflow instance."""
-    from .langgraph_workflow import create_workflow, TeamCoordinator
-    return create_workflow(TeamCoordinator(agents=agent_ids))
+def initiate_agents(task: str = None, agents: list = None, config: dict = None, **kwargs):
+    """
+    Initiate agents (legacy - for task-based workflows).
+    
+    For enterprise use, use create_agent() instead.
+    """
+    from config import get_runtime
+    
+    runtime = get_runtime()
+    
+    if runtime == "langgraph":
+        from .langgraph_workflow import create_workflow, TeamCoordinator
+        coordinator = TeamCoordinator(agents=agents)
+        wf = create_workflow(coordinator)
+        return wf.invoke({"topic": task or ""})
+    
+    raise ValueError(f"Unknown runtime: {runtime}")
