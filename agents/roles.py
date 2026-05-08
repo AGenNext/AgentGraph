@@ -1,9 +1,8 @@
 """
 Enterprise Agent - IAM + IGA Roles.
 
-Clarification:
-- identifier_uris: OAuth app identifier (not appId URIs)
-- credentials: API keys/secrets for M2M agents
+OAuth scopes: what the agent CAN access (API permissions).
+api_keys/secrets: how the agent authenticates.
 """
 
 from enum import Enum
@@ -38,7 +37,7 @@ class DeprovisioningReason(Enum):
 
 @dataclass
 class AgentConfig:
-    """Enterprise agent with IAM + IGA."""
+    """Enterprise agent config."""
     role: AgentRole
     
     # === IDENTITY (from SSO/IdP) ===
@@ -48,11 +47,13 @@ class AgentConfig:
     display_name: Optional[str] = None
     description: Optional[str] = None
     
-    # === CREDENTIALS (for M2M/API agents) ===
+    # === CREDENTIALS (how authenticate) ===
     api_keys: List[dict] = field(default_factory=list)  # API keys
-    client_secrets: List[dict] = field(default_factory=list)  # Client secrets
-    jwks_uri: Optional[str] = None     # JSON Web Key Set URL
-    token_endpoint: Optional[str] = None  # OAuth token endpoint
+    client_secrets: List[dict] = field(default_factory=list)  # OAuth secrets
+    
+    # === OAUTH SCOPES (what can access) ===
+    oauth_scopes: List[str] = field(default_factory=list)  # e.g., "read:users", "write:files"
+    resources: List[str] = field(default_factory=list)  # e.g., "https://graph.microsoft.com"
     
     # === IAM ROLES (from IdP) ===
     iam_system: Optional[str] = None
@@ -86,7 +87,7 @@ class AgentConfig:
     expires_at: Optional[datetime] = None
     renewal_required: bool = True
     
-    # === SCOPE ===
+    # === SCOPE (business) ===
     projects: List[str] = field(default_factory=list)
     products: List[str] = field(default_factory=list)
     groups: List[str] = field(default_factory=list)
