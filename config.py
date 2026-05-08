@@ -96,3 +96,9 @@ def validate_config() -> bool:
         if not os.getenv(var):
             print(f"Warning: {var} not set")
     return True
+
+
+# Chatwoot Configuration
+CHATWOOT_ACCOUNT_ID = os.getenv("CHATWOOT_ACCOUNT_ID")
+CHATWOOT_APP_URL = os.getenv("CHATWOOT_APP_URL")
+CHATWOOT_TOKEN = os.getenv("CHATWOOT_TOKEN")

@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Contact - Content Writing Team</title>
+  <style>
+    :root { --primary: #2563eb; --bg: #f8fafc; --text: #1e293b; }
+    body { font-family: system-ui; line-height: 1.6; max-width: 800px; margin: 0 auto; padding: 2rem; background: var(--bg); color: var(--text); }
+    h1 { color: var(--primary); }
+    .card { background: white; padding: 1.5rem; border-radius: 8px; margin: 1rem 0; box-shadow: 0 1px 3px rgba(0,0,0,0.1); }
+    code { background: #e2e8f0; padding: 0.2rem 0.4rem; border-radius: 4px; }
+    a { color: var(--primary); }
+  </style>
+</head>
+<body>
+  <p><a href="docs/index.html">← Back to Docs</a></p>
+
+  <h1>Contact & Support</h1>
+
+  <div class="card">
+    <h2>Chatwoot Chatbot</h2>
+    <p>Live chat with our AI-powered customer service chatbot.</p>
+    
+    <h3>Integration</h3>
+    <p>Add Chatwoot widget to your deployment:</p>
+    
+    <pre><code>&lt;script&gt;
+window.chatwootSettings = {
+  position: "bottom-right",
+  language: "en",
+  type: "standard"
+};
+(function(){
+  var d=document, w=window, t=w.Chatwoot;
+  if(typeof t!="function"){
+    var s=document.createElement("script");
+    s.src="https://cdn.chatwoot.com/widgets.js";
+    s.async=true;
+    document.head.appendChild(s);
+  }
+})();
+&lt;/script&gt;</code></pre>
+
+    <h3>Environment Variables</h3>
+    <p>Configure Chatwoot:</p>
+    <table>
+      <tr><th>Variable</th><th>Description</th></tr>
+      <tr><td><code>CHATWOOT_ACCOUNT_ID</code></td><td>Your Chatwoot account ID</td></tr>
+      <tr><td><code>CHATWOOT_APP_URL</code></td><td>Chatwoot instance URL</td></tr>
+      <tr><td><code>CHATWOOT_TOKEN</code></td><td>Widget token</td></tr>
+    </table>
+  </div>
+
+  <div class="card">
+    <h2>Direct Support</h2>
+    <ul>
+      <li><strong>GitHub Issues:</strong> <a href="https://github.com/AGenNext/AGenNext-Registry/issues">Report bugs</a></li>
+      <li><strong>Discussions:</strong> <a href="https://github.com/AGenNext/AGenNext-Registry/discussions">Ask questions</a></li>
+      <li><strong>Email:</strong> support@agennext.io</li>
+    </ul>
+  </div>
+</body>
+</html>

@@ -463,9 +463,53 @@ class MyAgent(BaseAgent):
 
   <footer>
     <div class="container">
-      <p>🤖 Content Writing Multi-Agent Team · <a href="https://github.com/AGenNext/AGenNext-Registry">GitHub</a> · MIT License</p>
+      <p>🤖 Content Writing Multi-Agent Team · <a href="docs/contact.html">Contact</a> · <a href="https://github.com/AGenNext/AGenNext-Registry">GitHub</a> · MIT License</p>
       <p>Built with LangGraph + A2A Protocol</p>
     </div>
   </footer>
+
+  <!-- Chatwoot Widget -->
+  <script>
+    if (window.CHATWOOT_ACCOUNT_ID) {
+      window.chatwootSettings = {
+        position: "bottom-right",
+        language: "en",
+        type: "standard"
+      };
+      (function(){
+        var d=document, w=window;
+        var s=document.createElement("script");
+        s.src="https://cdn.chatwoot.com/widgets.js";
+        s.async=true;
+        document.head.appendChild(s);
+      })();
+    }
+  </script>
 </body>
 </html>
+  <section class="content" id="source">
+    <div class="container">
+      <h2>Source Code</h2>
+      <p>For detailed implementation, see the source files in the repository.</p>
+      
+      <table>
+        <tr><th>Component</th><th>File</th><th>Description</th></tr>
+        <tr><td>Config</td><td><a href="https://github.com/AGenNext/AGenNext-Registry/blob/main/config.py">config.py</a></td><td>Application configuration</td></tr>
+        <tr><td>Main CLI</td><td><a href="https://github.com/AGenNext/AGenNext-Registry/blob/main/main.py">main.py</a></td><td>Entry point</td></tr>
+        <tr><td>LLM Client</td><td><a href="https://github.com/AGenNext/AGenNext-Registry/blob/main/core/llm_client.py">core/llm_client.py</a></td><td>40+ LLM providers</td></tr>
+        <tr><td>Registry</td><td><a href="https://github.com/AGenNext/AGenNext-Registry/blob/main/core/registry.py">core/registry.py</a></td><td>Skills, prompts, tools</td></tr>
+        <tr><td>Router</td><td><a href="https://github.com/AGenNext/AGenNext-Registry/blob/main/core/router.py">core/router.py</a></td><td>Task routing</td></tr>
+        <tr><td>Aggregator</td><td><a href="https://github.com/AGenNext/AGenNext-Registry/blob/main/core/aggregator.py">core/aggregator.py</a></td><td>Response aggregation</td></tr>
+        <tr><td>Quality Scorer</td><td><a href="https://github.com/AGenNext/AGenNext-Registry/blob/main/core/scorer.py">core/scorer.py</a></td><td>Quality scoring</td></tr>
+        <tr><td>Synthesizer</td><td><a href="https://github.com/AGenNext/AGenNext-Registry/blob/main/core/synthesizer.py">core/synthesizer.py</a></td><td>Result synthesis</td></tr>
+        <tr><td>Schema</td><td><a href="https://github.com/AGenNext/AGenNext-Registry/blob/main/core/schema.py">core/schema.py</a></td><td>Standard definitions</td></tr>
+        <tr><td>Base Agent</td><td><a href="https://github.com/AGenNext/AGenNext-Registry/blob/main/agents/base_agent.py">agents/base_agent.py</a></td><td>Agent base class</td></tr>
+        <tr><td>Coordinators</td><td><a href="https://github.com/AGenNext/AGenNext-Registry/blob/main/agents/coordinator.py">agents/coordinator.py</a></td><td>Team coordination</td></tr>
+        <tr><td>A2A Card</td><td><a href="https://github.com/AGenNext/AGenNext-Registry/blob/main/a2a/card.py">a2a/card.py</a></td><td>Agent metadata</td></tr>
+        <tr><td>A2A Messages</td><td><a href="https://github.com/AGenNext/AGenNext-Registry/blob/main/a2a/messages.py">a2a/messages.py</a></td><td>Protocol messages</td></tr>
+        <tr><td>A2A Client</td><td><a href="https://github.com/AGenNext/AGenNext-Registry/blob/main/a2a/client.py">a2a/client.py</a></td><td>A2A client</td></tr>
+        <tr><td>A2A Protocol</td><td><a href="https://github.com/AGenNext/AGenNext-Registry/blob/main/a2a/protocol.py">a2a/protocol.py</a></td><td>Protocol definitions</td></tr>
+        <tr><td>LangGraph</td><td><a href="https://github.com/AGenNext/AGenNext-Registry/blob/main/orchestrator/langgraph_workflow.py">orchestrator/langgraph_workflow.py</a></td><td>Workflow orchestration</td></tr>
+      </table>
+    </div>
+  </section>
