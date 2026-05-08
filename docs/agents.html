@@ -31,9 +31,10 @@
     .role-icon { width: 40px; height: 40px; background: var(--primary); display: flex; align-items: center; justify-content: center; font-size: 18px; }
     .role-card h3 { font-size: 16px; font-weight: 600; }
     .role-card p { color: var(--gray-40); font-size: 13px; margin-bottom: 1rem; line-height: 1.6; }
-    .role-features { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-    .feature { font-size: 11px; padding: 0.25rem 0.5rem; background: var(--gray-80); color: var(--gray-40); }
-    .feature.yes { background: #24a148; color: white; }
+    .role-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .meta { font-size: 11px; padding: 0.25rem 0.5rem; background: var(--gray-80); color: var(--gray-40); }
+    .meta.orch { background: #6929c4; color: white; }
+    .meta.llm { background: #1192e8; color: white; }
     
     code { background: var(--gray-80); color: var(--gray-40); padding: 0.2rem 0.4rem; font-size: 12px; font-family: 'IBM Plex Mono', monospace; }
     pre { background: var(--gray-90); color: var(--gray-40); padding: 1rem; border-left: 3px solid var(--primary); margin: 1rem 0; font-size: 13px; overflow-x: auto; }
@@ -42,7 +43,7 @@
     table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
     th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--gray-80); }
     th { background: var(--gray-80); font-size: 12px; text-transform: uppercase; }
-    td { color: var(--gray-40); }
+    td { color: var(--gray-40); font-size: 13px; }
     
     footer { background: var(--gray-90); border-top: 1px solid var(--gray-80); padding: 2rem 0; text-align: center; }
     footer p { color: var(--gray-40); font-size: 12px; }
@@ -66,7 +67,7 @@
   <div class="container">
     <div class="page-title">
       <h1>Enterprise Agents</h1>
-      <p>Agents with enterprise roles - drive projects, lead products, facilitate collaboration.</p>
+      <p>5 roles - each with preferred orchestrator & LLM (configurable)</p>
     </div>
 
     <!-- ROLES -->
@@ -74,83 +75,101 @@
       <h2>Enterprise Roles</h2>
       <div class="role-grid">
         <div class="role-card">
-          <div class="role-header"><span class="role-icon">👔</span><h3>Team Lead</h3></div>
-          <p>Leads one team, manages members. Coaches, manages, drives initiatives.</p>
-          <div class="role-features"><span class="feature">Manages</span><span class="feature">Coaches</span><span class="feature">Direct Reports</span></div>
-        </div>
-        <div class="role-card">
           <div class="role-header"><span class="role-icon">🚗</span><h3>Project Driver</h3></div>
-          <p>Drives multiple projects and products. Delegates, approves across initiatives.</p>
-          <div class="role-features"><span class="feature yes">Delegates</span><span class="feature yes">Approves</span><span class="feature">Team: 5+</span></div>
+          <p>Drives multiple projects & products. Delegates, approves.</p>
+          <div class="role-meta">
+            <span class="meta orch">orchestrator: langgraph</span>
+            <span class="meta llm">llm: gpt-4o</span>
+          </div>
+          <div class="role-meta">
+            <span class="meta">Delegates</span><span class="meta">Approves</span>
+          </div>
         </div>
-        <div class="role-card">
-          <div class="role-header"><span class="role-icon">👔</span><h3>Team Lead</h3></div>
-          <p>Leads one team, manages members. Coaches, manages, drives initiatives.</p>
-          <div class="role-features"><span class="feature">Manages</span><span class="feature">Coaches</span><span class="feature">Direct Reports</span></div>
-        </div>
+        
         <div class="role-card">
           <div class="role-header"><span class="role-icon">🎯</span><h3>Product Lead</h3></div>
-          <p>Owns product direction and roadmap. Makes product decisions.</p>
-          <div class="role-features"><span class="feature yes">Delegates</span><span class="feature yes">Approves</span><span class="feature">Owns Product</span></div>
+          <p>Owns product direction & roadmap. Makes product decisions.</p>
+          <div class="role-meta">
+            <span class="meta orch">orchestrator: langgraph</span>
+            <span class="meta llm">llm: gpt-4o</span>
+          </div>
+          <div class="role-meta">
+            <span class="meta">Delegates</span><span class="meta">Approves</span>
+          </div>
         </div>
-        <div class="role-card">
-          <div class="role-header"><span class="role-icon">👔</span><h3>Team Lead</h3></div>
-          <p>Leads one team, manages members. Coaches, manages, drives initiatives.</p>
-          <div class="role-features"><span class="feature">Manages</span><span class="feature">Coaches</span><span class="feature">Direct Reports</span></div>
-        </div>
+        
         <div class="role-card">
           <div class="role-header"><span class="role-icon">👥</span><h3>Group Admin</h3></div>
-          <p>Drives work through collaboration and engagement. No hierarchy - facilitates teamwork.</p>
-          <div class="role-features"><span class="feature">Collaborates</span><span class="feature">Facilitates</span><span class="feature">Engages</span></div>
+          <p>Drives collaboration across groups. Facilitates, engages.</p>
+          <div class="role-meta">
+            <span class="meta orch">orchestrator: langgraph</span>
+            <span class="meta llm">llm: gemini-2.0-flash</span>
+          </div>
+          <div class="role-meta">
+            <span class="meta">Facilitates</span><span class="meta">Engages</span>
+          </div>
         </div>
+        
         <div class="role-card">
           <div class="role-header"><span class="role-icon">👔</span><h3>Team Lead</h3></div>
-          <p>Leads one team, manages members. Coaches, manages, drives initiatives.</p>
-          <div class="role-features"><span class="feature">Manages</span><span class="feature">Coaches</span><span class="feature">Direct Reports</span></div>
+          <p>Leads one team. Manages members, coaches, 1:1s.</p>
+          <div class="role-meta">
+            <span class="meta orch">orchestrator: langgraph</span>
+            <span class="meta llm">llm: gpt-4</span>
+          </div>
+          <div class="role-meta">
+            <span class="meta">Manages</span><span class="meta">Coaches</span>
+          </div>
         </div>
+        
         <div class="role-card">
           <div class="role-header"><span class="role-icon">👤</span><h3>Employee Assistant</h3></div>
-          <p>Supports employees with tasks. Answers questions, helps with work.</p>
-          <div class="role-features"><span class="feature">Assists</span><span class="feature">1:1</span><span class="feature">Collaborates</span></div>
+          <p>Supports employees with tasks. Answers questions.</p>
+          <div class="role-meta">
+            <span class="meta orch">orchestrator: langgraph</span>
+            <span class="meta llm">llm: gemini-2.0-flash</span>
+          </div>
+          <div class="role-meta">
+            <span class="meta">Assists</span><span class="meta">1:1</span>
+          </div>
         </div>
       </div>
     </div>
 
     <!-- CREATE -->
     <div class="section">
-      <h2>Create Enterprise Agents</h2>
+      <h2>Create Enterprise Agent</h2>
       <pre><code>from orchestrator import create_agent
 
-# Project Driver
-driver = create_agent("project-alpha", "project_driver", config={"team_size": 5})
+# Project Driver - uses gpt-4o by default
+driver = create_agent("proj-driver", "project_driver", 
+    config={"projects": ["proj-a", "proj-b"]})
 
-# Product Lead
-product = create_agent("product-x", "product_lead", config={"owns": ["roadmap"]})
-
-# Group Admin - collaboration focused
-admin = create_agent("team-admin", "group_admin", config={"engages_with": ["team-a", "team-b"]})
-
-# Employee Assistant
-assistant = create_agent("assistant-jane", "assistant", config={"reports_to": "team-lead"})</code></pre>
+# Override orchestrator/LLM in config
+lead = create_agent("team-lead", "team_lead",
+    config={"manages": ["a", "b"], "orchestrator": "langgraph", "llm": "claude-3.5-sonnet"})</code></pre>
     </div>
 
     <!-- CONFIG -->
     <div class="section">
       <h2>Role Configuration</h2>
       <table>
-        <tr><th>Config</th><th>Type</th><th>Description</th></tr>
-        <tr><td>reports_to</td><td>str</td><td>Agent to report to</td></tr>
-        <tr><td>team_size</td><td>int</td><td>Team members</td></tr>
-        <tr><td>priority</td><td>int</td><td>Priority 1-10</td></tr>
-        <tr><td>owns</td><td>list</td><td>Owned projects</td></tr>
-        <tr><td>engages_with</td><td>list</td><td>Collaborates with</td></tr>
+        <tr><th>Config</th><th>Type</th><th>Default</th><th>Description</th></tr>
+        <tr><td>reports_to</td><td>str</td><td>-</td><td>Agent to report to</td></tr>
+        <tr><td>projects</td><td>list</td><td>[]</td><td>Projects</td></tr>
+        <tr><td>products</td><td>list</td><td>[]</td><td>Products</td></tr>
+        <tr><td>groups</td><td>list</td><td>[]</td><td>Groups</td></tr>
+        <tr><td>manages</td><td>list</td><td>[]</td><td>Direct reports</td></tr>
+        <tr><td>engages_with</td><td>list</td><td>[]</td><td>Collaborators</td></tr>
+        <tr><td>orchestrator</td><td>str</td><td>langgraph</td><td>Override runtime</td></tr>
+        <tr><td>llm</td><td>str</td><td>role default</td><td>Override LLM</td></tr>
       </table>
     </div>
 
     <!-- RUNTIME -->
     <div class="section">
       <h2>Runtime</h2>
-      <pre><code># Set runtime (not in code)
+      <pre><code># Set default runtime (not in code)
 export RUNTIME=langgraph</code></pre>
     </div>
   </div>
