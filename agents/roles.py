@@ -1,7 +1,7 @@
 """
-Enterprise Agent - SSO Identity + Lifecycle + IGA Roles.
+Enterprise Agent - IAM + IGA Roles.
 
-Identity from SSO + Roles from IGA (Identity Governance).
+Both IAM (SSO/IdP) and IGA (Governance) have roles.
 """
 
 from enum import Enum
@@ -11,7 +11,7 @@ from datetime import datetime
 
 
 class AgentRole(Enum):
-    """Enterprise agent roles."""
+    """Enterprise agent functional roles."""
     PROJECT_DRIVER = "project_driver"
     PRODUCT_LEAD = "product_lead"
     GROUP_ADMIN = "group_admin"
@@ -20,7 +20,6 @@ class AgentRole(Enum):
 
 
 class AgentStatus(Enum):
-    """Agent lifecycle status."""
     ACTIVE = "active"
     INACTIVE = "inactive"
     PENDING = "pending"
@@ -29,7 +28,6 @@ class AgentStatus(Enum):
 
 
 class DeprovisioningReason(Enum):
-    """Why agent disabled."""
     DISABLED = "disabled"
     TERMINATED = "terminated"
     SECURITY_CONCERN = "security_concern"
@@ -39,26 +37,31 @@ class DeprovisioningReason(Enum):
 
 @dataclass
 class AgentConfig:
-    """Enterprise agent - SSO + IGA roles."""
+    """Enterprise agent with IAM + IGA roles."""
     role: AgentRole
     
-    # === SSO IDENTITY ===
+    # === IAM IDENTITY (from Identity Provider) ===
     identity_id: Optional[str] = None
-    identity_provider: Optional[str] = None  # Entra/Okta/Auth0/Cognito
+    identity_provider: Optional[str] = None  # Entra/Okta/Cognito
     principal_name: Optional[str] = None
     display_name: Optional[str] = None
     description: Optional[str] = None
+    
+    # === IAM ROLES (from IdP/SSO) ===
+    iam_system: Optional[str] = None       # Entra/Okta/Google
+    iam_roles: List[str] = field(default_factory=list)  # Roles from IdP
+    iam_groups: List[str] = field(default_factory=list)  # Groups from IdP
     
     # === CREDENTIALS ===
     credentials: List[dict] = field(default_factory=list)
     identifier_uris: List[str] = field(default_factory=list)
     scopes: List[str] = field(default_factory=list)
     
-    # === IGA ROLES (from Identity Governance system) ===
+    # === IGA ROLES (from Identity Governance) ===
     iga_system: Optional[str] = None      # SAP IGA / Saviynt / OneIdentity
-    iga_roles: List[str] = field(default_factory=list)  # IGA assigned roles
-    iga_entitlements: List[str] = field(default_factory=list)  # Entitlements
-    access_certified: bool = False       # IGA access certification
+    iga_roles: List[str] = field(default_factory=list)  # Roles from IGA
+    iga_entitlements: List[str] = field(default_factory=list)
+    access_certified: bool = False
     access_certified_by: Optional[str] = None
     access_certified_at: Optional[datetime] = None
     
@@ -98,7 +101,6 @@ class AgentConfig:
     llm: Optional[str] = None
 
 
-# Default orchestrator/LLM per role
 ROLE_DEFAULTS = {
     AgentRole.PROJECT_DRIVER: {"orchestrator": "langgraph", "llm": "gpt-4o"},
     AgentRole.PRODUCT_LEAD: {"orchestrator": "langgraph", "llm": "gpt-4o"},
