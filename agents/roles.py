@@ -1,7 +1,8 @@
 """
-Enterprise Agent Config - Tools, Capabilities, Integrations, Memory, Knowledge.
+Enterprise Agent Config - Own registries.
 
-All external references - we just define what exists.
+We own: MCP, Memory System, RAG, Capabilities, Tools, Skills.
+External: Identity (SSO), Secret (Secret Manager).
 """
 
 from enum import Enum
@@ -17,17 +18,104 @@ class AgentRole(Enum):
     EMPLOYEE_ASSISTANT = "assistant"
 
 
+# === REGISTRIES (we own these) ===
+
+class MCPRegistry:
+    """MCP - Model Context Protocol registry."""
+    def __init__(self):
+        self._tools = {}
+        self._resources = {}
+        self._prompts = {}
+    
+    def register_tool(self, name: str, tool_fn):
+        self._tools[name] = tool_fn
+    def register_resource(self, uri: str, data):
+        self._resources[uri] = data
+    def register_prompt(self, name: str, prompt: str):
+        self._prompts[name] = prompt
+
+
+class MemorySystem:
+    """Memory system - session, context, history."""
+    def __init__(self):
+        self._sessions = {}
+        self._context = {}
+        self._history = {}
+    
+    def create_session(self, session_id: str):
+        self._sessions[session_id] = {"id": session_id, "messages": []}
+    def add_message(self, session_id: str, role: str, content: str):
+        if session_id in self._sessions:
+            self._sessions[session_id]["messages"].append({"role": role, "content": content})
+
+
+class RAGRegistry:
+    """RAG - Knowledge base registry."""
+    def __init__(self):
+        self._knowledge_bases = {}
+        self._embeddings = {}
+        self._retrievers = {}
+    
+    def register_kb(self, name: str, kb_config: dict):
+        self._knowledge_bases[name] = kb_config
+    def register_retriever(self, name: str, retriever_fn):
+        self._retrievers[name] = retriever_fn
+
+
+class ToolRegistry:
+    """Tool registry - function calls, APIs."""
+    def __init__(self):
+        self._tools = {}
+    
+    def register(self, name: str, tool_fn, description: str = ""):
+        self._tools[name] = {"fn": tool_fn, "description": description}
+
+
+class CapabilityRegistry:
+    """Capability registry - LLM features."""
+    def __init__(self):
+        self._capabilities = {}
+    
+    def register(self, name: str, capability_fn):
+        self._capabilities[name] = capability_fn
+
+
+class SkillRegistry:
+    """Skill registry - agent skills."""
+    def __init__(self):
+        self._skills = {}
+        self._skills_by_role = {}
+    
+    def register(self, name: str, skill_config: dict, role: str = None):
+        self._skills[name] = skill_config
+        if role:
+            if role not in self._skills_by_role:
+                self._skills_by_role[role] = []
+            self._skills_by_role[role].append(name)
+
+
+# === GLOBAL REGISTRIES ===
+mcp_registry = MCPRegistry()
+memory_system = MemorySystem()
+rag_registry = RAGRegistry()
+tool_registry = ToolRegistry()
+capability_registry = CapabilityRegistry()
+skill_registry = SkillRegistry()
+
+
+# === AGENT CONFIG ===
+
 @dataclass
 class AgentConfig:
-    """Enterprise agent config - minimal core, external refs."""
+    """Enterprise agent config - we own MCP/Memory/RAG/Tools/Capabilities/Skills."""
     role: AgentRole
     
-    # === IDENTITY (from IdP) ===
-    identity_id: str
-    identity_provider: str  # entra/okta/google
+    # === IDENTITY (external) ===
+    identity_id: str          # From SSO/IdP
+    identity_provider: str   # entra/okta/google
     
-    # === SECRET (from secret manager) ===
-    secret_ref: str
+    # === SECRET (external) ===
+    secret_ref: str          # From secret manager
     
     # === GOVERNANCE (required) ===
     owner: str
@@ -41,20 +129,29 @@ class AgentConfig:
     engages_with: List[str] = field(default_factory=list)
     manages: List[str] = field(default_factory=list)
     
-    # === TOOLS & CAPABILITIES (from platforms) ===
-    integrations: List[str] = field(default_factory=list)  # API connectors
-    capabilities: List[str] = field(default_factory=list)  # LLM features
+    # === OUR REGISTRIES ===
     
-    # === COMMUNICATIONS (from comms platform) ===
-    comms_refs: List[str] = field(default_factory=list)  # slack/teams/email
+    # MCP (our tools, resources, prompts)
+    mcp_tools: List[str] = field(default_factory=list)
+    mcp_resources: List[str] = field(default_factory=list)
+    mcp_prompts: List[str] = field(default_factory=list)
     
-    # === MEMORY (from memory platform) ===
-    memory_refs: List[str] = field(default_factory=list)  # redis/vector-db
+    # Memory (our session/context)
+    memory_type: str = "session"  # session/context/echoic
     
-    # === KNOWLEDGE BASES (from RAG platform) ===
-    knowledge_refs: List[str] = field(default_factory=list)  # pinecone/qdrant/mongo
+    # RAG / Knowledge (our knowledge bases)
+    knowledge_bases: List[str] = field(default_factory=list)
     
-    # === EMPLOYEE ASSISTANT ===
+    # Capabilities (our LLM features)
+    capabilities: List[str] = field(default_factory=list)
+    
+    # Tools (our function calls)
+    tools: List[str] = field(default_factory=list)
+    
+    # Skills (our agent skills)
+    skills: List[str] = field(default_factory=list)
+    
+    # Employee Assistant
     employee_email: Optional[str] = None
     it_admin_defaults: dict = field(default_factory=dict)
     employee_overrides: dict = field(default_factory=dict)
@@ -80,3 +177,30 @@ ROLE_BEHAVIORS = {
     AgentRole.TEAM_LEAD: {"behavior": "leads", "manages": True, "coaches": True},
     AgentRole.EMPLOYEE_ASSISTANT: {"behavior": "assists", "supports": True},
 }
+
+
+# === REGISTRY FUNCTIONS ===
+
+def create_mcp_tool(name: str, tool_fn):
+    """Register an MCP tool."""
+    mcp_registry.register_tool(name, tool_fn)
+
+def create_session(session_id: str):
+    """Create agent memory session."""
+    memory_system.create_session(session_id)
+
+def register_knowledge_base(name: str, kb_config: dict):
+    """Register a knowledge base."""
+    rag_registry.register_kb(name, kb_config)
+
+def register_tool(name: str, tool_fn, description: str = ""):
+    """Register a tool."""
+    tool_registry.register(name, tool_fn, description)
+
+def register_capability(name: str, capability_fn):
+    """Register a capability."""
+    capability_registry.register(name, capability_fn)
+
+def register_skill(name: str, skill_config: dict, role: str = None):
+    """Register a skill."""
+    skill_registry.register(name, skill_config, role)
