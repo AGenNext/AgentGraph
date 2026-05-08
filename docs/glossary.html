@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Glossary - Content Writing Team</title>
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ibm-blue-60: #0f62fe;
+      --gray-100: #161616;
+      --gray-90: #393939;
+      --gray-80: #525252;
+      --gray-70: #6f6f6f;
+      --gray-60: #8d8d8d;
+      --gray-50: #a8a8a8;
+      --gray-40: #c6c6c6;
+      --gray-30: #e0e0e0;
+      --gray-20: #f4f4f4;
+      --white: #ffffff;
+      --primary: var(--ibm-blue-60);
+      --bg-primary: var(--gray-100);
+      --bg-secondary: var(--gray-90);
+      --text-primary: var(--white);
+      --text-secondary: var(--gray-40);
+      --border: var(--gray-70);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'IBM Plex Sans', system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+    }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+    
+    header {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--gray-80);
+      padding: 0;
+    }
+    .header-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 48px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 600;
+    }
+    .logo-icon { width: 24px; height: 24px; background: var(--primary); border-radius: 2px; display: flex; align-items: center; justify-content: center; }
+    nav { display: flex; gap: 1.5rem; }
+    nav a { color: var(--text-secondary); text-decoration: none; font-size: 14px; }
+    nav a:hover { color: var(--text-primary); }
+    
+    .glossary-title { background: var(--bg-primary); padding: 3rem 0 2rem; border-bottom: 1px solid var(--gray-80); }
+    .glossary-title h1 { font-size: 42px; font-weight: 300; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
+    .glossary-title p { color: var(--text-secondary); font-size: 16px; }
+    
+    .search-bar {
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--gray-80);
+      position: sticky;
+      top: 0;
+      background: var(--bg-primary);
+      z-index: 50;
+    }
+    .search-input {
+      width: 100%;
+      max-width: 400px;
+      padding: 0.75rem 1rem;
+      font-size: 14px;
+      background: var(--gray-90);
+      border: 1px solid var(--gray-70);
+      color: var(--text-primary);
+      font-family: inherit;
+    }
+    .search-input:focus { outline: none; border-color: var(--primary); }
+    
+    .alphabet-nav {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      padding: 1.5rem 0;
+      border-bottom: 1px solid var(--gray-80);
+    }
+    .alphabet-nav a {
+      width: 32px;
+      height: 32px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: var(--gray-90);
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      font-weight: 500;
+      transition: all 0.15s;
+    }
+    .alphabet-nav a:hover, .alphabet-nav a.active { background: var(--primary); color: var(--white); }
+    
+    .glossary-list { padding: 2rem 0; }
+    .letter-section { margin-bottom: 2.5rem; }
+    .letter-heading {
+      font-size: 24px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 1rem;
+      padding-bottom: 0.5rem;
+      border-bottom: 2px solid var(--primary);
+    }
+    
+    .term-card {
+      background: var(--gray-90);
+      border: 1px solid var(--gray-80);
+      padding: 1.25rem 1.5rem;
+      margin-bottom: 1rem;
+    }
+    .term-card:hover { border-color: var(--primary); }
+    .term-title {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+      margin-bottom: 0.5rem;
+    }
+    .term-name {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+    .term-tag {
+      font-size: 11px;
+      padding: 0.2rem 0.5rem;
+      background: var(--gray-80);
+      color: var(--text-secondary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    .term-tag.noun { background: #0f62fe; color: white; }
+    .term-tag.verb { background: #24a148; color: white; }
+    .term-tag.abbreviation { background: #6929c4; color: white; }
+    .term-tag.protocol { background: #1192e8; color: white; }
+    .term-tag.framework { background: #fa4d56; color: white; }
+    .term-definition { color: var(--text-secondary); font-size: 14px; line-height: 1.6; }
+    .term-example {
+      margin-top: 0.75rem;
+      padding: 0.75rem;
+      background: var(--gray-80);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      color: var(--gray-40);
+    }
+    .term-see-also {
+      margin-top: 0.75rem;
+      font-size: 12px;
+      color: var(--text-secondary);
+    }
+    .term-see-also a { color: var(--primary); text-decoration: none; }
+    .term-see-also a:hover { text-decoration: underline; }
+    
+    footer {
+      background: var(--gray-90);
+      border-top: 1px solid var(--gray-80);
+      padding: 2rem 0;
+      text-align: center;
+    }
+    footer p { color: var(--text-secondary); font-size: 12px; }
+    footer strong { color: var(--text-primary); }
+    
+    @media (max-width: 768px) {
+      .header-container { flex-direction: column; height: auto; padding: 1rem 0; gap: 1rem; }
+      .glossary-title h1 { font-size: 28px; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-container">
+      <a href="https://github.com/AGenNext/AGenNext-Registry" class="logo">
+        <span class="logo-icon">🤖</span>
+        <span>Content Writing Team</span>
+      </a>
+      <nav>
+        <a href="index.html">Home</a>
+        <a href="frameworks.html">Frameworks</a>
+        <a href="components.html">Components</a>
+        <a href="glossary.html">Glossary</a>
+        <a href="contact.html">Contact</a>
+      </nav>
+    </div>
+  </header>
+
+  <div class="glossary-title">
+    <div class="container">
+      <h1>Glossary</h1>
+      <p>Dictionary of terms for the Content Writing Multi-Agent Team framework.</p>
+    </div>
+  </div>
+
+  <div class="search-bar">
+    <div class="container">
+      <input type="text" class="search-input" placeholder="Search terms..." id="searchInput">
+    </div>
+  </div>
+
+  <div class="container">
+    <div class="alphabet-nav">
+      <a href="#A">A</a>
+      <a href="#B">B</a>
+      <a href="#C">C</a>
+      <a href="#D">D</a>
+      <a href="#E">E</a>
+      <a href="#G">G</a>
+      <a href="#L">L</a>
+      <a href="#M">M</a>
+      <a href="#O">O</a>
+      <a href="#P">P</a>
+      <a href="#R">R</a>
+      <a href="#S">S</a>
+      <a href="#T">T</a>
+      <a href="#W">W</a>
+    </div>
+
+    <div class="glossary-list">
+      <!-- A -->
+      <div class="letter-section" id="A">
+        <h2 class="letter-heading">A</h2>
+        
+        <div class="term-card">
+          <div class="term-title">
+            <span class="term-name">A2A Protocol</span>
+            <span class="term-tag protocol">protocol</span>
+          </div>
+          <p class="term-definition">Agent-to-Agent Protocol. A standardized protocol for communication between AI agents, enabling task delegation, result sharing, and collaborative workflows across different agent frameworks.</p>
+          <div class="term-example">agent.send_task(task_id="task-001", message="Analyze data")</div>
+          <p class="term-see-also">See also: <a href="#agent">Agent</a>, <a href="#workflow">Workflow</a></p>
+        </div>
+        
+        <div class="term-card">
+          <div class="term-title">
+            <span class="term-name">Agent</span>
+            <span class="term-tag noun">noun</span>
+          </div>
+          <p class="term-definition">An autonomous AI entity programmed to perform specific tasks using LLM capabilities. Agents can use tools, execute functions, and communicate via A2A Protocol.</p>
+          <div class="term-example">agent = OpenAIAgent() result = agent.run("Write documentation")</div>
+          <p class="term-see-also">See also: <a href="#sdk">SDK</a>, <a href="#llm">LLM</a></p>
+        </div>
+        
+        <div class="term-card">
+          <div class="term-title">
+            <span class="term-name">API</span>
+            <span class="term-tag abbreviation">abbreviation</span>
+          </div>
+          <p class="term-definition">Application Programming Interface. A set of protocols and tools for building software applications. The Content Team provides a REST API for agent management.</p>
+          <div class="term-example">POST /agents/{agentId}/run</div>
+        </div>
+      </div>
+
+      <!-- B -->
+      <div class="letter-section" id="B">
+        <h2 class="letter-heading">B</h2>
+        
+        <div class="term-card">
+          <div class="term-title">
+            <span class="term-name">Base Agent</span>
+            <span class="term-tag noun">noun</span>
+          </div>
+          <p class="term-definition">The foundational abstract class that all agent implementations inherit from. Provides common interfaces for running tasks, listing capabilities, and registering skills.</p>
+          <div class="term-example">class MyAgent(BaseAgent): ...</div>
+        </div>
+      </div>
+
+      <!-- C -->
+      <div class="letter-section" id="C">
+        <h2 class="letter-heading">C</h2>
+        
+        <div class="term-card">
+          <div class="term-title">
+            <span class="term-name">Capability</span>
+            <span class="term-tag noun">noun</span>
+          </div>
+          <p class="term-definition">A skill or function that an agent can perform. Defined in the agent card with name, description, and input/output schemas.</p>
+          <div class="term-example">Capability(name="code_execution", description="Execute code")</div>
+          <p class="term-see-also">See also: <a href="#skill">Skill</a>, <a href="#agent-card">Agent Card</a></p>
+        </div>
+        
+        <div class="term-card">
+          <div class="term-title">
+            <span class="term-name">Coordinator</span>
+            <span class="term-tag noun">noun</span>
+          </div>
+          <p class="term-definition">A special agent type that orchestrates multiple agents to work collaboratively on complex tasks.</p>
+          <div class="term-example">team = TeamCoordinator() team.run_parallel(agents, task)</div>
+          <p class="term-see-also">See also: <a href="#workflow">Workflow</a></p>
+        </div>
+      </div>
+
+      <!-- D -->
+      <div class="letter-section" id="D">
+        <h2 class="letter-heading">D</h2>
+        
+        <div class="term-card">
+          <div class="term-title">
+            <span class="term-name">DID</span>
+            <span class="term-tag abbreviation">abbreviation</span>
+          </div>
+          <p class="term-definition">Decentralized Identifier. A format for uniquely identifying resources in the registry (e.g., did:agent:openai).</p>
+          <div class="term-example">did:agent:openai</div>
+        </div>
+      </div>
+
+      <!-- G -->
+      <div class="letter-section" id="G">
+        <h2 class="letter-heading">G</h2>
+        
+        <div class="term-card">
+          <div class="term-title">
+            <span class="term-name">GitHub Actions</span>
+            <span class="term-tag framework">framework</span>
+          </div>
+          <p class="term-definition">A CI/CD platform for automating build, test, and deployment workflows.</p>
+          <div class="term-example">uses: actions/checkout@v4</div>
+        </div>
+      </div>
+
+      <!-- L -->
+      <div class="letter-section" id="L">
+        <h2 class="letter-heading">L</h2>
+        
+        <div class="term-card">
+          <div class="term-title">
+            <span class="term-name">LangGraph</span>
+            <span class="term-tag framework">framework</span>
+          </div>
+          <p class="term-definition">A library for building stateful, multi-agent applications powered by LLMs. Used for workflow orchestration in this project.</p>
+          <div class="term-example">workflow = create_workgraph() workflow.invoke(state)</div>
+          <p class="term-see-also">See also: <a href="#workflow">Workflow</a></p>
+        </div>
+        
+        <div class="term-card">
+          <div class="term-title">
+            <span class="term-name">LLM</span>
+            <span class="term-tag abbreviation">abbreviation</span>
+          </div>
+          <p class="term-definition">Large Language Model. An AI model trained on vast amounts of text data, capable of generating human-like text.</p>
+          <div class="term-example">client = create_llm_client("openai", model="gpt-4o")</div>
+          <p class="term-see-also">See also: <a href="#provider">Provider</a></p>
+        </div>
+      </div>
+
+      <!-- M -->
+      <div class="letter-section" id="M">
+        <h2 class="letter-heading">M</h2>
+        
+        <div class="term-card">
+          <div class="term-title">
+            <span class="term-name">Message</span>
+            <span class="term-tag noun">noun</span>
+          </div>
+          <p class="term-definition">In A2A Protocol, a structured communication containing role, parts, and metadata between agents.</p>
+          <div class="term-example">Message(role="user", parts=[TextPart(text="Hello")])</div>
+        </div>
+      </div>
+
+      <!-- O -->
+      <div class="letter-section" id="O">
+        <h2 class="letter-heading">O</h2>
+        
+        <div class="term-card">
+          <div class="term-title">
+            <span class="term-name">OpenAPI</span>
+            <span class="term-tag protocol">protocol</span>
+          </div>
+          <p class="term-definition">A specification for building and documenting REST APIs. The Content Team API follows OpenAPI 3.0.</p>
+          <div class="term-example">openapi: 3.0.3</div>
+        </div>
+        
+        <div class="term-card">
+          <div class="term-title">
+            <span class="term-name">Orchestrator</span>
+            <span class="term-tag noun">noun</span>
+          </div>
+          <p class="term-definition">A component that manages the execution flow of multiple agents using LangGraph.</p>
+          <div class="term-example">orchestrator.run(team, task)</div>
+        </div>
+      </div>
+
+      <!-- P -->
+      <div class="letter-section" id="P">
+        <h2 class="letter-heading">P</h2>
+        
+        <div class="term-card">
+          <div class="term-title">
+            <span class="term-name">Provider</span>
+            <span class="term-tag noun">noun</span>
+          </div>
+          <p class="term-definition">An LLM service provider (OpenAI, Anthropic, Google, etc.) that can generate text.</p>
+          <div class="term-example">client = create_llm_client("anthropic")</div>
+          <p class="term-see-also">See also: <a href="#llm">LLM</a></p>
+        </div>
+      </div>
+
+      <!-- R -->
+      <div class="letter-section" id="R">
+        <h2 class="letter-heading">R</h2>
+        
+        <div class="term-card">
+          <div class="term-title">
+            <span class="term-name">Registry</span>
+            <span class="term-tag noun">noun</span>
+          </div>
+          <p class="term-definition">A centralized store for skills, prompts, and tools using DID format for identification.</p>
+          <div class="term-example">registry = get_registry() skills = registry.list_skills()</div>
+        </div>
+      </div>
+
+      <!-- S -->
+      <div class="letter-section" id="S">
+        <h2 class="letter-heading">S</h2>
+        
+        <div class="term-card">
+          <div class="term-title">
+            <span class="term-name">SDK</span>
+            <span class="term-tag abbreviation">abbreviation</span>
+          </div>
+          <p class="term-definition">Software Development Kit. A library for building applications for a specific platform or service.</p>
+          <div class="term-example">from openai import OpenAI</div>
+          <p class="term-see-also">See also: <a href="#agent">Agent</a></p>
+        </div>
+        
+        <div class="term-card">
+          <div class="term-title">
+            <span class="term-name">Skill</span>
+            <span class="term-tag noun">noun</span>
+          </div>
+          <p class="term-definition">A capability that can be invoked on an agent. Registered with ID, name, and description.</p>
+          <div class="term-example">Skill(id="coding", name="Coding", description="Software dev")</div>
+          <p class="term-see-also">See also: <a href="#capability">Capability</a></p>
+        </div>
+      </div>
+
+      <!-- T -->
+      <div class="letter-section" id="T">
+        <h2 class="letter-heading">T</h2>
+        
+        <div class="term-card">
+          <div class="term-title">
+            <span class="term-name">Task</span>
+            <span class="term-tag noun">noun</span>
+          </div>
+          <p class="term-definition">In A2A Protocol, an execution of work containing ID, message, and status information.</p>
+          <div class="term-example">Task(id="task-001", message=message, status=status)</div>
+        </div>
+      </div>
+
+      <!-- W -->
+      <div class="letter-section" id="W">
+        <h2 class="letter-heading">W</h2>
+        
+        <div class="term-card">
+          <div class="term-title">
+            <span class="term-name">Workflow</span>
+            <span class="term-tag noun">noun</span>
+          </div>
+          <p class="term-definition">A directed graph of agent execution steps orchestrated by LangGraph. Supports sequential, parallel, and hierarchical strategies.</p>
+          <div class="term-example">workflow.invoke({"task": "Write content"})</div>
+          <p class="term-see-also">See also: <a href="#langgraph">LangGraph</a>, <a href="#coordinator">Coordinator</a></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Built & Managed by <strong>OpenAutonomyx (OPC) Private Limited</strong></p>
+      <p>All Rights Reserved.</p>
+    </div>
+  </footer>
+
+  <script>
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+      var query = e.target.value.toLowerCase();
+      document.querySelectorAll('.term-card').forEach(function(card) {
+        var text = card.textContent.toLowerCase();
+        card.style.display = text.includes(query) ? 'block' : 'none';
+      });
+    });
+  </script>
+</body>
+</html>
