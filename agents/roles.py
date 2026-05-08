@@ -2,6 +2,7 @@
 Enterprise Agent Roles.
 
 Each role has preferred orchestrator and LLM - configurable.
+Employee Assistant: employee email in config, employee can override.
 """
 
 from enum import Enum
@@ -33,9 +34,13 @@ class AgentRoleConfig:
     engages_with: List[str] = field(default_factory=list)
     manages: List[str] = field(default_factory=list)
     
+    # Employee Assistant - employee email
+    employee_email: Optional[str] = None
+    employee_overrides: dict = field(default_factory=dict)
+    
     # Runtime - configurable (defaults provided)
-    orchestrator: str = "langgraph"  # Can override: set via config
-    llm: Optional[str] = None       # Can override: set via config
+    orchestrator: str = "langgraph"
+    llm: Optional[str] = None
 
 
 # Default orchestrator and LLM per role
