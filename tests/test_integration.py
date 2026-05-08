@@ -11,7 +11,7 @@ class TestConfig:
     
     def test_validate_config(self):
         from config import validate_config
-        assert validate_config() is True
+        assert validate_config() == []
 
 
 class TestCore:

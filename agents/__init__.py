@@ -2,7 +2,7 @@
 
 from .base_agent import BaseAgent, ContentRequest, ContentResult
 from .openai_agent import OpenAIAgent
-from .salesforce_client import EinsteinAgent as SalesforceAgent
+from .salesforce_client import SalesforceClient as SalesforceAgent
 from .microsoft_agent import MicrosoftAgent
 from .google_agent import GoogleAgent
 from .docker_agent import DockerAgent

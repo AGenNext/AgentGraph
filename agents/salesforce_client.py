@@ -25,11 +25,12 @@ class EinsteinAgent:
 
 class SalesforceClient:
     """Salesforce AI SDK client."""
+    agent_id = "salesforce-einstein"
     
     def __init__(
         self,
-        instance_url: str,
-        access_token: str,
+        instance_url: str = "https://login.salesforce.com",
+        access_token: str = "mock",
         api_version: str = "v58.0",
         **kwargs
     ):

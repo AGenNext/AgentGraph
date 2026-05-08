@@ -28,3 +28,8 @@ EXPOSE 7860 8501
 
 # Default command
 CMD ["python", "ui/examples.py", "chat"]
+
+# Healthcheck for container health
+HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
+    CMD curl -f http://localhost:7860/health || exit 1
+
