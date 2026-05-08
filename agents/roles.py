@@ -1,8 +1,11 @@
 """
 Enterprise Agent Roles.
 
-Each role has preferred orchestrator and LLM - configurable.
-Employee Assistant: IT admin sets defaults, employee can override.
+Each enterprise agent has:
+- Owner: Accountable for agent outcomes
+- Sponsor: Budget/strategy approval
+- IT Admin: Config defaults (for Employee Assistant)
+- Employee: Can override (for Assistant)
 """
 
 from enum import Enum
@@ -20,31 +23,32 @@ class AgentRole(Enum):
 
 @dataclass
 class AgentRoleConfig:
-    """Config for agent role - IT admin defaults, employee overrides."""
+    """Enterprise agent configuration with governance."""
     role: AgentRole
     
-    # Reporting
-    reports_to: Optional[str] = None
+    # Governance - who owns/approves
+    owner: Optional[str] = None      # Accountable for outcomes
+    sponsor: Optional[str] = None     # Budget/strategy approval
+    reports_to: Optional[str] = None # Reporting chain
     priority: int = 1
     
-    # Ownership / Scope
+    # Scope
     projects: List[str] = field(default_factory=list)
     products: List[str] = field(default_factory=list)
     groups: List[str] = field(default_factory=list)
     engages_with: List[str] = field(default_factory=list)
     manages: List[str] = field(default_factory=list)
     
-    # Employee Assistant - IT admin sets defaults, employee overrides
+    # Employee Assistant specifics
     employee_email: Optional[str] = None
-    it_admin_defaults: dict = field(default_factory=dict)  # IT admin sets
-    employee_overrides: dict = field(default_factory=dict) # Employee overrides
+    it_admin_defaults: dict = field(default_factory=dict)
+    employee_overrides: dict = field(default_factory=dict)
     
     # Runtime
     orchestrator: str = "langgraph"
     llm: Optional[str] = None
 
 
-# Default orchestrator and LLM per role
 ROLE_DEFAULTS = {
     AgentRole.PROJECT_DRIVER: {"orchestrator": "langgraph", "llm": "gpt-4o"},
     AgentRole.PRODUCT_LEAD: {"orchestrator": "langgraph", "llm": "gpt-4o"},
