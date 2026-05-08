@@ -87,3 +87,12 @@ streamlit run ui/streamlit_examples.py
 
 - Fake email in README (REMOVED)
 - localhost in healthcheck (OK - this is standard for Docker)
+
+---
+
+## Audit Done
+
+- Full repo audit completed
+- Removed fake emails from: SECURITY.md, PROJECTS.md, DOCKER_README.md, orchestrator
+- Replaced placeholder URLs with real ones
+- Added rule: no fake contact/placeholders
