@@ -41,9 +41,10 @@
     pre code { background: none; padding: 0; }
     
     table { width: 100%; border-collapse: collapse; margin: 1rem 0; }
-    th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--gray-80); }
+    th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--gray-80); font-size: 13px; }
     th { background: var(--gray-80); font-size: 12px; text-transform: uppercase; }
-    td { color: var(--gray-40); font-size: 13px; }
+    td { color: var(--gray-40); }
+    .section-title { background: var(--gray-80); }
     
     footer { background: var(--gray-90); border-top: 1px solid var(--gray-80); padding: 2rem 0; text-align: center; }
     footer p { color: var(--gray-40); font-size: 12px; }
@@ -67,7 +68,7 @@
   <div class="container">
     <div class="page-title">
       <h1>Enterprise Agents</h1>
-      <p>5 roles - each with preferred orchestrator & LLM (configurable)</p>
+      <p>5 roles - each with owner, sponsor, and configurable orchestrator/LLM</p>
     </div>
 
     <!-- ROLES -->
@@ -81,11 +82,7 @@
             <span class="meta orch">orchestrator: langgraph</span>
             <span class="meta llm">llm: gpt-4o</span>
           </div>
-          <div class="role-meta">
-            <span class="meta">Delegates</span><span class="meta">Approves</span>
-          </div>
         </div>
-        
         <div class="role-card">
           <div class="role-header"><span class="role-icon">🎯</span><h3>Product Lead</h3></div>
           <p>Owns product direction & roadmap. Makes product decisions.</p>
@@ -93,11 +90,7 @@
             <span class="meta orch">orchestrator: langgraph</span>
             <span class="meta llm">llm: gpt-4o</span>
           </div>
-          <div class="role-meta">
-            <span class="meta">Delegates</span><span class="meta">Approves</span>
-          </div>
         </div>
-        
         <div class="role-card">
           <div class="role-header"><span class="role-icon">👥</span><h3>Group Admin</h3></div>
           <p>Drives collaboration across groups. Facilitates, engages.</p>
@@ -105,11 +98,7 @@
             <span class="meta orch">orchestrator: langgraph</span>
             <span class="meta llm">llm: gemini-2.0-flash</span>
           </div>
-          <div class="role-meta">
-            <span class="meta">Facilitates</span><span class="meta">Engages</span>
-          </div>
         </div>
-        
         <div class="role-card">
           <div class="role-header"><span class="role-icon">👔</span><h3>Team Lead</h3></div>
           <p>Leads one team. Manages members, coaches, 1:1s.</p>
@@ -117,20 +106,13 @@
             <span class="meta orch">orchestrator: langgraph</span>
             <span class="meta llm">llm: gpt-4</span>
           </div>
-          <div class="role-meta">
-            <span class="meta">Manages</span><span class="meta">Coaches</span>
-          </div>
         </div>
-        
         <div class="role-card">
           <div class="role-header"><span class="role-icon">👤</span><h3>Employee Assistant</h3></div>
-          <p>Supports employees with tasks. Answers questions.</p>
+          <p>Supports employees. IT admin defaults, employee overrides.</p>
           <div class="role-meta">
             <span class="meta orch">orchestrator: langgraph</span>
             <span class="meta llm">llm: gemini-2.0-flash</span>
-          </div>
-          <div class="role-meta">
-            <span class="meta">Assists</span><span class="meta">1:1</span>
           </div>
         </div>
       </div>
@@ -141,31 +123,35 @@
       <h2>Create Enterprise Agent</h2>
       <pre><code>from orchestrator import create_agent
 
-# Project Driver - uses gpt-4o by default
-driver = create_agent("proj-driver", "project_driver", 
-    config={"projects": ["proj-a", "proj-b"]})
-
-# Override orchestrator/LLM in config
-lead = create_agent("team-lead", "team_lead",
-    config={"manages": ["a", "b"], "orchestrator": "langgraph", "llm": "claude-3.5-sonnet"})</code></pre>
+# With owner & sponsor
+agent = create_agent("proj-driver", "project_driver", 
+    config={
+        "owner": "cto@company.com",
+        "sponsor": "cfo@company.com",
+        "projects": ["proj-a"]
+    })</code></pre>
     </div>
 
     <!-- CONFIG -->
     <div class="section">
-      <h2>Role Configuration</h2>
+      <h2>Agent Configuration</h2>
       <table>
+        <tr class="section-title"><th colspan="4">Governance</th></tr>
         <tr><th>Config</th><th>Type</th><th>Default</th><th>Description</th></tr>
-        <tr><td>reports_to</td><td>str</td><td>-</td><td>Agent to report to</td></tr>
+        <tr><td>owner</td><td>str</td><td>-</td><td>Accountable for outcomes</td></tr>
+        <tr><td>sponsor</td><td>str</td><td>-</td><td>Budget/strategy approval</td></tr>
+        <tr><td>reports_to</td><td>str</td><td>-</td><td>Reporting chain</td></tr>
+        <tr><td>priority</td><td>int</td><td>1</td><td>Priority level</td></tr>
+        
+        <tr class="section-title"><th colspan="4">Scope</th></tr>
         <tr><td>projects</td><td>list</td><td>[]</td><td>Projects</td></tr>
         <tr><td>products</td><td>list</td><td>[]</td><td>Products</td></tr>
         <tr><td>groups</td><td>list</td><td>[]</td><td>Groups</td></tr>
-        <tr><td>employee_email</td><td>str</td><td>-</td><td>Employee email for assistant</td></tr>
-        <tr><td>it_admin_defaults</td><td>dict</td><td>{}</td><td>IT admin sets defaults</td></tr>
-        <tr><td>employee_overrides</td><td>dict</td><td>{}}</td><td>Employee can override config</td></tr>
         <tr><td>manages</td><td>list</td><td>[]</td><td>Direct reports</td></tr>
-        <tr><td>engages_with</td><td>list</td><td>[]</td><td>Collaborators</td></tr>
-        <tr><td>orchestrator</td><td>str</td><td>langgraph</td><td>Override runtime</td></tr>
-        <tr><td>llm</td><td>str</td><td>role default</td><td>Override LLM</td></tr>
+        
+        <tr class="section-title"><th colspan="4">Runtime</th></tr>
+        <tr><td>orchestrator</td><td>str</td><td>langgraph</td><td>Runtime</td></tr>
+        <tr><td>llm</td><td>str</td><td>role default</td><td>LLM model</td></tr>
       </table>
     </div>
 
