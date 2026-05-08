@@ -27,15 +27,15 @@ class AIProvider:
     # Model -> capabilities mapping
     MODEL_CAPABILITIES = {
         # GPT-4o family
-        "gpt-4o": ["vision", "function-calling", "json", "streaming"],
+        "gpt-4o": ["vision", "function-calling", "json", "streaming", "text-to-speech", "dall-e-3", "realtime"],
         "gpt-4o-mini": ["function-calling", "json", "streaming"],
         
         # Claude family  
-        "claude-3-5-sonnet": ["vision", "function-calling", "json", "streaming", "thinking"],
+        "claude-3-5-sonnet": ["vision", "function-calling", "json", "streaming", "thinking", "text-to-speech"],
         "claude-3-opus": ["vision", "function-calling", "json", "streaming", "thinking"],
         
         # Gemini family
-        "gemini-2.0-flash": ["vision", "function-calling", "json", "streaming", "native-tools"],
+        "gemini-2.0-flash": ["vision", "function-calling", "json", "streaming", "native-tools", "text-to-speech", "image-generation"],
         "gemini-2.0-flash-lite": ["function-calling", "json", "streaming"],
         
         # Azure OpenAI
