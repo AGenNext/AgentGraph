@@ -87,8 +87,8 @@ config = AgentConfig(
     identity_id="agent-123",
     identity_provider="entra",
     secret_ref="ai-agent-key",
-    owner="cto@company.com",
-    sponsor="cfo@company.com",
+    owner="",
+    sponsor="",
     
     # Provider + Auth
     ai_provider_name="openai",
@@ -125,8 +125,8 @@ config = AgentConfig(
     identity_id="my-agent",
     identity_provider="entra",
     secret_ref="agent-key",
-    owner="me@company.com",
-    sponsor="boss@company.com",
+    owner="",
+    sponsor="",
     ai_provider_name="openai",
     auth_method="api_key",
     provider_api_key="sk-...",

@@ -2,7 +2,7 @@
 
 ## Reporting Security Vulnerabilities
 
-If you discover a security vulnerability in this project, please send an email to security@agenext.io instead of using the public GitHub issue tracker.
+If you discover a security vulnerability in this project, please send an email to  instead of using the public GitHub issue tracker.
 
 ## Supported Versions
 

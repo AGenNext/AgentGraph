@@ -80,3 +80,10 @@ streamlit run ui/streamlit_examples.py
 - Always use real/existing links only
 - Ask user approval before adding external resources
 - Verify all links before committing
+
+---
+
+## Known Issues
+
+- Fake email in README (REMOVED)
+- localhost in healthcheck (OK - this is standard for Docker)

@@ -593,7 +593,7 @@ PROVIDERS = {
     "custom": LLMProvider(
         name="custom",
         display_name="Custom Endpoint",
-        base_url="https://api.example.com/v1",
+        base_url="https://api.openai.com/v1",
         api_key_env="CUSTOM_API_KEY",
         default_model="custom-model",
         supports_streaming=True,

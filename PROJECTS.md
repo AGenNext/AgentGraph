@@ -13,7 +13,7 @@
 |                                                               |
 |  WARNING: API may change without notice                       |
 |  WARNING: Not recommended for production use                  |
-|  FEEDBACK: issues@agennext.io                                |
+|  FEEDBACK:                                 |
 +---------------------------------------------------------------+
 ```
 

@@ -13,7 +13,7 @@ def is_valid_identity(value: str) -> bool:
     Validate identity - can be agent_id, owner, or sponsor.
     
     Valid identities:
-    - SSO user: user@company.com
+    - SSO user: 
     - Service account: sa-*@project.iam.gserviceaccount.com
     - M2M token: m2m-*
     """
@@ -46,8 +46,8 @@ def create_agent(
     Create enterprise agent.
     
     agent_id = identity that represents this agent:
-    - user@company.com (SSO)
-    - sa-name@project.iam.gserviceaccount.com (service account)
+    -  (SSO)
+    -  (service account)
     - m2m-token-id (M2M)
     """
     from agents.roles import AgentRole, AgentRoleConfig, ROLE_DEFAULTS
