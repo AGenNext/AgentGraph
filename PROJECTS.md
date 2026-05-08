@@ -1,10 +1,29 @@
 # Agent Registry - Project Plan
 
+![Alpha](https://img.shields.io/badge/Status-Alpha-red?style=for-the-badge)
+![Version](https://img.shields.io/badge/Version-0.1.0-blue?style=for-the-badge)
+
+## ALPHA RELEASE NOTICE
+
+```
++---------------------------------------------------------------+
+|                     ALPHA RELEASE                             |
++---------------------------------------------------------------+
+|  This project is in active development.                        |
+|                                                               |
+|  WARNING: API may change without notice                       |
+|  WARNING: Not recommended for production use                  |
+|  FEEDBACK: issues@agennext.io                                |
++---------------------------------------------------------------+
+```
+
+---
+
 ## Overview
 Enterprise Multi-Agent Team Platform with support for:
 
 - OpenAI SDK
-- Microsoft Agent Framework  
+- Microsoft Agent Framework
 - Google ADK
 - Salesforce Agent SDK
 - LangGraph Orchestration
@@ -12,84 +31,74 @@ Enterprise Multi-Agent Team Platform with support for:
 
 ---
 
-## 🎯 MILESTONES
+## MILESTONES
 
-### M1: Core Framework ✅ DONE
-**Target:** Q1 2026  
-**Status:** 100%
+### M1: Core Framework (DONE)
 
 | Task | Status |
 |------|--------|
-| AgentRegistry class | ✅ |
-| AgentConfig with roles | ✅ |
-| Provider clients (5 providers) | ✅ |
-| Authentication system | ✅ |
-| Model selection | ✅ |
+| AgentRegistry class | DONE |
+| AgentConfig with roles | DONE |
+| Provider clients (5 providers) | DONE |
+| Authentication system | DONE |
+| Model selection | DONE |
 
 ---
 
-### M2: UI Toolkits ✅ DONE
-**Target:** Q2 2026  
-**Status:** 100%
+### M2: UI Toolkits (DONE)
 
 | Task | Status |
 |------|--------|
-| UI builders for all SDKs | ✅ |
-| Gradio components | ✅ |
-| Streamlit components | ✅ |
-| Runnable examples | ✅ |
-| Platform UI spec | ✅ |
+| UI builders for all SDKs | DONE |
+| Gradio components | DONE |
+| Streamlit components | DONE |
+| Runnable examples | DONE |
+| Platform UI spec | DONE |
 
 ---
 
-### M3: Platform UI 🔄 IN PROGRESS
-**Target:** Q2 2026  
-**Status:** 30%
+### M3: Platform UI (IN PROGRESS)
 
 | Task | Status |
 |------|--------|
-| Agent List screen | 🔄 |
-| Add/Edit Agent form | ⏳ |
-| Clone Agent modal | ⏳ |
-| Version History | ⏳ |
-| Dark mode | ⏳ |
-| Mobile responsive | ⏳ |
-| A11y accessibility | ⏳ |
+| Agent List screen | IN PROGRESS |
+| Add/Edit Agent form | TODO |
+| Clone Agent modal | TODO |
+| Version History | TODO |
+| Dark mode | TODO |
+| Mobile responsive | TODO |
+| A11y accessibility | TODO |
 
 ---
 
-### M4: Agent Team Management ⏳ PLANNED
-**Target:** Q3 2026  
-**Status:** 0%
+### M4: Agent Team Management (PLANNED)
 
 | Task | Status |
 |------|--------|
-| Create Team API | ⏳ |
-| Add agents to team | ⏳ |
-| Role definitions | ⏳ |
-| Workflow orchestration | ⏳ |
-| Handoff rules | ⏳ |
-| Team chat UI | ⏳ |
+| Create Team API | TODO |
+| Add agents to team | TODO |
+| Role definitions | TODO |
+| Workflow orchestration | TODO |
+| Handoff rules | TODO |
+| Team chat UI | TODO |
 
 ---
 
-### M5: Deployment ⏳ PLANNED
-**Target:** Q4 2026  
-**Status:** 0%
+### M5: Deployment (PLANNED)
 
 | Task | Status |
 |------|--------|
-| Docker image | ⏳ |
-| Docker Compose | ⏳ |
-| K8s Helm chart | ⏳ |
-| GitHub Actions | ⏳ |
-| Release v2.0 | ⏳ |
+| Docker image | TODO |
+| Docker Compose | TODO |
+| K8s Helm chart | TODO |
+| GitHub Actions | TODO |
+| Release v2.0 | TODO |
 
 ---
 
-## 📝 TASK BOARD
+## TASK BOARD
 
-### Done ✅
+### Done
 
 | ID | Task |
 |----|------|
@@ -99,13 +108,13 @@ Enterprise Multi-Agent Team Platform with support for:
 | D-004 | Examples |
 | D-005 | Platform UI spec |
 
-### In Progress 🔄
+### In Progress
 
 | ID | Task |
 |----|------|
 | T-001 | Agent List screen |
 
-### Backlog ⏳
+### Backlog
 
 | ID | Task | Priority |
 |----|------|----------|
@@ -118,90 +127,47 @@ Enterprise Multi-Agent Team Platform with support for:
 
 ---
 
-## 📦 Components
-
-### Agents Module (`/agents`)
-| Component | Status |
-|-----------|--------|
-| base_agent.py | ✅ |
-| roles.py | ✅ |
-| providers.py | ✅ |
-| coordinator.py | ✅ |
-| openai_agent.py | ✅ |
-| microsoft_agent.py | ✅ |
-| google_agent.py | ✅ |
-| langchain_agent.py | ✅ |
-
-### UI Module (`/ui`)
-| Component | Status |
-|-----------|--------|
-| __init__.py | ✅ |
-| openai_builder.py | ✅ |
-| microsoft_builder.py | ✅ |
-| google_builder.py | ✅ |
-| langchain_builder.py | ✅ |
-| gradio_builder.py | ✅ |
-| streamlit_builder.py | ✅ |
-| examples.py | ✅ |
-
-### Platform UI (`/platform-ui`)
-| Component | Status |
-|-----------|--------|
-| SPEC.md | ✅ |
-
----
-
-## 📊 Progress
+## Progress
 
 ```
-M1: ████████████████████ 100%
-M2: ████████████████████ 100%
-M3: ████████░░░░░░░░░░░ 30%
-M4: ░░░░░░░░░░░░░░░░░░░ 0%
-M5: ░░░░░░░░░░░░░░░░░░░ 0%
+M1: 100%
+M2: 100%
+M3: 30%
+M4: 0%
+M5: 0%
 
-Overall: ██████████░░░░░ 42%
+Overall: 42%
 ```
 
 ---
 
-## 🗺️ ROADMAP
+## ROADMAP
 
 ```
 2026
-════════════════════════════════════════════════════════════════════
+==============================================================
 
-Q1 ───────────────────────────────────────────────────────────────
-  ✓ AgentRegistry Core
-  ✓ Provider Clients (OpenAI, Google, Microsoft, Anthropic, Azure)
-  ✓ Authentication System
-  ✓ Model Selection
+Q1 -----------------------------------------------
+  DONE: AgentRegistry Core
+  DONE: Provider Clients
+  DONE: Authentication
 
-Q2 ───────────────────────────────────────────────────────────────  ← WE ARE HERE
-  🔄 Platform UI
-     ├── Agent List Screen
-     ├── Add/Edit Form
-     ├── Clone Modal
-     └── Version History
-     
-  ⏳ Agent Teams
-     ├── Team Creation
-     ├── Role Definitions
-     └── Workflow Orchestration
+Q2 ----------------------------------------------  WE ARE HERE
+  IN PROGRESS: Platform UI
 
-Q3 ───────────────────────────────────────────────────────────────
-  ⏳ Multi-Agent Collaboration
-  ⏳ A2A Protocol Integration
-  ⏳ Real-time Chat
+Q3 -----------------------------------------------
+  PLANNED: Agent Teams
+  PLANNED: Multi-Agent Collaboration
+  PLANNED: A2A Protocol
 
-Q4 ───────────────────────────────────────────────────────────────
-  ⏳ Docker & Kubernetes
-  ⏳ Production Release v2.0
+Q4 -----------------------------------------------
+  PLANNED: Docker & Kubernetes
+  PLANNED: Production Release v2.0
 ```
 
 ---
 
-## 🚀 QUICK START
+## QUICK START
 
 ```bash
 # 1. Clone
@@ -212,23 +178,19 @@ pip install -r requirements.txt
 
 # 3. Run UI
 python ui/examples.py chat
-
-# 4. Or use Docker
-docker run -p 7860:7860 agennext/agent-registry:latest
 ```
 
 ---
 
-## 📞 RESOURCES
+## RESOURCES
 
 | Resource | Link |
 |----------|------|
 | Documentation | README.md |
-| API Reference | docs/api.md |
-| Examples | examples/ |
 | UI Spec | platform-ui/SPEC.md |
 | Issues | github.com/AGenNext/AGenNext-Registry/issues |
 
 ---
 
-*Last updated: 2026-05-08*
+Last updated: 2026-05-08
+Status: ALPHA
