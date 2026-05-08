@@ -1,7 +1,7 @@
 """
-Enterprise Agent - Complete AI Provider Capabilities.
+Enterprise Agent - AI Provider with Multiple Auth Methods.
 
-All capabilities based on model from AI provider.
+Each provider can use different auth methods.
 """
 
 from enum import Enum
@@ -17,113 +17,69 @@ class AgentRole(Enum):
     EMPLOYEE_ASSISTANT = "assistant"
 
 
-class AIProvider:
-    """AI Provider - all capabilities by model."""
+class AuthMethod(Enum):
+    """Authentication methods per provider."""
+    # API Key based
+    API_KEY = "api_key"
+    OAUTH = "oauth"
     
-    # COMPLETE MODEL CAPABILITIES
+    # AWS/IAM based
+    IAM = "iam"
+    AWS_CREDENTIALS = "aws_credentials"
+    AWS_IAM_ROLE = "iam_role"
+    
+    # Azure
+    AZURE_MI = "managed_identity"
+    AZURE_AD = "azure_ad"
+    
+    # Google
+    GCP_SERVICE_ACCOUNT = "gcp_service_account"
+    
+    # Enterprise
+    ENTRA_APP_REGISTRATION = "entra_app"
+
+
+class AIProvider:
+    """AI Provider - multiple auth methods."""
+    
+    # Provider -> supported auth methods
+    PROVIDER_AUTH = {
+        "openai": ["api_key", "oauth"],
+        "anthropic": ["api_key"],
+        "google": ["api_key", "gcp_service_account"],
+        "azure": ["api_key", "managed_identity", "azure_ad"],
+        "bedrock": ["iam", "aws_credentials", "iam_role"],
+        "groq": ["api_key"],
+        "openrouter": ["api_key"],
+        "nvidia": ["api_key", "nvidia_nim"],
+    }
+    
+    # Model capabilities
     MODEL_CAPABILITIES = {
-        # === OPENAI ===
-        "gpt-4o": [
-            "vision", "function-calling", "json", "streaming", 
-            "text-to-speech", "dall-e-3", "realtime", 
-            "fine-tuning", "batch"
-        ],
-        "gpt-4o-mini": [
-            "function-calling", "json", "streaming",
-            "batch", "fine-tuning"
-        ],
-        "o1": [
-            "reasoning", "chain-of-thought", "math", "code-generation",
-            "step-by-step"
-        ],
-        "o3-mini": [
-            "reasoning", "chain-of-thought", "math",
-            "code-generation", "fast"
-        ],
-        
-        # === ANTHROPIC ===
-        "claude-3-5-sonnet": [
-            "vision", "function-calling", "json", "streaming",
-            "thinking", "text-to-speech", "computer-use"
-        ],
-        "claude-3-opus": [
-            "vision", "function-calling", "json",
-            "streaming", "thinking", "computer-use"
-        ],
-        "claude-3-haiku": [
-            "function-calling", "json", "streaming",
-            "fast"
-        ],
-        
-        # === GOOGLE ===
-        "gemini-2.0-flash": [
-            "vision", "function-calling", "json", "streaming",
-            "text-to-speech", "image-generation", "native-tools"
-        ],
-        "gemini-2.5-pro": [
-            "vision", "function-calling", "json", "streaming",
-            "thinking", "long-context", "code-execution"
-        ],
-        "gemini-1.5-flash": [
-            "vision", "function-calling", "json", "streaming"
-        ],
-        
-        # === AZURE OPENAI ===
-        "azure-gpt-4o": [
-            "vision", "function-calling", "json"
-        ],
-        "azure-gpt-4o-mini": [
-            "function-calling", "json", "fast"
-        ],
-        
-        # === AWS BEDROCK ===
-        "bedrock-claude": [
-            "vision", "function-calling", "json", "thinking"
-        ],
-        "bedrock-llama": [
-            "function-calling", "json"
-        ],
-        "bedrock-titan": [
-            "function-calling", "json"
-        ],
-        
-        # === GROQ ===
-        "groq-llama-3-70b": [
-            "function-calling", "streaming", "fast"
-        ],
-        "groq-mixtral": [
-            "function-calling", "streaming", "fast"
-        ],
-        
-        # === NVIDIA ===
-        "nvidia-llama": [
-            "function-calling", "json", "streaming"
-        ],
-        "nvidia-mixtral": [
-            "function-calling", "streaming", "fast"
-        ],
-        
-        # === OPENROUTER ===
-        "openrouter-gpt-4": [
-            "vision", "function-calling", "json"
-        ],
-        "openrouter-claude": [
-            "vision", "function-calling", "thinking"
-        ],
+        "gpt-4o": ["vision", "function-calling", "json", "streaming", "text-to-speech", "dall-e-3"],
+        "gpt-4o-mini": ["function-calling", "json", "streaming"],
+        "o1": ["reasoning", "chain-of-thought", "math"],
+        "claude-3-5-sonnet": ["vision", "function-calling", "json", "streaming", "thinking"],
+        "gemini-2.0-flash": ["vision", "function-calling", "json", "streaming", "text-to-speech"],
+        "gemini-2.5-pro": ["vision", "function-calling", "json", "streaming", "thinking"],
     }
     
     def __init__(self):
         self._providers = {}
         self._models = {}
     
-    def register(self, provider_name: str, api_key: str, base_url: str = None):
-        self._providers[provider_name] = {"api_key": api_key, "base_url": base_url}
+    def register(self, provider_name: str, auth_method: str, auth_config: dict):
+        """Register provider with auth config."""
+        self._providers[provider_name] = {
+            "auth_method": auth_method,
+            "auth_config": auth_config,
+        }
+    
+    def get_supported_auth(self, provider_name: str) -> List[str]:
+        return self.PROVIDER_AUTH.get(provider_name, [])
     
     def get_capabilities(self, model: str) -> List[str]:
         return self.MODEL_CAPABILITIES.get(model, [])
-    
-    def get_provider(self, model: str) -> Optional[str]:
-        return self._models.get(model, {}).get("provider")
 
 
 ai_provider = AIProvider()
@@ -136,43 +92,42 @@ class MCPRegistry:
         self._tools = {}
         self._resources = {}
         self._prompts = {}
-    def register_tool(self, name: str, tool_fn):
+    def register_tool(self, name, tool_fn):
         self._tools[name] = tool_fn
-    def register_resource(self, uri: str, data):
+    def register_resource(self, uri, data):
         self._resources[uri] = data
-    def register_prompt(self, name: str, prompt: str):
+    def register_prompt(self, name, prompt):
         self._prompts[name] = prompt
 
 
 class MemorySystem:
     def __init__(self):
         self._sessions = {}
-    def create_session(self, session_id: str):
+    def create_session(self, session_id):
         self._sessions[session_id] = {"id": session_id, "messages": []}
 
 
 class RAGRegistry:
     def __init__(self):
-        self._knowledge_bases = {}
-    def register_kb(self, name: str, kb_config: dict):
-        self._knowledge_bases[name] = kb_config
+        self._kb = {}
+    def register_kb(self, name, kb_config):
+        self._kb[name] = kb_config
 
 
 class ToolRegistry:
     def __init__(self):
         self._tools = {}
-    def register(self, name: str, tool_fn, description: str = ""):
+    def register(self, name, tool_fn, description=""):
         self._tools[name] = {"fn": tool_fn, "description": description}
 
 
 class SkillRegistry:
     def __init__(self):
         self._skills = {}
-    def register(self, name: str, skill_config: dict, role: str = None):
+    def register(self, name, skill_config, role=None):
         self._skills[name] = skill_config
 
 
-# === GLOBAL REGISTRIES ===
 mcp_registry = MCPRegistry()
 memory_system = MemorySystem()
 rag_registry = RAGRegistry()
@@ -203,10 +158,26 @@ class AgentConfig:
     engages_with: List[str] = field(default_factory=list)
     manages: List[str] = field(default_factory=list)
     
-    # === AI PROVIDER ===
+    # === AI PROVIDER (with auth) ===
     ai_provider_name: str = "openai"
-    provider_api_key: Optional[str] = None
+    auth_method: str = "api_key"           # Which auth method
+    provider_api_key: Optional[str] = None  # For api_key
     provider_base_url: Optional[str] = None
+    
+    # Azure/AWS specific
+    subscription_id: Optional[str] = None
+    resource_group: Optional[str] = None
+    managed_identity: Optional[str] = None
+    
+    # AWS specific  
+    aws_region: Optional[str] = None
+    iam_role_arn: Optional[str] = None
+    
+    # Google specific
+    gcp_project: Optional[str] = None
+    gcp_location: Optional[str] = None
+    
+    # Model
     model: str = "gpt-4o"
     
     # === OUR REGISTRIES ===
@@ -228,6 +199,10 @@ class AgentConfig:
 
 def get_capabilities(model: str) -> List[str]:
     return ai_provider.get_capabilities(model)
+
+
+def get_supported_auth(provider: str) -> List[str]:
+    return ai_provider.get_supported_auth(provider)
 
 
 ROLE_DEFAULTS = {
