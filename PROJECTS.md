@@ -162,3 +162,73 @@ M5: ░░░░░░░░░░░░░░░░░░░ 0%
 
 Overall: ██████████░░░░░ 42%
 ```
+
+---
+
+## 🗺️ ROADMAP
+
+```
+2026
+════════════════════════════════════════════════════════════════════
+
+Q1 ───────────────────────────────────────────────────────────────
+  ✓ AgentRegistry Core
+  ✓ Provider Clients (OpenAI, Google, Microsoft, Anthropic, Azure)
+  ✓ Authentication System
+  ✓ Model Selection
+
+Q2 ───────────────────────────────────────────────────────────────  ← WE ARE HERE
+  🔄 Platform UI
+     ├── Agent List Screen
+     ├── Add/Edit Form
+     ├── Clone Modal
+     └── Version History
+     
+  ⏳ Agent Teams
+     ├── Team Creation
+     ├── Role Definitions
+     └── Workflow Orchestration
+
+Q3 ───────────────────────────────────────────────────────────────
+  ⏳ Multi-Agent Collaboration
+  ⏳ A2A Protocol Integration
+  ⏳ Real-time Chat
+
+Q4 ───────────────────────────────────────────────────────────────
+  ⏳ Docker & Kubernetes
+  ⏳ Production Release v2.0
+```
+
+---
+
+## 🚀 QUICK START
+
+```bash
+# 1. Clone
+git clone https://github.com/AGenNext/AGenNext-Registry.git
+
+# 2. Install
+pip install -r requirements.txt
+
+# 3. Run UI
+python ui/examples.py chat
+
+# 4. Or use Docker
+docker run -p 7860:7860 agennext/agent-registry:latest
+```
+
+---
+
+## 📞 RESOURCES
+
+| Resource | Link |
+|----------|------|
+| Documentation | README.md |
+| API Reference | docs/api.md |
+| Examples | examples/ |
+| UI Spec | platform-ui/SPEC.md |
+| Issues | github.com/AGenNext/AGenNext-Registry/issues |
+
+---
+
+*Last updated: 2026-05-08*
