@@ -1,13 +1,11 @@
 """
-Enterprise Agent Config - capabilities from AI provider based on model.
+Enterprise Agent - Complete AI Provider Capabilities.
 
-We own: MCP, Memory, RAG, Tools, Skills.
-AI Provider: provides capabilities based on model.
-External: Identity, Secret.
+All capabilities based on model from AI provider.
 """
 
 from enum import Enum
-from typing import Optional, List, Dict
+from typing import Optional, List
 from dataclasses import dataclass, field
 
 
@@ -19,32 +17,99 @@ class AgentRole(Enum):
     EMPLOYEE_ASSISTANT = "assistant"
 
 
-# === AI PROVIDER REGISTRY ===
-
 class AIProvider:
-    """AI Provider - capabilities based on model."""
+    """AI Provider - all capabilities by model."""
     
-    # Model -> capabilities mapping
+    # COMPLETE MODEL CAPABILITIES
     MODEL_CAPABILITIES = {
-        # GPT-4o family
-        "gpt-4o": ["vision", "function-calling", "json", "streaming", "text-to-speech", "dall-e-3", "realtime"],
-        "gpt-4o-mini": ["function-calling", "json", "streaming"],
+        # === OPENAI ===
+        "gpt-4o": [
+            "vision", "function-calling", "json", "streaming", 
+            "text-to-speech", "dall-e-3", "realtime", 
+            "fine-tuning", "batch"
+        ],
+        "gpt-4o-mini": [
+            "function-calling", "json", "streaming",
+            "batch", "fine-tuning"
+        ],
+        "o1": [
+            "reasoning", "chain-of-thought", "math", "code-generation",
+            "step-by-step"
+        ],
+        "o3-mini": [
+            "reasoning", "chain-of-thought", "math",
+            "code-generation", "fast"
+        ],
         
-        # Claude family  
-        "claude-3-5-sonnet": ["vision", "function-calling", "json", "streaming", "thinking", "text-to-speech"],
-        "claude-3-opus": ["vision", "function-calling", "json", "streaming", "thinking"],
+        # === ANTHROPIC ===
+        "claude-3-5-sonnet": [
+            "vision", "function-calling", "json", "streaming",
+            "thinking", "text-to-speech", "computer-use"
+        ],
+        "claude-3-opus": [
+            "vision", "function-calling", "json",
+            "streaming", "thinking", "computer-use"
+        ],
+        "claude-3-haiku": [
+            "function-calling", "json", "streaming",
+            "fast"
+        ],
         
-        # Gemini family
-        "gemini-2.0-flash": ["vision", "function-calling", "json", "streaming", "native-tools", "text-to-speech", "image-generation"],
-        "gemini-2.0-flash-lite": ["function-calling", "json", "streaming"],
+        # === GOOGLE ===
+        "gemini-2.0-flash": [
+            "vision", "function-calling", "json", "streaming",
+            "text-to-speech", "image-generation", "native-tools"
+        ],
+        "gemini-2.5-pro": [
+            "vision", "function-calling", "json", "streaming",
+            "thinking", "long-context", "code-execution"
+        ],
+        "gemini-1.5-flash": [
+            "vision", "function-calling", "json", "streaming"
+        ],
         
-        # Azure OpenAI
-        "azure-gpt-4o": ["vision", "function-calling", "json"],
-        "azure-claude": ["vision", "function-calling"],
+        # === AZURE OPENAI ===
+        "azure-gpt-4o": [
+            "vision", "function-calling", "json"
+        ],
+        "azure-gpt-4o-mini": [
+            "function-calling", "json", "fast"
+        ],
         
-        # Groq
-        "groq-llama-3": ["function-calling", "streaming"],
-        "groq-mixtral": ["function-calling", "streaming"],
+        # === AWS BEDROCK ===
+        "bedrock-claude": [
+            "vision", "function-calling", "json", "thinking"
+        ],
+        "bedrock-llama": [
+            "function-calling", "json"
+        ],
+        "bedrock-titan": [
+            "function-calling", "json"
+        ],
+        
+        # === GROQ ===
+        "groq-llama-3-70b": [
+            "function-calling", "streaming", "fast"
+        ],
+        "groq-mixtral": [
+            "function-calling", "streaming", "fast"
+        ],
+        
+        # === NVIDIA ===
+        "nvidia-llama": [
+            "function-calling", "json", "streaming"
+        ],
+        "nvidia-mixtral": [
+            "function-calling", "streaming", "fast"
+        ],
+        
+        # === OPENROUTER ===
+        "openrouter-gpt-4": [
+            "vision", "function-calling", "json"
+        ],
+        "openrouter-claude": [
+            "vision", "function-calling", "thinking"
+        ],
     }
     
     def __init__(self):
@@ -52,41 +117,25 @@ class AIProvider:
         self._models = {}
     
     def register(self, provider_name: str, api_key: str, base_url: str = None):
-        """Register AI provider."""
-        self._providers[provider_name] = {
-            "api_key": api_key,
-            "base_url": base_url,
-        }
+        self._providers[provider_name] = {"api_key": api_key, "base_url": base_url}
     
-    def add_model(self, provider_name: str, model_name: str, capabilities: List[str] = None):
-        """Add model to provider."""
-        if model_name not in self.MODEL_CAPABILITIES:
-            self._models[model_name] = {
-                "provider": provider_name,
-                "capabilities": capabilities or [],
-            }
+    def get_capabilities(self, model: str) -> List[str]:
+        return self.MODEL_CAPABILITIES.get(model, [])
     
-    def get_capabilities(self, model_name: str) -> List[str]:
-        """Get capabilities for a model."""
-        return self.MODEL_CAPABILITIES.get(model_name, [])
-    
-    def get_provider(self, model_name: str) -> Optional[str]:
-        """Get provider name for a model."""
-        return self._models.get(model_name, {}).get("provider")
+    def get_provider(self, model: str) -> Optional[str]:
+        return self._models.get(model, {}).get("provider")
 
 
 ai_provider = AIProvider()
 
 
-# === MCP REGISTRY ===
+# === REGISTRIES ===
 
 class MCPRegistry:
-    """MCP registry."""
     def __init__(self):
         self._tools = {}
         self._resources = {}
         self._prompts = {}
-    
     def register_tool(self, name: str, tool_fn):
         self._tools[name] = tool_fn
     def register_resource(self, uri: str, data):
@@ -95,40 +144,28 @@ class MCPRegistry:
         self._prompts[name] = prompt
 
 
-# === MEMORY SYSTEM ===
-
 class MemorySystem:
-    """Memory system."""
     def __init__(self):
         self._sessions = {}
     def create_session(self, session_id: str):
         self._sessions[session_id] = {"id": session_id, "messages": []}
 
 
-# === RAG REGISTRY ===
-
 class RAGRegistry:
-    """RAG registry."""
     def __init__(self):
         self._knowledge_bases = {}
     def register_kb(self, name: str, kb_config: dict):
         self._knowledge_bases[name] = kb_config
 
 
-# === TOOL REGISTRY ===
-
 class ToolRegistry:
-    """Tool registry."""
     def __init__(self):
         self._tools = {}
     def register(self, name: str, tool_fn, description: str = ""):
         self._tools[name] = {"fn": tool_fn, "description": description}
 
 
-# === SKILL REGISTRY ===
-
 class SkillRegistry:
-    """Skill registry."""
     def __init__(self):
         self._skills = {}
     def register(self, name: str, skill_config: dict, role: str = None):
@@ -147,7 +184,6 @@ skill_registry = SkillRegistry()
 
 @dataclass
 class AgentConfig:
-    """Enterprise agent config."""
     role: AgentRole
     
     # === EXTERNAL ===
@@ -167,7 +203,7 @@ class AgentConfig:
     engages_with: List[str] = field(default_factory=list)
     manages: List[str] = field(default_factory=list)
     
-    # === AI PROVIDER (capabilities from model) ===
+    # === AI PROVIDER ===
     ai_provider_name: str = "openai"
     model: str = "gpt-4o"
     
@@ -189,7 +225,6 @@ class AgentConfig:
 
 
 def get_capabilities(model: str) -> List[str]:
-    """Get capabilities for model from AI provider."""
     return ai_provider.get_capabilities(model)
 
 
