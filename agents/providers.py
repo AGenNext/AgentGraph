@@ -1,7 +1,7 @@
 """
-AI Provider - Simple OpenAI-compatible endpoints.
+AI Provider - ALL OpenAI-Compatible endpoints.
 
-Just provide base_url and API key - no transformations needed.
+Every provider uses /v1/chat/completions format.
 """
 
 from abc import ABC, abstractmethod
@@ -20,12 +20,10 @@ class AIClient(ABC):
         pass
 
 
-# === THE CLIENT ===
-
 class LLMClient(AIClient):
     """
     OpenAI-compatible LLM client.
-    Just provide base_url - works with any /v1/chat/completions endpoint.
+    Works with ANY /v1/chat/completions endpoint.
     """
     
     def __init__(self, base_url: str, api_key: str = None, model: str = "default"):
@@ -61,7 +59,7 @@ class LLMClient(AIClient):
                 yield line.decode("utf-8")
     
     def list_models(self) -> List[str]:
-        """List models at endpoint."""
+        """List models."""
         import requests
         url = f"{self.base_url}/v1/models"
         try:
@@ -82,88 +80,42 @@ class LLMClient(AIClient):
         return resp.json()["data"][0]["embedding"]
 
 
-# === PROVIDER ALIASES ===
+# === DEFAULT BASE URLs (if not provided) ===
 
 PROVIDER_URLS = {
     "openai": "https://api.openai.com/v1",
-    "anthropic": "https://api.anthropic.com",  # Exception (different API)
-    "google": "https://generativelanguage.googleapis.com",
-    "azure": None,  # Custom
-    "bedrock": None,  # AWS-specific
-    "ollama": "http://localhost:11434",
-    "lmstudio": "http://localhost:1234",
-    "vllm": "http://localhost:8000",
-    "local": "http://localhost:11434",
+    "azure": "https://your-resource.openai.azure.com",
+    "anthropic": "https://api.anthropic.com/v1",  # OpenAI-compatible
+    "google": "https://generativelanguage.googleapis.com/v1",
+    "bedrock": "https://bedrock-runtime.your-region.amazonaws.com",
+    "ollama": "http://localhost:11434/v1",
+    "lmstudio": "http://localhost:1234/v1",
+    "vllm": "http://localhost:8000/v1",
+    "local": "http://localhost:11434/v1",
 }
 
 
 def create_client(provider: str, config: Dict) -> AIClient:
     """
-    Create LLM client - just needs base_url.
+    Create LLM client - base_url is ALL that's needed.
     
     Usage:
         client = create_client("openai", {"provider_api_key": "sk-..."})
-        
-        # Or any OpenAI-compatible:
-        client = create_client("custom", {
+        client = create_client("ollama", {"model": "llama3"})
+        client = create_client("my-custom", {
             "provider_base_url": "https://my-llm.com/v1",
             "provider_api_key": "key",
-            "model": "my-model",
         })
     """
     p = provider.lower()
     
-    # Exceptions
-    if p == "anthropic":
-        return AnthropicClient(config.get("provider_api_key"))
-    if p == "bedrock":
-        return BedrockClient(config.get("aws_region"))
-    
-    # Get base_url
+    # Get base_url - from config or provider alias
     base_url = config.get("provider_base_url") or PROVIDER_URLS.get(p)
     if not base_url:
-        raise ValueError(f"base_url required for: {provider}")
+        raise ValueError(f"provider_base_url required")
     
     return LLMClient(
         base_url=base_url,
         api_key=config.get("provider_api_key"),
         model=config.get("model", p)
     )
-
-
-# === EXCEPTIONS ===
-
-class AnthropicClient(AIClient):
-    """Anthropic - different API."""
-    def __init__(self, api_key: str):
-        self.api_key = api_key
-    
-    def chat(self, messages: List[Dict], model: str = "claude-3-5-sonnet-20241022", **kwargs) -> Dict:
-        import requests
-        url = "https://api.anthropic.com/v1/messages"
-        resp = requests.post(url, json={
-            "model": model, "messages": messages, **kwargs
-        }, headers={
-            "x-api-key": self.api_key,
-            "anthropic-version": "2023-06-01",
-        }, timeout=60)
-        resp.raise_for_status()
-        return resp.json()
-    def stream(self, messages, model, **kwargs):
-        yield from []
-
-
-class BedrockClient(AIClient):
-    """AWS Bedrock."""
-    def __init__(self, region: str = "us-east-1"):
-        self.region = region
-    
-    def chat(self, messages: List[Dict], model: str = "anthropic.claude-3-sonnet-20240229-v1:0", **kwargs) -> Dict:
-        import boto3
-        client = boto3.client("bedrock-runtime", region_name=self.region)
-        return client.converse(modelId=model, messages=messages, **kwargs)
-    def stream(self, messages, model, **kwargs):
-        yield from []
-
-
-model_selector = None  # Keep simple
