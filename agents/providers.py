@@ -1,12 +1,11 @@
 """
-AI Provider API Integration with Custom Provider Support.
+AI Provider - Simple OpenAI-compatible endpoints.
 
-Custom provider = OpenAI-compatible endpoint (any LLM).
+Just provide base_url and API key - no transformations needed.
 """
 
-import json
 from abc import ABC, abstractmethod
-from typing import Optional, List, Dict, Any, Iterator
+from typing import List, Dict, Iterator
 
 
 class AIClient(ABC):
@@ -21,17 +20,17 @@ class AIClient(ABC):
         pass
 
 
-# === CUSTOM (OPENAI COMPATIBLE) - THE DEFAULT ===
+# === THE CLIENT ===
 
-class CustomLLMClient(AIClient):
+class LLMClient(AIClient):
     """
-    Custom LLM with OpenAI-compatible API.
-    This is the PRIMARY client - accepts ANY /v1/chat/completions endpoint.
+    OpenAI-compatible LLM client.
+    Just provide base_url - works with any /v1/chat/completions endpoint.
     """
     
     def __init__(self, base_url: str, api_key: str = None, model: str = "default"):
         self.base_url = base_url.rstrip("/")
-        self.api_key = api_key or "dummy"
+        self.api_key = api_key or "empty"
         self.model = model
     
     def _headers(self) -> Dict:
@@ -41,7 +40,7 @@ class CustomLLMClient(AIClient):
         }
     
     def chat(self, messages: List[Dict], model: str = None, **kwargs) -> Dict:
-        """OpenAI-compatible /chat/completions."""
+        """Call /v1/chat/completions."""
         import requests
         model = model or self.model
         url = f"{self.base_url}/v1/chat/completions"
@@ -62,7 +61,7 @@ class CustomLLMClient(AIClient):
                 yield line.decode("utf-8")
     
     def list_models(self) -> List[str]:
-        """List models."""
+        """List models at endpoint."""
         import requests
         url = f"{self.base_url}/v1/models"
         try:
@@ -85,15 +84,12 @@ class CustomLLMClient(AIClient):
 
 # === PROVIDER ALIASES ===
 
-PROVIDER_ALIASES = {
-    # Cloud providers
+PROVIDER_URLS = {
     "openai": "https://api.openai.com/v1",
-    "anthropic": "https://api.anthropic.com",  # Different API
+    "anthropic": "https://api.anthropic.com",  # Exception (different API)
     "google": "https://generativelanguage.googleapis.com",
-    "azure": None,  # Has custom endpoint format
+    "azure": None,  # Custom
     "bedrock": None,  # AWS-specific
-    
-    # Local
     "ollama": "http://localhost:11434",
     "lmstudio": "http://localhost:1234",
     "vllm": "http://localhost:8000",
@@ -103,104 +99,71 @@ PROVIDER_ALIASES = {
 
 def create_client(provider: str, config: Dict) -> AIClient:
     """
-    Create AI client - custom provider is PRIMARY.
+    Create LLM client - just needs base_url.
     
     Usage:
-      config = {
-          "provider_base_url": "https://my-llm.com/v1",  # Required for custom
-          "provider_api_key": "sk-...",
-          "model": "my-model",
-      }
-      client = create_client("custom", config)
+        client = create_client("openai", {"provider_api_key": "sk-..."})
+        
+        # Or any OpenAI-compatible:
+        client = create_client("custom", {
+            "provider_base_url": "https://my-llm.com/v1",
+            "provider_api_key": "key",
+            "model": "my-model",
+        })
     """
-    
     p = provider.lower()
     
-    # Special providers (non-OpenAI compatible)
+    # Exceptions
     if p == "anthropic":
-        return AnthropicClient(config.get("provider_api_key"), config.get("provider_base_url"))
+        return AnthropicClient(config.get("provider_api_key"))
     if p == "bedrock":
-        return BedrockClient(config.get("aws_region"), config.get("credentials"))
+        return BedrockClient(config.get("aws_region"))
     
-    # DEFAULT: Custom LLM (OpenAI compatible)
-    # This works for: openai, google, azure, ollama, lmstudio, vllm, local, and ANY custom
-    base_url = config.get("provider_base_url")
-    
-    # Try provider alias if no base_url
-    if not base_url and p in PROVIDER_ALIASES:
-        base_url = PROVIDER_ALIASES[p]
-    
+    # Get base_url
+    base_url = config.get("provider_base_url") or PROVIDER_URLS.get(p)
     if not base_url:
-        raise ValueError(f"provider_base_url required for: {provider}")
+        raise ValueError(f"base_url required for: {provider}")
     
-    return CustomLLMClient(
+    return LLMClient(
         base_url=base_url,
         api_key=config.get("provider_api_key"),
         model=config.get("model", p)
     )
 
 
-# === ADDITIONAL SPECIAL CLIENTS ===
+# === EXCEPTIONS ===
 
 class AnthropicClient(AIClient):
-    """Anthropic (different API)."""
-    
-    def __init__(self, api_key: str, base_url: str = None):
+    """Anthropic - different API."""
+    def __init__(self, api_key: str):
         self.api_key = api_key
-        self.base_url = base_url or "https://api.anthropic.com"
     
     def chat(self, messages: List[Dict], model: str = "claude-3-5-sonnet-20241022", **kwargs) -> Dict:
         import requests
-        url = f"{self.base_url}/v1/messages"
-        headers = {
+        url = "https://api.anthropic.com/v1/messages"
+        resp = requests.post(url, json={
+            "model": model, "messages": messages, **kwargs
+        }, headers={
             "x-api-key": self.api_key,
             "anthropic-version": "2023-06-01",
-            "Content-Type": "application/json",
-        }
-        data = {"model": model, "messages": messages, **kwargs}
-        resp = requests.post(url, json=data, headers=headers, timeout=60)
+        }, timeout=60)
         resp.raise_for_status()
         return resp.json()
-    
-    def stream(self, messages: List[Dict], model: str = "claude-3-5-sonnet-20241022", **kwargs) -> Iterator:
+    def stream(self, messages, model, **kwargs):
         yield from []
 
 
 class BedrockClient(AIClient):
     """AWS Bedrock."""
-    
-    def __init__(self, region: str = "us-east-1", credentials: Dict = None):
+    def __init__(self, region: str = "us-east-1"):
         self.region = region
-        self.credentials = credentials or {}
     
     def chat(self, messages: List[Dict], model: str = "anthropic.claude-3-sonnet-20240229-v1:0", **kwargs) -> Dict:
         import boto3
-        client = boto3.client("bedrock-runtime", region_name=self.region, **self.credentials)
-        resp = client.converse(modelId=model, messages=messages, **kwargs)
-        return resp
-    
-    def stream(self, messages: List[Dict], model: str = None, **kwargs) -> Iterator:
+        client = boto3.client("bedrock-runtime", region_name=self.region)
+        return client.converse(modelId=model, messages=messages, **kwargs)
+    def stream(self, messages, model, **kwargs):
         yield from []
 
 
-# === MODEL SELECTION ===
-
-class ModelSelector:
-    """Select best model based on requirements."""
-    
-    CAPABILITY_REQUIREMENTS = {
-        "vision": ["gpt-4o", "claude-3-5-sonnet", "gemini-2.0-flash"],
-        "thinking": ["gpt-4o", "claude-3-5-sonnet", "o1", "gemini-2.5-pro"],
-        "fast": ["gpt-4o-mini", "claude-3-haiku"],
-        "code": ["gpt-4o", "o1", "claude-3-5-sonnet"],
-    }
-    
-    def select(self, required_capabilities: List[str]) -> str:
-        for cap in required_capabilities:
-            models = self.CAPABILITY_REQUIREMENTS.get(cap, [])
-            if models:
-                return models[0]
-        return "gpt-4o"
-
-
-model_selector = ModelSelector()
+model_selector = None  # Keep simple
