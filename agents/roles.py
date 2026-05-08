@@ -1,21 +1,17 @@
 """
-Enterprise Agent Config - Simplified.
+Enterprise Agent Config - Minimal.
 
-Key fields only:
-- Identity (from SSO)
-- Owner/Sponsor (governance)
-- Secret ref (points to secret manager)
-- Business scope (projects, products, groups)
-- Runtime (orchestrator, LLM)
+Lifecycle managed by IAM/IGA tools, not here.
+We just need identity + governance + runtime.
 """
 
 from enum import Enum
 from typing import Optional, List
 from dataclasses import dataclass, field
-from datetime import datetime
 
 
 class AgentRole(Enum):
+    """Functional roles for agents."""
     PROJECT_DRIVER = "project_driver"
     PRODUCT_LEAD = "product_lead"
     GROUP_ADMIN = "group_admin"
@@ -23,51 +19,33 @@ class AgentRole(Enum):
     EMPLOYEE_ASSISTANT = "assistant"
 
 
-class AgentStatus(Enum):
-    ACTIVE = "active"
-    INACTIVE = "inactive"
-    PENDING = "pending"
-    SUSPENDED = "suspended"
-    DEPROVISIONED = "deprovisioned"
-
-
-class DeprovisioningReason(Enum):
-    DISABLED = "disabled"
-    TERMINATED = "terminated"
-    SECURITY_CONCERN = "security_concern"
-    IDLE = "idle"
-    MANUAL = "manual"
-
-
 @dataclass
 class AgentConfig:
-    """Enterprise agent config - simplified."""
+    """
+    Minimal agent config.
+    
+    Lifecycle managed by IAM/IGA tools externally.
+    """
     role: AgentRole
     
-    # === IDENTITY (from SSO - just provide ID, system maps) ===
-    identity_id: Optional[str] = None  # Provided by IdP
-    identity_provider: Optional[str] = None  # entra/okta/google
+    # === IDENTITY (from SSO) ===
+    identity_id: str  # From identity provider
+    identity_provider: str  # entra/okta/google/cognito
     
-    # === SECRET REF (points to secret manager) ===
-    secret_ref: Optional[str] = None  # In secret manager
+    # === SECRET (from secret manager) ===
+    secret_ref: str  # In vault/aws-secrets/azure-keyvault
     
-    # === GOVERNANCE (mandatory) ===
-    owner: str  # Required
-    sponsor: str  # Required
+    # === GOVERNANCE (required) ===
+    owner: str  # Accountable for agent
+    sponsor: str  # Budget/strategy
     
-    # === SCOPE (business) ===
+    # === SCOPE ===
     reports_to: Optional[str] = None
-    priority: int = 1
     projects: List[str] = field(default_factory=list)
     products: List[str] = field(default_factory=list)
     groups: List[str] = field(default_factory=list)
-    
-    # === LIFECYCLE ===
-    status: AgentStatus = AgentStatus.ACTIVE
-    created_at: Optional[datetime] = None
-    modified_at: Optional[datetime] = None
-    deprovisioned_at: Optional[datetime] = None
-    deprovisioning_reason: Optional[DeprovisioningReason] = None
+    engages_with: List[str] = field(default_factory=list)
+    manages: List[str] = field(default_factory=list)
     
     # === EMPLOYEE ASSISTANT ===
     employee_email: Optional[str] = None
