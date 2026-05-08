@@ -7,7 +7,9 @@ from agents.base_agent import BaseAgent, ContentRequest, ContentResult
 
 
 class SalesforceAgent(BaseAgent):
-    """Sales and business content writer with Salesforce CRM integration."""
+    """Sales and business content writer with Salesforce CRM integration.
+    
+    Preferred Model: gpt-4o (or any LLM via API)
     
     def __init__(
         self,

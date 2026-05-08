@@ -7,7 +7,9 @@ from agents.base_agent import BaseAgent, ContentRequest, ContentResult
 
 
 class MicrosoftAgent(BaseAgent):
-    """Enterprise content writer using Microsoft Azure OpenAI."""
+    """Enterprise content writer using Microsoft Azure OpenAI.
+    
+    Preferred Model: gpt-4 (Azure Deployment)
     
     def __init__(
         self,

@@ -10,6 +10,11 @@ from core.llm_client import LLMClient, LLMConfig
 class OpenAIAgent(BaseAgent):
     """Creative content writer - works with ANY LLM (OpenAI, Ollama, LM Studio, etc.)."""
     
+    @property
+    def preferred_model(self) -> str:
+        """Preferred LLM model for this agent."""
+        return "gpt-4o" 
+    
     def __init__(
         self,
         api_key: Optional[str] = None,

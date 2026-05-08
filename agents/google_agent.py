@@ -11,6 +11,8 @@ from core.registry import REGISTRY
 class GoogleAgent(BaseAgent):
     """Google Gemini agent - uses registry references.
     
+    Preferred Model: gemini-2.0-flash
+    
     Capabilities (from registry):
     - did:content-team:skill:research:v1
     - did:content-team:skill:seo:v1
