@@ -1,7 +1,7 @@
 """
-Enterprise Agent Config - Identity + Governance + Tools.
+Enterprise Agent Config - Tools, Capabilities, Integrations, Memory, Knowledge.
 
-Tools & capabilities managed by external platforms, not here.
+All external references - we just define what exists.
 """
 
 from enum import Enum
@@ -19,21 +19,17 @@ class AgentRole(Enum):
 
 @dataclass
 class AgentConfig:
-    """
-    Enterprise agent config.
-    
-    Tools & capabilities managed by external platforms.
-    """
+    """Enterprise agent config - minimal core, external refs."""
     role: AgentRole
     
-    # === IDENTITY (from SSO) ===
+    # === IDENTITY (from IdP) ===
     identity_id: str
     identity_provider: str  # entra/okta/google
     
     # === SECRET (from secret manager) ===
     secret_ref: str
     
-    # === GOVERNANCE ===
+    # === GOVERNANCE (required) ===
     owner: str
     sponsor: str
     
@@ -45,9 +41,18 @@ class AgentConfig:
     engages_with: List[str] = field(default_factory=list)
     manages: List[str] = field(default_factory=list)
     
-    # === TOOLS & CAPABILITIES (from external platforms) ===
-    tool_refs: List[str] = field(default_factory=list)  # API integrations, function calls
-    capability_refs: List[str] = field(default_factory=list)  # LLM capabilities, vision, etc.
+    # === TOOLS & CAPABILITIES (from platforms) ===
+    integrations: List[str] = field(default_factory=list)  # API connectors
+    capabilities: List[str] = field(default_factory=list)  # LLM features
+    
+    # === COMMUNICATIONS (from comms platform) ===
+    comms_refs: List[str] = field(default_factory=list)  # slack/teams/email
+    
+    # === MEMORY (from memory platform) ===
+    memory_refs: List[str] = field(default_factory=list)  # redis/vector-db
+    
+    # === KNOWLEDGE BASES (from RAG platform) ===
+    knowledge_refs: List[str] = field(default_factory=list)  # pinecone/qdrant/mongo
     
     # === EMPLOYEE ASSISTANT ===
     employee_email: Optional[str] = None
