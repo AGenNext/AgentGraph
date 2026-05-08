@@ -1,8 +1,8 @@
 """
-Enterprise Agent - Secret Manager Reference.
+Enterprise Agent - IAM/IGA Role references.
 
-credential_refs: Points to secret manager (AWS Secrets, Vault, Azure Key Vault).
-Admin doesn't set secrets - references secret manager.
+Roles point to IAM/IGA systems - not hardcoded values.
+Just like credentials point to secret manager.
 """
 
 from enum import Enum
@@ -37,35 +37,35 @@ class DeprovisioningReason(Enum):
 
 @dataclass
 class AgentConfig:
-    """Enterprise agent - credentials from secret manager."""
+    """Enterprise agent - role refs from IAM/IGA."""
     role: AgentRole
     
     # === IDENTITY (from SSO/IdP) ===
     identity_id: Optional[str] = None
-    identity_provider: Optional[str] = None  # Entra/Okta/Cognito
+    identity_provider: Optional[str] = None
     principal_name: Optional[str] = None
     display_name: Optional[str] = None
     description: Optional[str] = None
     
-    # === SECRET MANAGER (credentials from) ===
+    # === SECRET MANAGER ===
     secret_manager: Optional[str] = None  # aws-secrets/vault/azure-keyvault
-    secret_refs: List[str] = field(default_factory=list)  # Secret path in manager
-    credential_rotation: str = "auto"  # auto/manual
+    secret_refs: List[str] = field(default_factory=list)
+    credential_rotation: str = "auto"
     credential_expires_at: Optional[datetime] = None
     
     # === OAUTH SCOPES ===
     oauth_scopes: List[str] = field(default_factory=list)
     resources: List[str] = field(default_factory=list)
     
-    # === IAM ROLES ===
-    iam_system: Optional[str] = None
-    iam_roles: List[str] = field(default_factory=list)
-    iam_groups: List[str] = field(default_factory=list)
+    # === IAM ROLES (reference from IdP) ===
+    iam_system: Optional[str] = None  # entra/okta/google
+    iam_role_refs: List[str] = field(default_factory=list)  # Role refs
+    iam_group_refs: List[str] = field(default_factory=list)  # Group refs
     
-    # === IGA ROLES ===
-    iga_system: Optional[str] = None
-    iga_roles: List[str] = field(default_factory=list)
-    iga_entitlements: List[str] = field(default_factory=list)
+    # === IGA ROLES (reference from IGA) ===
+    iga_system: Optional[str] = None  # saviynt/sailpoint/sap-iga
+    iga_role_refs: List[str] = field(default_factory=list)  # Role refs
+    iga_entitlement_refs: List[str] = field(default_factory=list)  # Entitlement refs
     access_certified: bool = False
     access_certified_by: Optional[str] = None
     access_certified_at: Optional[datetime] = None
