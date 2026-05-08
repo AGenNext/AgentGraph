@@ -6,7 +6,7 @@
   <title>Enterprise Agents - Multi-Agent Team</title>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
   <style>
-    :root { --ibm-blue-60: #0f62fe; --gray-100: #161616; --gray-90: #393939; --gray-80: #525252; --gray-40: #c6c6c6; --white: #ffffff; --primary: var(--ibm-blue-60); }
+    :root { --ibm-blue-60: #0f62fe; --gray-100: #161616; --gray-90: #393939; --gray-80: #525252; --gray-40: #c6c6c4; --white: #ffffff; --primary: var(--ibm-blue-60); }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 14px; color: var(--white); background: var(--gray-100); }
     .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
@@ -24,7 +24,7 @@
     .section { padding: 2.5rem 0; border-bottom: 1px solid var(--gray-80); }
     .section h2 { font-size: 20px; font-weight: 600; margin-bottom: 1.5rem; }
     
-    .role-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1.5rem; }
+    .role-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 1.5rem; }
     .role-card { background: var(--gray-90); border: 1px solid var(--gray-80); padding: 1.5rem; }
     .role-card:hover { border-color: var(--primary); }
     .role-header { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1rem; }
@@ -58,6 +58,7 @@
         <a href="frameworks.html">Frameworks</a>
         <a href="components.html">Architecture</a>
         <a href="glossary.html">Glossary</a>
+        <a href="agents.html">Agents</a>
       </nav>
     </div>
   </header>
@@ -65,82 +66,52 @@
   <div class="container">
     <div class="page-title">
       <h1>Enterprise Agents</h1>
-      <p>Agents designed for enterprise roles - driving projects, leading products, assisting employees.</p>
+      <p>Agents with enterprise roles - drive projects, lead products, facilitate collaboration.</p>
     </div>
 
-    <!-- ENTERPRISE ROLES -->
+    <!-- ROLES -->
     <div class="section">
       <h2>Enterprise Roles</h2>
       <div class="role-grid">
         <div class="role-card">
-          <div class="role-header">
-            <span class="role-icon">🚗</span>
-            <h3>Project Driver</h3>
-          </div>
-          <p>Leads and drives projects to completion. Delegates tasks, approves work, coordinates team members.</p>
-          <div class="role-features">
-            <span class="feature yes">Delegates ☑</span>
-            <span class="feature yes">Approves ☑</span>
-            <span class="feature">Team: 5+</span>
-            <span class="feature">Priority: High</span>
-          </div>
+          <div class="role-header"><span class="role-icon">🚗</span><h3>Project Driver</h3></div>
+          <p>Leads and drives projects to completion. delegates tasks, approves work.</p>
+          <div class="role-features"><span class="feature yes">Delegates</span><span class="feature yes">Approves</span><span class="feature">Team: 5+</span></div>
         </div>
-        
         <div class="role-card">
-          <div class="role-header">
-            <span class="role-icon">🎯</span>
-            <h3>Product Lead</h3>
-          </div>
-          <p>Owns product direction and roadmap. Makes product decisions, prioritizes features, drives vision.</p>
-          <div class="role-features">
-            <span class="feature yes">Delegates ☑</span>
-            <span class="feature yes">Approves ☑</span>
-            <span class="feature">Owns Product</span>
-            <span class="feature">Reports: Cxo</span>
-          </div>
+          <div class="role-header"><span class="role-icon">🎯</span><h3>Product Lead</h3></div>
+          <p>Owns product direction and roadmap. Makes product decisions.</p>
+          <div class="role-features"><span class="feature yes">Delegates</span><span class="feature yes">Approves</span><span class="feature">Owns Product</span></div>
         </div>
-        
         <div class="role-card">
-          <div class="role-header">
-            <span class="role-icon">👤</span>
-            <h3>Employee Assistant</h3>
-          </div>
-          <p>Supports employees with tasks. Answers questions, helps with work, collaborates.</p>
-          <div class="role-features">
-            <span class="feature">Delegates ✗</span>
-            <span class="feature">Approves ✗</span>
-            <span class="feature">1:1 Support</span>
-            <span class="feature">Reports: Lead</span>
-          </div>
+          <div class="role-header"><span class="role-icon">👥</span><h3>Group Admin</h3></div>
+          <p>Drives work through collaboration and engagement. No hierarchy - facilitates teamwork.</p>
+          <div class="role-features"><span class="feature">Collaborates</span><span class="feature">Facilitates</span><span class="feature">Engages</span></div>
+        </div>
+        <div class="role-card">
+          <div class="role-header"><span class="role-icon">👤</span><h3>Employee Assistant</h3></div>
+          <p>Supports employees with tasks. Answers questions, helps with work.</p>
+          <div class="role-features"><span class="feature">Assists</span><span class="feature">1:1</span><span class="feature">Collaborates</span></div>
         </div>
       </div>
     </div>
 
-    <!-- CREATION -->
+    <!-- CREATE -->
     <div class="section">
       <h2>Create Enterprise Agents</h2>
       <pre><code>from orchestrator import create_agent
 
 # Project Driver
-driver = create_agent(
-    name="project-alpha",
-    role="project_driver",
-    config={"team_size": 5, "priority": 1}
-)
+driver = create_agent("project-alpha", "project_driver", config={"team_size": 5})
 
-# Product Lead  
-product = create_agent(
-    name="product-x",
-    role="product_lead",
-    config={"owns": ["roadmap"], "reports_to": "cto"}
-)
+# Product Lead
+product = create_agent("product-x", "product_lead", config={"owns": ["roadmap"]})
+
+# Group Admin - collaboration focused
+admin = create_agent("team-admin", "group_admin", config={"engages_with": ["team-a", "team-b"]})
 
 # Employee Assistant
-assistant = create_agent(
-    name="assistant-jane", 
-    role="assistant",
-    config={"reports_to": "team-lead"}
-)</code></pre>
+assistant = create_agent("assistant-jane", "assistant", config={"reports_to": "team-lead"})</code></pre>
     </div>
 
     <!-- CONFIG -->
@@ -148,17 +119,17 @@ assistant = create_agent(
       <h2>Role Configuration</h2>
       <table>
         <tr><th>Config</th><th>Type</th><th>Description</th></tr>
-        <tr><td>reports_to</td><td>str</td><td>Agent ID this reports to</td></tr>
-        <tr><td>team_size</td><td>int</td><td>Number of team members</td></tr>
-        <tr><td>priority</td><td>int</td><td>Priority level (1-10)</td></tr>
-        <tr><td>owns</td><td>list</td><td>Owned projects/products</td></tr>
+        <tr><td>reports_to</td><td>str</td><td>Agent to report to</td></tr>
+        <tr><td>team_size</td><td>int</td><td>Team members</td></tr>
+        <tr><td>priority</td><td>int</td><td>Priority 1-10</td></tr>
+        <tr><td>owns</td><td>list</td><td>Owned projects</td></tr>
+        <tr><td>engages_with</td><td>list</td><td>Collaborates with</td></tr>
       </table>
     </div>
 
     <!-- RUNTIME -->
     <div class="section">
       <h2>Runtime</h2>
-      <p style="color: var(--gray-40);">Set runtime via environment:</p>
       <pre><code># Set runtime (not in code)
 export RUNTIME=langgraph</code></pre>
     </div>

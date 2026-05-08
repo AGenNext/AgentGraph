@@ -2,35 +2,36 @@
 Enterprise Agent Roles.
 
 Agents can have different enterprise roles:
-- Project Driver: Leads and drives projects to completion
-- Product Lead: Owns product direction and roadmap
-- Employee Assistant: Supports employees with tasks
+- Project Driver: Leads and drives projects
+- Product Lead: Owns product direction
+- Employee Assistant: Supports employees
+- Group Admin: Drives work through collaboration
 """
-
 
 from enum import Enum
 from typing import Optional
-from dataclasses import dataclass
+from dataclasses import dataclass, field
 
 
 class AgentRole(Enum):
     """Enterprise agent roles."""
-    PROJECT_DRIVER = "project_driver"  # Drives projects
-    PRODUCT_LEAD = "product_lead"     # Owns product
-    EMPLOYEE_ASSISTANT = "assistant"   # Supports employees
+    PROJECT_DRIVER = "project_driver"
+    PRODUCT_LEAD = "product_lead"
+    EMPLOYEE_ASSISTANT = "assistant"
+    GROUP_ADMIN = "group_admin"
 
 
 @dataclass
 class AgentRoleConfig:
     """Configuration for agent role."""
     role: AgentRole
-    reports_to: Optional[str] = None    # Agent ID this reports to
-    team_size: int = 0                 # Team members
-    priority: int = 1                 # Priority level
-    owns: list[str] = None             # Owned projects/products
+    reports_to: Optional[str] = None
+    team_size: int = 0
+    priority: int = 1
+    owns: list[str] = field(default_factory=list)
+    engages_with: list[str] = field(default_factory=list)
 
 
-# Role-based behavior
 ROLE_BEHAVIORS = {
     AgentRole.PROJECT_DRIVER: {
         "behavior": "drives",
@@ -46,5 +47,12 @@ ROLE_BEHAVIORS = {
         "behavior": "assists",
         "delegates": False,
         "approves": False,
+    },
+    AgentRole.GROUP_ADMIN: {
+        "behavior": "collaborates",
+        "delegates": False,
+        "approves": False,
+        "engages": True,
+        "facilitates": True,
     },
 }
