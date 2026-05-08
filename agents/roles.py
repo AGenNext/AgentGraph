@@ -1,19 +1,21 @@
 """
-Enterprise Agent Roles.
+Enterprise Agent Roles - Microsoft Entra Agent ID aligned.
 
-Each enterprise agent has:
-- Owner: Accountable for agent outcomes
-- Sponsor: Budget/strategy approval
-- IT Admin: Config defaults (for Employee Assistant)
-- Employee: Can override (for Assistant)
+Includes:
+- Identity: object_id, UPN, displayName
+- Credentials & scopes  
+- Lifecycle management
+- Owner & Sponsor governance
 """
 
 from enum import Enum
 from typing import Optional, List
 from dataclasses import dataclass, field
+from datetime import datetime
 
 
 class AgentRole(Enum):
+    """Enterprise agent roles."""
     PROJECT_DRIVER = "project_driver"
     PRODUCT_LEAD = "product_lead"
     GROUP_ADMIN = "group_admin"
@@ -21,30 +23,77 @@ class AgentRole(Enum):
     EMPLOYEE_ASSISTANT = "assistant"
 
 
+class AgentStatus(Enum):
+    """Agent lifecycle status."""
+    ACTIVE = "active"
+    INACTIVE = "inactive"
+    PENDING = "pending"
+    SUSPENDED = "suspended"
+    DEPROVISIONED = "deprovisioned"
+
+
+class DeprovisioningReason(Enum):
+    """Why agent was disabled."""
+    DISABLED = "disabled"
+    TERMINATED = "terminated"
+    SECURITY_CONCERN = "security_concern"
+    IDLE = "idle"
+    MANUAL = "manual"
+
+
 @dataclass
-class AgentRoleConfig:
-    """Enterprise agent configuration with governance."""
+class AgentConfig:
+    """
+    Enterprise agent config - Entra Agent ID aligned.
+    """
     role: AgentRole
     
-    # Governance - who owns/approves
-    owner: Optional[str] = None      # Accountable for outcomes
-    sponsor: Optional[str] = None     # Budget/strategy approval
-    reports_to: Optional[str] = None # Reporting chain
+    # === IDENTITY ===
+    object_id: Optional[str] = None
+    user_principal_name: Optional[str] = None
+    display_name: Optional[str] = None
+    description: Optional[str] = None
+    
+    # === CREDENTIALS ===
+    credentials: List[dict] = field(default_factory=list)
+    identifier_uris: List[str] = field(default_factory=list)
+    scopes: List[str] = field(default_factory=list)
+    app_roles: List[str] = field(default_factory=list)
+    
+    # === GOVERNANCE ===
+    owner: str
+    sponsor: str
+    reports_to: Optional[str] = None
     priority: int = 1
     
-    # Scope
+    # === LIFECYCLE MANAGEMENT ===
+    status: AgentStatus = AgentStatus.ACTIVE
+    created_at: Optional[datetime] = None
+    modified_at: Optional[datetime] = None
+    last_used_at: Optional[datetime] = None
+    
+    # Deprovisioning
+    deprovisioned_at: Optional[datetime] = None
+    deprovisioning_reason: Optional[DeprovisioningReason] = None
+    disable_reason: Optional[str] = None
+    
+    # Expiration
+    expires_at: Optional[datetime] = None
+    renewal_required: bool = True
+    
+    # === SCOPE ===
     projects: List[str] = field(default_factory=list)
     products: List[str] = field(default_factory=list)
     groups: List[str] = field(default_factory=list)
     engages_with: List[str] = field(default_factory=list)
     manages: List[str] = field(default_factory=list)
     
-    # Employee Assistant specifics
+    # === EMPLOYEE ASSISTANT ===
     employee_email: Optional[str] = None
     it_admin_defaults: dict = field(default_factory=dict)
     employee_overrides: dict = field(default_factory=dict)
     
-    # Runtime
+    # === RUNTIME ===
     orchestrator: str = "langgraph"
     llm: Optional[str] = None
 
