@@ -1,0 +1,78 @@
+# AGenNext Registry Memory - YAML Format
+
+project:
+  name: "AGenNext Registry"
+  version: "0.1.0"
+  status: "ALPHA"
+  repository: "https://github.com/AGenNext/AGenNext-Registry"
+
+sdks:
+  openai:
+    client_exists: true
+    ui_exists: true
+    auth_methods:
+      - api_key
+      - oauth
+  anthropic:
+    client_exists: true
+    ui_exists: true
+    auth_methods:
+      - api_key
+  google:
+    client_exists: true
+    ui_exists: true
+    auth_methods:
+      - api_key
+      - gcp_service_account
+  microsoft:
+    client_exists: true
+    ui_exists: true
+    auth_methods:
+      - azure_ad
+      - managed_identity
+  aws_bedrock:
+    client_exists: true
+    ui_exists: true
+    auth_methods:
+      - iam
+  langchain:
+    client_exists: true
+    ui_exists: true
+  langgraph:
+    client_exists: true
+    ui_exists: true
+  salesforce:
+    client_exists: true
+    ui_exists: true
+
+milestones:
+  - id: "m1"
+    name: "Core Framework"
+    status: "DONE"
+    progress: 100
+  - id: "m2"
+    name: "UI Toolkits"
+    status: "DONE"
+    progress: 100
+  - id: "m3"
+    name: "Platform UI"
+    status: "IN PROGRESS"
+    progress: 30
+  - id: "m4"
+    name: "Agent Teams"
+    status: "PLANNED"
+    progress: 0
+  - id: "m5"
+    name: "Deployment"
+    status: "PLANNED"
+    progress: 0
+
+memory:
+  format: "YAML"
+  created: "2026-05-08"
+  updated: "2026-05-08"
+
+commands:
+  run_ui: "python ui/examples.py chat"
+  run_streamlit: "streamlit run ui/streamlit_examples.py"
+  docker: "docker run -p 7860:7860 agennext/agent-registry:latest"
