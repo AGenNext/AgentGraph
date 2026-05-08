@@ -1,8 +1,7 @@
 """
-Enterprise Agent Config - Minimal.
+Enterprise Agent Config - Identity + Governance + Tools.
 
-Lifecycle managed by IAM/IGA tools, not here.
-We just need identity + governance + runtime.
+Tools & capabilities managed by external platforms, not here.
 """
 
 from enum import Enum
@@ -11,7 +10,6 @@ from dataclasses import dataclass, field
 
 
 class AgentRole(Enum):
-    """Functional roles for agents."""
     PROJECT_DRIVER = "project_driver"
     PRODUCT_LEAD = "product_lead"
     GROUP_ADMIN = "group_admin"
@@ -22,22 +20,22 @@ class AgentRole(Enum):
 @dataclass
 class AgentConfig:
     """
-    Minimal agent config.
+    Enterprise agent config.
     
-    Lifecycle managed by IAM/IGA tools externally.
+    Tools & capabilities managed by external platforms.
     """
     role: AgentRole
     
     # === IDENTITY (from SSO) ===
-    identity_id: str  # From identity provider
-    identity_provider: str  # entra/okta/google/cognito
+    identity_id: str
+    identity_provider: str  # entra/okta/google
     
     # === SECRET (from secret manager) ===
-    secret_ref: str  # In vault/aws-secrets/azure-keyvault
+    secret_ref: str
     
-    # === GOVERNANCE (required) ===
-    owner: str  # Accountable for agent
-    sponsor: str  # Budget/strategy
+    # === GOVERNANCE ===
+    owner: str
+    sponsor: str
     
     # === SCOPE ===
     reports_to: Optional[str] = None
@@ -46,6 +44,10 @@ class AgentConfig:
     groups: List[str] = field(default_factory=list)
     engages_with: List[str] = field(default_factory=list)
     manages: List[str] = field(default_factory=list)
+    
+    # === TOOLS & CAPABILITIES (from external platforms) ===
+    tool_refs: List[str] = field(default_factory=list)  # API integrations, function calls
+    capability_refs: List[str] = field(default_factory=list)  # LLM capabilities, vision, etc.
     
     # === EMPLOYEE ASSISTANT ===
     employee_email: Optional[str] = None
