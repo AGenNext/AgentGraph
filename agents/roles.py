@@ -205,6 +205,8 @@ class AgentConfig:
     
     # === AI PROVIDER ===
     ai_provider_name: str = "openai"
+    provider_api_key: Optional[str] = None
+    provider_base_url: Optional[str] = None
     model: str = "gpt-4o"
     
     # === OUR REGISTRIES ===
