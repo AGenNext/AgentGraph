@@ -1,12 +1,8 @@
 """
-Enterprise Agent - Credentials managed by system, not set at creation.
+Enterprise Agent - Secret Manager Reference.
 
-Credentials (api_keys, client_secrets) should be:
-- Managed by identity system (auto-generated)
-- Referenced (not hardcoded)
-- Rotated automatically
-
-Admin sets references, system manages values.
+credential_refs: Points to secret manager (AWS Secrets, Vault, Azure Key Vault).
+Admin doesn't set secrets - references secret manager.
 """
 
 from enum import Enum
@@ -41,7 +37,7 @@ class DeprovisioningReason(Enum):
 
 @dataclass
 class AgentConfig:
-    """Enterprise agent config - credentials managed by system."""
+    """Enterprise agent - credentials from secret manager."""
     role: AgentRole
     
     # === IDENTITY (from SSO/IdP) ===
@@ -51,21 +47,22 @@ class AgentConfig:
     display_name: Optional[str] = None
     description: Optional[str] = None
     
-    # === CREDENTIALS (system-managed references) ===
-    credential_refs: List[dict] = field(default_factory=list)  # Secrets manager refs
-    credential_rotation: Optional[str] = None  # auto/manual
+    # === SECRET MANAGER (credentials from) ===
+    secret_manager: Optional[str] = None  # aws-secrets/vault/azure-keyvault
+    secret_refs: List[str] = field(default_factory=list)  # Secret path in manager
+    credential_rotation: str = "auto"  # auto/manual
     credential_expires_at: Optional[datetime] = None
     
-    # === OAUTH SCOPES (what can access) ===
+    # === OAUTH SCOPES ===
     oauth_scopes: List[str] = field(default_factory=list)
     resources: List[str] = field(default_factory=list)
     
-    # === IAM ROLES (from IdP) ===
+    # === IAM ROLES ===
     iam_system: Optional[str] = None
     iam_roles: List[str] = field(default_factory=list)
     iam_groups: List[str] = field(default_factory=list)
     
-    # === IGA ROLES (from Governance) ===
+    # === IGA ROLES ===
     iga_system: Optional[str] = None
     iga_roles: List[str] = field(default_factory=list)
     iga_entitlements: List[str] = field(default_factory=list)
