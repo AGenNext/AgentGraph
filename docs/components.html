@@ -6,226 +6,215 @@
   <title>Components - Enterprise Multi-Agent Team</title>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --ibm-blue-60: #0f62fe;
-      --gray-100: #161616;
-      --gray-90: #393939;
-      --gray-80: #525252;
-      --gray-70: #6f6f6f;
-      --gray-60: #8d8d8d;
-      --gray-40: #c6c6c6;
-      --white: #ffffff;
-      --primary: var(--ibm-blue-60);
-      --bg-primary: var(--gray-100);
-      --bg-secondary: var(--gray-90);
-      --text-primary: var(--white);
-      --text-secondary: var(--gray-40);
-    }
+    :root { --ibm-blue-60: #0f62fe; --gray-100: #161616; --gray-90: #393939; --gray-80: #525252; --gray-70: #6f6f6f; --gray-60: #8d8d8d; --gray-40: #c6c6c6; --white: #ffffff; --primary: var(--ibm-blue-60); --bg-primary: var(--gray-100); --bg-secondary: var(--gray-90); --text-primary: var(--white); --text-secondary: var(--gray-40); }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 14px; line-height: 1.5; color: var(--text-primary); background: var(--bg-primary); }
     .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
-    header { background: var(--bg-secondary); border-bottom: 1px solid var(--gray-80); padding: 0; }
+    header { background: var(--bg-secondary); border-bottom: 1px solid var(--gray-80); }
     .header-container { display: flex; align-items: center; justify-content: space-between; height: 48px; }
     .logo { display: flex; align-items: center; gap: 0.75rem; color: var(--text-primary); text-decoration: none; font-weight: 600; }
-    .logo-icon { width: 24px; height: 24px; background: var(--primary); border-radius: 2px; display: flex; align-items: center; justify-content: center; }
+    .logo-icon { width: 24px; height: 24px; background: var(--primary); border-radius: 2px; }
     nav { display: flex; gap: 1.5rem; }
-    nav a { color: var(--text-secondary); text-decoration: none; font-size: 14px; }
+    nav a { color: var(--text-secondary); text-decoration: none; }
     nav a:hover { color: var(--text-primary); }
-    
     .page-title { padding: 3rem 0 2rem; border-bottom: 1px solid var(--gray-80); }
     .page-title h1 { font-size: 42px; font-weight: 300; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
     .page-title p { color: var(--text-secondary); font-size: 16px; }
-    
-    .section { padding: 3rem 0; border-bottom: 1px solid var(--gray-80); }
-    .section h2 { font-size: 20px; font-weight: 600; margin-bottom: 1.5rem; letter-spacing: -0.01em; }
-    
-    .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 1rem; margin: 1.5rem 0; }
-    .feature-card { background: var(--gray-90); border: 1px solid var(--gray-80); padding: 1.5rem; }
-    .feature-card:hover { border-color: var(--primary); }
-    .feature-card h3 { font-size: 16px; font-weight: 600; margin-bottom: 0.75rem; color: var(--text-primary); display: flex; align-items: center; gap: 0.5rem; }
-    .feature-card p { color: var(--text-secondary); font-size: 14px; }
-    .feature-card ul { margin: 0.75rem 0 0; padding-left: 1.25rem; color: var(--text-secondary); }
-    .feature-card li { margin: 0.35rem 0; font-size: 13px; }
-    
-    .badge { display: inline-flex; align-items: center; gap: 0.25rem; }
-    .tag { font-size: 11px; padding: 0.2rem 0.5rem; background: var(--gray-80); color: var(--text-secondary); text-transform: uppercase; letter-spacing: 0.05em; }
-    .tag-blue { background: var(--primary); color: white; }
-    .tag-green { background: #24a148; color: white; }
-    .tag-purple { background: #6929c4; color: white; }
-    .tag-cyan { background: #1192e8; color: white; }
-    
-    code { background: var(--gray-80); color: var(--gray-40); padding: 0.2rem 0.4rem; border-radius: 0; font-size: 12px; font-family: 'IBM Plex Mono', monospace; }
-    pre { background: var(--gray-90); color: var(--gray-40); padding: 1.25rem; border-radius: 0; overflow-x: auto; margin: 1rem 0; border-left: 3px solid var(--primary); font-size: 13px; }
-    pre code { background: none; padding: 0; color: inherit; }
-    
-    table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; background: var(--gray-90); }
-    th, td { padding: 0.75rem 1rem; text-align: left; border-bottom: 1px solid var(--gray-80); font-size: 14px; }
-    th { background: var(--gray-80); font-weight: 600; color: var(--text-primary); font-size: 12px; text-transform: uppercase; letter-spacing: 0.05em; }
+
+    .section { padding: 2.5rem 0; border-bottom: 1px solid var(--gray-80); }
+    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
+    .section h2 { font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
+    .module-count { font-size: 12px; color: var(--text-secondary); background: var(--gray-80); padding: 0.25rem 0.75rem; }
+
+    .modular-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
+    .module { background: var(--gray-90); border: 1px solid var(--gray-80); padding: 1.25rem; transition: all 0.15s; }
+    .module:hover { border-color: var(--primary); transform: translateY(-2px); }
+    .module-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .module-icon { width: 32px; height: 32px; background: var(--primary); border-radius: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; }
+    .module h3 { font-size: 15px; font-weight: 600; }
+    .module p { color: var(--text-secondary); font-size: 13px; margin-bottom: 0.75rem; }
+    .module-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+    .meta-tag { font-size: 10px; padding: 0.2rem 0.5rem; background: var(--gray-80); color: var(--text-secondary); text-transform: uppercase; }
+    .meta-tag.required { background: var(--primary); color: white; }
+    .meta-tag.optional { background: #24a148; color: white; }
+
+    code { background: var(--gray-80); color: var(--gray-40); padding: 0.15rem 0.35rem; font-size: 11px; font-family: 'IBM Plex Mono', monospace; }
+    pre { background: var(--gray-90); color: var(--gray-40); padding: 1rem; border-left: 3px solid var(--primary); margin: 0.75rem 0; font-size: 12px; }
+    pre code { background: none; padding: 0; }
+
+    table { width: 100%; border-collapse: collapse; margin: 1rem 0; background: var(--gray-90); }
+    th, td { padding: 0.625rem 1rem; text-align: left; border-bottom: 1px solid var(--gray-80); font-size: 13px; }
+    th { background: var(--gray-80); font-weight: 600; font-size: 11px; text-transform: uppercase; }
     td { color: var(--text-secondary); }
     tr:hover td { background: var(--gray-80); }
-    
+
     footer { background: var(--gray-90); border-top: 1px solid var(--gray-80); padding: 2rem 0; text-align: center; }
     footer p { color: var(--text-secondary); font-size: 12px; }
     footer strong { color: var(--text-primary); }
-    
-    @media (max-width: 768px) {
-      .header-container { flex-direction: column; height: auto; padding: 1rem 0; gap: 1rem; }
-    }
+    @media (max-width: 768px) { .header-container { flex-direction: column; height: auto; padding: 1rem 0; } }
   </style>
 </head>
 <body>
   <header>
     <div class="container header-container">
-      <a href="index.html" class="logo"><span class="logo-icon">🤖</span><span>Enterprise Multi-Agent Team</span></a>
-      <nav>
-        <a href="index.html">Home</a>
-        <a href="frameworks.html">Frameworks</a>
-        <a href="glossary.html">Glossary</a>
-        <a href="contact.html">Contact</a>
-      </nav>
+      <a href="index.html" class="logo"><span class="logo-icon">🤖</span>Enterprise Multi-Agent Team</a>
+      <nav><a href="index.html">Home</a><a href="frameworks.html">Frameworks</a><a href="glossary.html">Glossary</a><a href="contact.html">Contact</a></nav>
     </div>
   </header>
 
   <div class="container">
     <div class="page-title">
       <h1>Components</h1>
-      <p>Enterprise LLM Agnostic Multi-Agent Team built on modular, extensible architecture.</p>
+      <p>Modular architecture for the Enterprise LLM Agnostic Multi-Agent Team.</p>
     </div>
 
-    <!-- CORE FEATURES -->
+    <!-- MODULE 1: LLM PROVIDERS -->
     <div class="section">
-      <h2>Core Features</h2>
-      <div class="feature-grid">
-        <div class="feature-card">
-          <h3><span class="tag tag-blue">Core</span> LLM Agnostic Engine</h3>
-          <p>Works with 40+ LLM providers through unified API.</p>
-          <ul>
-            <li>OpenAI, Anthropic, Google, Azure OpenAI</li>
-            <li>Cohere, Mistral, Ollama (local)</li>
-            <li>Cloudflare Workers AI, Replicate</li>
-            <li>Custom provider support via adapters</li>
-          </ul>
+      <div class="section-header">
+        <h2>1. LLM Providers</h2>
+        <span class="module-count">8 Modules</span>
+      </div>
+      <div class="modular-grid">
+        <div class="module">
+          <div class="module-header"><span class="module-icon">🟢</span><h3>OpenAI Provider</h3></div>
+          <p>GPT-4o, GPT-4 Turbo, o1 models with vision & function calling</p>
+          <div class="module-meta"><span class="meta-tag required">OPENAI_API_KEY</span><span class="meta-tag optional">api_base</span></div>
         </div>
-        <div class="feature-card">
-          <h3><span class="tag tag-green">Core</span> LangChain Deep Agent Orchestrator</h3>
-          <p>Intelligent workflow orchestration with graph-based execution.</p>
-          <ul>
-            <li>Sequential & parallel execution</li>
-            <li>Conditional branching logic</li>
-            <li>State management across nodes</li>
-            <li>Human-in-the-loop support</li>
-          </ul>
+        <div class="module">
+          <div class="module-header"><span class="module-icon">🔴</span><h3>Anthropic Provider</h3></div>
+          <p>Claude 3.5 Sonnet, Opus with computer use</p>
+          <div class="module-meta"><span class="meta-tag required">ANTHROPIC_API_KEY</span></div>
         </div>
-        <div class="feature-card">
-          <h3><span class="tag tag-purple">Core</span> A2A Protocol Hub</h3>
-          <p>Standardized agent-to-agent communication.</p>
-          <ul>
-            <li>Task delegation & results sharing</li>
-            <li>Message passing between agents</li>
-            <li>Card-based discovery</li>
-            <li>Streaming support</li>
-          </ul>
+        <div class="module">
+          <div class="module-header"><span class="module-icon">🔵</span><h3>Google Provider</h3></div>
+          <p>Gemini 2.0 Flash, Pro with code execution</p>
+          <div class="module-meta"><span class="meta-tag required">GOOGLE_API_KEY</span></div>
         </div>
-        <div class="feature-card">
-          <h3><span class="tag tag-cyan">Core</span> Registry System</h3>
-          <p>Unified skill, tool, and prompt management.</p>
-          <ul>
-            <li>DID-based identification</li>
-            <li>Skill version management</li>
-            <li>Dynamic tool loading</li>
-            <li>Template prompts library</li>
-          </ul>
+        <div class="module">
+          <div class="module-header"><span class="module-icon">🟣</span><h3>Azure OpenAI</h3></div>
+          <p>Enterprise GPT-4 deployment with custom endpoints</p>
+          <div class="module-meta"><span class="meta-tag required">AZURE_*</span></div>
+        </div>
+        <div class="module">
+          <div class="module-header"><span class="module-icon">🟡</span><h3>Cohere Provider</h3></div>
+          <p>Command-R, embeddings & classification</p>
+          <div class="module-meta"><span class="meta-tag required">COHERE_API_KEY</span></div>
+        </div>
+        <div class="module">
+          <div class="module-header"><span class="module-icon">⚪</span><h3>Ollama Provider</h3></div>
+          <p>Local Llama3, Mistral for offline privacy</p>
+          <div class="module-meta"><span class="meta-tag optional">local</span></div>
+        </div>
+        <div class="module">
+          <div class="module-header"><span class="module-icon">🟠</span><h3>Mistral Provider</h3></div>
+          <p>Mistral Large, Codestral for code generation</p>
+          <div class="module-meta"><span class="meta-tag required">MISTRAL_API_KEY</span></div>
+        </div>
+        <div class="module">
+          <div class="module-header"><span class="module-icon">🟧</span><h3>Cloudflare Workers</h3></div>
+          <p>LLama 3 on edge for low latency</p>
+          <div class="module-meta"><span class="meta-tag required">CF_API_TOKEN</span></div>
         </div>
       </div>
     </div>
 
-    <!-- EXTENSIBILITY -->
+    <!-- MODULE 2: AGENTS -->
     <div class="section">
-      <h2>Extensibility</h2>
-      <div class="feature-grid">
-        <div class="feature-card">
-          <h3>Add Custom Agents</h3>
-          <p>Extend the team with your own agents.</p>
+      <div class="section-header">
+        <h2>2. Agent Modules</h2>
+        <span class="module-count">14 Modules</span>
+      </div>
+      <table>
+        <tr><th>Agent</th><th>Preferred Model</th><th>Specialization</th><th>Dependencies</th></tr>
+        <tr><td>OpenAIAgent</td><td>gpt-4o</td><td>Coding & reasoning</td><td>openai</td></tr>
+        <tr><td>GoogleAgent</td><td>gemini-2.0-flash</td><td>Research & SEO</td><td>google-generativeai</td></tr>
+        <tr><td>MicrosoftAgent</td><td>gpt-4</td><td>Enterprise docs</td><td>azure-ai</td></tr>
+        <tr><td>SalesforceAgent</td><td>gpt-4o</td><td>CRM automation</td><td>simple-salesforce</td></tr>
+        <tr><td>LangChainAgent</td><td>varies</td><td>Tool chains</td><td>langchain</td></tr>
+        <tr><td>LlamaIndexAgent</td><td>varies</td><td>RAG</td><td>llamaindex</td></tr>
+        <tr><td>DockerAgent</td><td>gpt-4o</td><td>Container configs</td><td>docker</td></tr>
+        <tr><td>GitHubAgent</td><td>gpt-4o</td><td>Repository ops</td><td>PyGithub</td></tr>
+      </table>
+    </div>
+
+    <!-- MODULE 3: ORCHESTRATORS -->
+    <div class="section">
+      <div class="section-header">
+        <h2>3. Orchestrator Modules</h2>
+        <span class="module-count">3 Modules</span>
+      </div>
+      <div class="modular-grid">
+        <div class="module">
+          <div class="module-header"><span class="module-icon">📊</span><h3>LangGraph Workflow</h3></div>
+          <p>Graph-based orchestration with state management</p>
+          <pre><code>from orchestrator import create_workflow
+wf = create_workflow()
+result = wf.invoke(state)</code></pre>
+        </div>
+        <div class="module">
+          <div class="module-header"><span class="module-icon">🔗</span><h3>A2A Protocol</h3></div>
+          <p>Agent-to-agent communication hub</p>
+          <pre><code>from a2a import A2AServer
+server = A2AServer(agents)
+await server.handle_task(message)</code></pre>
+        </div>
+        <div class="module">
+          <div class="module-header"><span class="module-icon">⚙️</span><h3>Team Coordinator</h3></div>
+          <p>Parallel & sequential execution</p>
+          <pre><code>from agents import TeamCoordinator
+team = TeamCoordinator()
+results = team.run_parallel(tasks)</code></pre>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE 4: EXTENSIONS -->
+    <div class="section">
+      <div class="section-header">
+        <h2>4. Extension Points</h2>
+        <span class="module-count">4 Points</span>
+      </div>
+      <div class="modular-grid">
+        <div class="module">
+          <div class="module-header"><span class="module-icon">➕</span><h3>Custom Agent</h3></div>
+          <p>Extend BaseAgent for new capabilities</p>
           <pre><code>class MyAgent(BaseAgent):
-    def __init__(self):
-        super().__init__(
-            agent_id="my-agent",
-            name="Custom Agent",
-            skills=["skill-id"]
-        )</code></pre>
+    async def run(self, task):
+        return await self.llm.complete(task)</code></pre>
         </div>
-        <div class="feature-card">
-          <h3>Add Custom LLM Providers</h3>
-          <p>Register new LLM providers easily.</p>
-          <pre><code>LLM_REGISTRY["my-provider"] = {
-    "client": MyProviderClient,
-    "default_model": "my-model",
-    "api_key_env": "MY_API_KEY"
-}</code></pre>
+        <div class="module">
+          <div class="module-header"><span class="module-icon">🔌</span><h3>LLM Adapter</h3></div>
+          <p>Register new providers</p>
+          <pre><code>REGISTRY["my-provider"] = MyAdapter</code></pre>
         </div>
-        <div class="feature-card">
-          <h3>Custom Workflow Nodes</h3>
-          <p>Add custom LangGraph nodes.</p>
-          <pre><code>@node
-def custom_node(state):
-    # Process state
-    return {"result": process(state)}</code></pre>
+        <div class="module">
+          <div class="module-header"><span class="module-icon">🔧</span><h3>Custom Tool</h3></div>
+          <p>Add tools via decorator</p>
+          <pre><code>@tool def search(q): return api(q)</code></pre>
         </div>
-        <div class="feature-card">
-          <h3>Tool Adapters</h3>
-          <p>Wrap external tools as agent tools.</p>
-          <pre><code>@tool
-def my_tool(query: str) -> str:
-    return external_api.search(query)</code></pre>
+        <div class="module">
+          <div class="module-header"><span class="module-icon">📦</span><h3>Workflow Node</h3></div>
+          <p>Add LangGraph nodes</p>
+          <pre><code>@node def process(state): 
+    return {"out": state}</code></pre>
         </div>
       </div>
     </div>
 
-    <!-- PLUGIN ECOSYSTEM -->
+    <!-- MODULE 5: REGISTRY -->
     <div class="section">
-      <h2>Plugin Ecosystem</h2>
+      <div class="section-header">
+        <h2>5. Registry Modules</h2>
+        <span class="module-count">3 Modules</span>
+      </div>
       <table>
-        <tr><th>Plugin</th><th>Description</th><th>Location</th></tr>
-        <tr><td>OpenAI SDK</td><td>Coding & reasoning agent</td><td>agents/openai_agent.py</td></tr>
-        <tr><td>Salesforce SDK</td><td>CRM automation</td><td>agents/salesforce_agent.py</td></tr>
-        <tr><td>Azure AI Foundry</td><td>Enterprise documentation</td><td>agents/microsoft_agent.py</td></tr>
-        <tr><td>Google ADK</td><td>Research & analysis</td><td>agents/google_agent.py</td></tr>
-        <tr><td>LangChain</td><td>Tool-use workflows</td><td>agents/langchain_agent.py</td></tr>
-        <tr><td>LlamaIndex</td><td>RAG documentation</td><td>agents/llamaindex_agent.py</td></tr>
-        <tr><td>Docker SDK</td><td>Container configs</td><td>agents/docker_agent.py</td></tr>
-        <tr><td>GitHub SDK</td><td>Repository operations</td><td>agents/github_agent.py</td></tr>
+        <tr><th>Registry</th><th>Purpose</th><th>Format</th></tr>
+        <tr><td>Skills Registry</td><td>Agent capabilities</td><td>DID</td></tr>
+        <tr><td>Tools Registry</td><td>Executable functions</td><td>DID</td></tr>
+        <tr><td>Prompts Registry</td><td>Template prompts</td><td>Versioned</td></tr>
       </table>
     </div>
 
-    <!-- LLM PROVIDERS -->
-    <div class="section">
-      <h2>LLM Provider Support</h2>
-      <table>
-        <tr><th>Provider</th><th>Models</th><th>Features</th><th>Env Variable</th></tr>
-        <tr><td>OpenAI</td><td>gpt-4o, gpt-4-turbo, o1</td><td>Vision, function calling</td><td>OPENAI_API_KEY</td></tr>
-        <tr><td>Anthropic</td><td>claude-3.5-sonnet, claude-3-opus</td><td>Computer use, analysis</td><td>ANTHROPIC_API_KEY</td></tr>
-        <tr><td>Google</td><td>gemini-2.0-flash, gemini-pro</td><td>Code execution, long context</td><td>GOOGLE_API_KEY</td></tr>
-        <tr><td>Azure OpenAI</td><td>gpt-4, gpt-35-turbo</td><td>Enterprise, custom endpoints</td><td>AZURE_OPENAI_*</td></tr>
-        <tr><td>Cohere</td><td>command-r, command-r-plus</td><td>Embeddings, classification</td><td>COHERE_API_KEY</td></tr>
-        <tr><td>Mistral</td><td>mistral-large, codestral</td><td>Code generation</td><td>MISTRAL_API_KEY</td></tr>
-        <tr><td>Ollama</td><td>llama3, mistral (local)</td><td>Offline, privacy</td><td>None (local)</td></tr>
-        <tr><td>Cloudflare</td><td>@cf/meta/llama-3</td><td>Fast, edge computing</td><td>CF_API_TOKEN</td></tr>
-      </table>
-    </div>
-
-    <!-- AGENT CAPABILITIES -->
-    <div class="section">
-      <h2>Agent Capabilities</h2>
-      <table>
-        <tr><th>Agent</th><th>Preferred Model</th><th>Skills</th><th>Tools</th></tr>
-        <tr><td>OpenAIAgent</td><td>gpt-4o</td><td>Coding, writing</td><td>code_executor</td></tr>
-        <tr><td>GoogleAgent</td><td>gemini-2.0-flash</td><td>Research, SEO</td><td>web_search</td></tr>
-        <tr><td>MicrosoftAgent</td><td>gpt-4</td><td>Enterprise docs</td><td>azure_storage</td></tr>
-        <tr><td>SalesforceAgent</td><td>gpt-4o</td><td>CRM, SQL</td><td>salesforce_api</td></tr>
-        <tr><td>LangChainAgent</td><td>varies</td><td>Tool chains</td><td>custom_tools</td></tr>
-        <tr><td>LlamaIndexAgent</td><td>varies</td><td>RAG, search</td><td>vector_store</td></tr>
-      </table>
-    </div>
   </div>
 
   <footer>
