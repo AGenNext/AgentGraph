@@ -3,13 +3,13 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Components - Enterprise Multi-Agent Team</title>
+  <title>Architecture - Enterprise Multi-Agent Team</title>
   <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
   <style>
-    :root { --ibm-blue-60: #0f62fe; --gray-100: #161616; --gray-90: #393939; --gray-80: #525252; --gray-70: #6f6f6f; --gray-60: #8d8d8d; --gray-40: #c6c6c6; --white: #ffffff; --primary: var(--ibm-blue-60); --bg-primary: var(--gray-100); --bg-secondary: var(--gray-90); --text-primary: var(--white); --text-secondary: var(--gray-40); }
+    :root { --ibm-blue-60: #0f62fe; --ibm-blue-40: #0043ce; --gray-100: #161616; --gray-90: #393939; --gray-80: #525252; --gray-70: #6f6f6f; --gray-60: #8d8d8d; --gray-40: #c6c6c6; --gray-30: #e0e0e0; --white: #ffffff; --primary: var(--ibm-blue-60); --bg-primary: var(--gray-100); --bg-secondary: var(--gray-90); --text-primary: var(--white); --text-secondary: var(--gray-40); }
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: 'IBM Plex Sans', system-ui, sans-serif; font-size: 14px; line-height: 1.5; color: var(--text-primary); background: var(--bg-primary); }
-    .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+    .container { max-width: 1400px; margin: 0 auto; padding: 0 2rem; }
     header { background: var(--bg-secondary); border-bottom: 1px solid var(--gray-80); }
     .header-container { display: flex; align-items: center; justify-content: space-between; height: 48px; }
     .logo { display: flex; align-items: center; gap: 0.75rem; color: var(--text-primary); text-decoration: none; font-weight: 600; }
@@ -21,37 +21,100 @@
     .page-title h1 { font-size: 42px; font-weight: 300; letter-spacing: -0.03em; margin-bottom: 0.75rem; }
     .page-title p { color: var(--text-secondary); font-size: 16px; }
 
-    .section { padding: 2.5rem 0; border-bottom: 1px solid var(--gray-80); }
-    .section-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 1.5rem; }
-    .section h2 { font-size: 20px; font-weight: 600; letter-spacing: -0.01em; }
-    .module-count { font-size: 12px; color: var(--text-secondary); background: var(--gray-80); padding: 0.25rem 0.75rem; }
-
-    .modular-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 1rem; }
-    .module { background: var(--gray-90); border: 1px solid var(--gray-80); padding: 1.25rem; transition: all 0.15s; }
-    .module:hover { border-color: var(--primary); transform: translateY(-2px); }
-    .module-header { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; }
-    .module-icon { width: 32px; height: 32px; background: var(--primary); border-radius: 0; display: flex; align-items: center; justify-content: center; font-size: 14px; }
-    .module h3 { font-size: 15px; font-weight: 600; }
-    .module p { color: var(--text-secondary); font-size: 13px; margin-bottom: 0.75rem; }
-    .module-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
-    .meta-tag { font-size: 10px; padding: 0.2rem 0.5rem; background: var(--gray-80); color: var(--text-secondary); text-transform: uppercase; }
-    .meta-tag.required { background: var(--primary); color: white; }
-    .meta-tag.optional { background: #24a148; color: white; }
-
+    /* NETWORK DIAGRAM STYLES */
+    .network { padding: 3rem 0; position: relative; }
+    .network-bg {
+      position: absolute;
+      inset: 0;
+      background: 
+        radial-gradient(circle at 30% 30%, rgba(15, 98, 254, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(105, 41, 212, 0.06) 0%, transparent 50%);
+      pointer-events: none;
+    }
+    .central-hub {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 180px;
+      height: 180px;
+      background: var(--gray-90);
+      border: 2px solid var(--primary);
+      border-radius: 50%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+      text-align: center;
+      padding: 1rem;
+    }
+    .central-hub h3 { font-size: 16px; font-weight: 600; margin-bottom: 0.5rem; }
+    .central-hub span { font-size: 12px; color: var(--text-secondary); }
+    .central-hub-icon { font-size: 32px; margin-bottom: 0.5rem; }
+    
+    .node-ring {
+      position: relative;
+      margin: 0 auto;
+      height: 600px;
+      max-width: 800px;
+    }
+    .node {
+      position: absolute;
+      background: var(--gray-90);
+      border: 1px solid var(--gray-70);
+      padding: 0.75rem 1rem;
+      min-width: 140px;
+      text-align: center;
+      transition: all 0.2s;
+      cursor: default;
+    }
+    .node:hover { border-color: var(--primary); transform: scale(1.05); }
+    .node h4 { font-size: 12px; font-weight: 600; margin-bottom: 0.25rem; }
+    .node span { font-size: 10px; color: var(--text-secondary); }
+    .node-ring-1 .node { border-radius: 24px; }
+    .node-ring-2 .node { border-radius: 16px; background: var(--gray-80); }
+    
+    /* Positioning nodes in circular pattern */
+    .node-ring-1 { display: flex; flex-wrap: wrap; justify-content: center; gap: 1rem; padding-top: 220px; }
+    .node-ring-2 { display: flex; flex-wrap: wrap; justify-content: center; gap: 0.75rem; padding-top: 80px; }
+    
+    .connector {
+      position: absolute;
+      background: var(--gray-70);
+      z-index: 1;
+    }
+    
+    /* INTERCONNECTED SECTIONS */
+    .-sections { padding: 2rem 0; }
+    .section { padding: 2rem 0; border-bottom: 1px solid var(--gray-80); display: grid; grid-template-columns: 1fr 2fr; gap: 2rem; }
+    .section:last-child { border-bottom: none; }
+    .section-info h3 { font-size: 18px; font-weight: 600; margin-bottom: 0.5rem; display: flex; align-items: center; gap: 0.5rem; }
+    .section-info h3 .num { background: var(--primary); color: white; width: 24px; height: 24px; border-radius: 50%; display: inline-flex; align-items: center; justify-content: center; font-size: 12px; }
+    .section-info p { color: var(--text-secondary); font-size: 13px; line-height: 1.6; }
+    .section-content { display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    .chip { background: var(--gray-90); border: 1px solid var(--gray-70); padding: 0.5rem 0.75rem; font-size: 12px; display: flex; align-items: center; gap: 0.5rem; transition: all 0.15s; }
+    .chip:hover { border-color: var(--primary); }
+    .chip-icon { width: 20px; height: 20px; background: var(--primary); border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 10px; }
+    .chip strong { font-weight: 500; }
+    .chip small { color: var(--text-secondary); }
+    
+    .flow-diagram { padding: 2rem 0; display: flex; align-items: center; justify-content: center; gap: 0.5rem; flex-wrap: wrap; }
+    .flow-step { background: var(--gray-90); border: 1px solid var(--gray-70); padding: 0.75rem 1rem; font-size: 12px; display: flex; align-items: center; gap: 0.5rem; }
+    .flow-arrow { font-size: 18px; color: var(--primary); }
+    
     code { background: var(--gray-80); color: var(--gray-40); padding: 0.15rem 0.35rem; font-size: 11px; font-family: 'IBM Plex Mono', monospace; }
     pre { background: var(--gray-90); color: var(--gray-40); padding: 1rem; border-left: 3px solid var(--primary); margin: 0.75rem 0; font-size: 12px; }
     pre code { background: none; padding: 0; }
-
-    table { width: 100%; border-collapse: collapse; margin: 1rem 0; background: var(--gray-90); }
-    th, td { padding: 0.625rem 1rem; text-align: left; border-bottom: 1px solid var(--gray-80); font-size: 13px; }
-    th { background: var(--gray-80); font-weight: 600; font-size: 11px; text-transform: uppercase; }
-    td { color: var(--text-secondary); }
-    tr:hover td { background: var(--gray-80); }
-
+    
     footer { background: var(--gray-90); border-top: 1px solid var(--gray-80); padding: 2rem 0; text-align: center; }
     footer p { color: var(--text-secondary); font-size: 12px; }
     footer strong { color: var(--text-primary); }
-    @media (max-width: 768px) { .header-container { flex-direction: column; height: auto; padding: 1rem 0; } }
+    @media (max-width: 768px) { 
+      .header-container { flex-direction: column; height: auto; padding: 1rem 0; }
+      .section { grid-template-columns: 1fr; }
+      .node-ring { display: none; }
+    }
   </style>
 </head>
 <body>
@@ -64,157 +127,155 @@
 
   <div class="container">
     <div class="page-title">
-      <h1>Components</h1>
-      <p>Modular architecture for the Enterprise LLM Agnostic Multi-Agent Team.</p>
+      <h1>Architecture</h1>
+      <p>Non-siloed, interconnected system where every module flows into another.</p>
     </div>
 
-    <!-- MODULE 1: LLM PROVIDERS -->
-    <div class="section">
-      <div class="section-header">
-        <h2>1. LLM Providers</h2>
-        <span class="module-count">8 Modules</span>
+    <!-- INTERACTIVE NETWORK -->
+    <div class="network">
+      <div class="network-bg"></div>
+      <div class="central-hub">
+        <span class="central-hub-icon">🔗</span>
+        <h3>LangChain Deep Agent</h3>
+        <span>Orchestrator</span>
       </div>
-      <div class="modular-grid">
-        <div class="module">
-          <div class="module-header"><span class="module-icon">🟢</span><h3>OpenAI Provider</h3></div>
-          <p>GPT-4o, GPT-4 Turbo, o1 models with vision & function calling</p>
-          <div class="module-meta"><span class="meta-tag required">OPENAI_API_KEY</span><span class="meta-tag optional">api_base</span></div>
+      
+      <div class="node-ring">
+        <!-- Inner ring: Core systems -->
+        <div class="node-ring-1">
+          <div class="node" style="position:absolute;top:80px;left:50%;transform:translateX(-50%);">
+            <h4>A2A Protocol</h4>
+            <span>Hub</span>
+          </div>
+          <div class="node" style="position:absolute;top:80px;right:80px;">
+            <h4>Registry</h4>
+            <span>Skills/Tools</span>
+          </div>
+          <div class="node" style="position:absolute;bottom:60px;left:50%;transform:translateX(-50%);">
+            <h4>State Manager</h4>
+            <span>Workflow</span>
+          </div>
+          <div class="node" style="position:absolute;bottom:100px;left:80px;">
+            <h4>Config</h4>
+            <span>Env/Secrets</span>
+          </div>
         </div>
-        <div class="module">
-          <div class="module-header"><span class="module-icon">🔴</span><h3>Anthropic Provider</h3></div>
-          <p>Claude 3.5 Sonnet, Opus with computer use</p>
-          <div class="module-meta"><span class="meta-tag required">ANTHROPIC_API_KEY</span></div>
-        </div>
-        <div class="module">
-          <div class="module-header"><span class="module-icon">🔵</span><h3>Google Provider</h3></div>
-          <p>Gemini 2.0 Flash, Pro with code execution</p>
-          <div class="module-meta"><span class="meta-tag required">GOOGLE_API_KEY</span></div>
-        </div>
-        <div class="module">
-          <div class="module-header"><span class="module-icon">🟣</span><h3>Azure OpenAI</h3></div>
-          <p>Enterprise GPT-4 deployment with custom endpoints</p>
-          <div class="module-meta"><span class="meta-tag required">AZURE_*</span></div>
-        </div>
-        <div class="module">
-          <div class="module-header"><span class="module-icon">🟡</span><h3>Cohere Provider</h3></div>
-          <p>Command-R, embeddings & classification</p>
-          <div class="module-meta"><span class="meta-tag required">COHERE_API_KEY</span></div>
-        </div>
-        <div class="module">
-          <div class="module-header"><span class="module-icon">⚪</span><h3>Ollama Provider</h3></div>
-          <p>Local Llama3, Mistral for offline privacy</p>
-          <div class="module-meta"><span class="meta-tag optional">local</span></div>
-        </div>
-        <div class="module">
-          <div class="module-header"><span class="module-icon">🟠</span><h3>Mistral Provider</h3></div>
-          <p>Mistral Large, Codestral for code generation</p>
-          <div class="module-meta"><span class="meta-tag required">MISTRAL_API_KEY</span></div>
-        </div>
-        <div class="module">
-          <div class="module-header"><span class="module-icon">🟧</span><h3>Cloudflare Workers</h3></div>
-          <p>LLama 3 on edge for low latency</p>
-          <div class="module-meta"><span class="meta-tag required">CF_API_TOKEN</span></div>
+        
+        <!-- Outer ring: Agents & Providers -->
+        <div class="node-ring-2">
+          <div class="node" style="top:10px;left:10%;"><h4>OpenAI</h4><span>gpt-4o</span></div>
+          <div class="node" style="top:10px;left:30%;"><h4>Anthropic</h4><span>Claude</span></div>
+          <div class="node" style="top:10px;left:50%;"><h4>Google</h4><span>Gemini</span></div>
+          <div class="node" style="top:10px;left:70%;"><h4>Azure</h4><span>Enterprise</span></div>
+          <div class="node" style="top:10px;left:85%;"><h4>Ollama</h4><span>Local</span></div>
+          
+          <div class="node" style="bottom:10px;left:10%;"><h4>OpenAIAgent</h4><span>Coding</span></div>
+          <div class="node" style="bottom:10px;left:30%;"><h4>GoogleAgent</h4><span>Research</span></div>
+          <div class="node" style="bottom:10px;left:50%;"><h4>MsftAgent</h4><span>Docs</span></div>
+          <div class="node" style="bottom:10px;left:70%;"><h4>SFAggregent</h4><span>CRM</span></div>
+          <div class="node" style="bottom:10px;left:85%;"><h4>LangChain</h4><span>Tools</span></div>
         </div>
       </div>
     </div>
 
-    <!-- MODULE 2: AGENTS -->
-    <div class="section">
-      <div class="section-header">
-        <h2>2. Agent Modules</h2>
-        <span class="module-count">14 Modules</span>
-      </div>
-      <table>
-        <tr><th>Agent</th><th>Preferred Model</th><th>Specialization</th><th>Dependencies</th></tr>
-        <tr><td>OpenAIAgent</td><td>gpt-4o</td><td>Coding & reasoning</td><td>openai</td></tr>
-        <tr><td>GoogleAgent</td><td>gemini-2.0-flash</td><td>Research & SEO</td><td>google-generativeai</td></tr>
-        <tr><td>MicrosoftAgent</td><td>gpt-4</td><td>Enterprise docs</td><td>azure-ai</td></tr>
-        <tr><td>SalesforceAgent</td><td>gpt-4o</td><td>CRM automation</td><td>simple-salesforce</td></tr>
-        <tr><td>LangChainAgent</td><td>varies</td><td>Tool chains</td><td>langchain</td></tr>
-        <tr><td>LlamaIndexAgent</td><td>varies</td><td>RAG</td><td>llamaindex</td></tr>
-        <tr><td>DockerAgent</td><td>gpt-4o</td><td>Container configs</td><td>docker</td></tr>
-        <tr><td>GitHubAgent</td><td>gpt-4o</td><td>Repository ops</td><td>PyGithub</td></tr>
-      </table>
-    </div>
-
-    <!-- MODULE 3: ORCHESTRATORS -->
-    <div class="section">
-      <div class="section-header">
-        <h2>3. Orchestrator Modules</h2>
-        <span class="module-count">3 Modules</span>
-      </div>
-      <div class="modular-grid">
-        <div class="module">
-          <div class="module-header"><span class="module-icon">📊</span><h3>LangGraph Workflow</h3></div>
-          <p>Graph-based orchestration with state management</p>
-          <pre><code>from orchestrator import create_workflow
-wf = create_workflow()
-result = wf.invoke(state)</code></pre>
-        </div>
-        <div class="module">
-          <div class="module-header"><span class="module-icon">🔗</span><h3>A2A Protocol</h3></div>
-          <p>Agent-to-agent communication hub</p>
-          <pre><code>from a2a import A2AServer
-server = A2AServer(agents)
-await server.handle_task(message)</code></pre>
-        </div>
-        <div class="module">
-          <div class="module-header"><span class="module-icon">⚙️</span><h3>Team Coordinator</h3></div>
-          <p>Parallel & sequential execution</p>
-          <pre><code>from agents import TeamCoordinator
-team = TeamCoordinator()
-results = team.run_parallel(tasks)</code></pre>
-        </div>
+    <!-- INTERCONNECTED DATA FLOW -->
+    <div class="sections">
+      <div class="section" style="border:none;padding-bottom:1rem;">
+        <div class="section-info"><h3>Data Never silos - Always Flows</h3></div>
       </div>
     </div>
+    
+    <div class="flow-diagram">
+      <div class="flow-step">User Request →</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">A2A Protocol →</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">LangChain Deep Agent →</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">Registry (Match Skills) →</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">Select Agent →</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">LLM Provider →</div>
+      <span class="flow-arrow">→</span>
+      <div class="flow-step">Result</div>
+    </div>
 
-    <!-- MODULE 4: EXTENSIONS -->
-    <div class="section">
-      <div class="section-header">
-        <h2>4. Extension Points</h2>
-        <span class="module-count">4 Points</span>
+    <!-- MODULES THAT INTERCONNECT -->
+    <div class="sections">
+      <div class="section">
+        <div class="section-info">
+          <h3><span class="num">1</span> LLM Providers ↔ Agents ↔ Orchestrator</h3>
+          <p>Providers are not isolated—they're selected dynamically based on task requirements. Agents consume LLM capabilities, orchestrator controls flow.</p>
+        </div>
+        <div class="section-content">
+          <div class="chip"><span class="chip-icon">🟢</span><div><strong>OpenAI</strong><small> gpt-4o</small></div></div>
+          <div class="chip"><span class="chip-icon">🔴</span><div><strong>Anthropic</strong><small> Claude</small></div></div>
+          <div class="chip"><span class="chip-icon">🔵</span><div><strong>Google</strong><small> Gemini</small></div></div>
+          <div class="chip"><span class="chip-icon">🟣</span><div><strong>Azure</strong><small> GPT-4</small></div></div>
+          <div class="chip"><span class="chip-icon">⬜</span><div><strong>Ollama</strong><small> Local</small></div></div>
+        </div>
       </div>
-      <div class="modular-grid">
-        <div class="module">
-          <div class="module-header"><span class="module-icon">➕</span><h3>Custom Agent</h3></div>
-          <p>Extend BaseAgent for new capabilities</p>
-          <pre><code>class MyAgent(BaseAgent):
-    async def run(self, task):
-        return await self.llm.complete(task)</code></pre>
+
+      <div class="section">
+        <div class="section-info">
+          <h3><span class="num">2</span> Registry ↔ Skills ↔ Agents ↔ A2A</h3>
+          <p>Registry isn't a silo—agents advertise skills, A2A protocol discovers capabilities dynamically, enabling on-demand team formation.</p>
         </div>
-        <div class="module">
-          <div class="module-header"><span class="module-icon">🔌</span><h3>LLM Adapter</h3></div>
-          <p>Register new providers</p>
-          <pre><code>REGISTRY["my-provider"] = MyAdapter</code></pre>
+        <div class="section-content">
+          <div class="chip"><div><strong>did:skill:coding</strong><small> v1</small></div></div>
+          <div class="chip"><div><strong>did:skill:research</strong><small> v1</small></div></div>
+          <div class="chip"><div><strong>did:skill:seo</strong><small> v1</small></div></div>
+          <div class="chip"><div><strong>did:tool:web_search</strong><small> v1</small></div></div>
+          <div class="chip"><div><strong>did:tool:code_exec</strong><small> v1</small></div></div>
         </div>
-        <div class="module">
-          <div class="module-header"><span class="module-icon">🔧</span><h3>Custom Tool</h3></div>
-          <p>Add tools via decorator</p>
-          <pre><code>@tool def search(q): return api(q)</code></pre>
+      </div>
+
+      <div class="section">
+        <div class="section-info">
+          <h3><span class="num">3</span> Orchestrator ↔ State Manager ↔ Workflow Nodes</h3>
+          <p>LangChain Deep Agent orchestrates by passing state between nodes—no silos, just a continuous flow graph where each node modifies shared state.</p>
         </div>
-        <div class="module">
-          <div class="module-header"><span class="module-icon">📦</span><h3>Workflow Node</h3></div>
-          <p>Add LangGraph nodes</p>
-          <pre><code>@node def process(state): 
-    return {"out": state}</code></pre>
+        <div class="section-content">
+          <div class="chip"><div><strong>Input Node</strong><small> Parse</small></div></div>
+          <div class="chip"><div><strong>Route Node</strong><small> Decide</small></div></div>
+          <div class="chip"><div><strong>Agent Node</strong><small> Execute</small></div></div>
+          <div class="chip"><div><strong>Aggregate Node</strong><small> Merge</small></div></div>
+          <div class="chip"><div><strong>Output Node</strong><small> Format</small></div></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-info">
+          <h3><span class="num">4</span> Extensions Connect Seamlessly</h3>
+          <p>Add custom agents, tools, or providers—they plug into existing flow without rewriting.</p>
+        </div>
+        <div class="section-content">
+          <div class="chip"><div><strong>@custom_agent</strong><small> decorator</small></div></div>
+          <div class="chip"><div><strong>@tool</strong><small> decorator</small></div></div>
+          <div class="chip"><div><strong>@node</strong><small> LangGraph</small></div></div>
+          <div class="chip"><div><strong>Adapter</strong><small> LLM</small></div></div>
         </div>
       </div>
     </div>
 
-    <!-- MODULE 5: REGISTRY -->
-    <div class="section">
-      <div class="section-header">
-        <h2>5. Registry Modules</h2>
-        <span class="module-count">3 Modules</span>
+    <!-- EXAMPLE FLOW -->
+    <div class="sections">
+      <div class="section" style="border:none;">
+        <div class="section-info">
+          <h3>Example: Cross-Module Request</h3>
+          <pre><code># User asks: "Research AI agents and write a blog post"
+# 
+# 1. A2A receives request
+# 2. Registry finds: research skill + writing skill
+# 3. LangChain orchestrates:
+#    - GoogleAgent (research skill) → fetches info
+#    - OpenAIAgent (writing skill) → generates content
+#    - State merges → final output
+# Result: Seamless cross-module collaboration</code></pre>
+        </div>
       </div>
-      <table>
-        <tr><th>Registry</th><th>Purpose</th><th>Format</th></tr>
-        <tr><td>Skills Registry</td><td>Agent capabilities</td><td>DID</td></tr>
-        <tr><td>Tools Registry</td><td>Executable functions</td><td>DID</td></tr>
-        <tr><td>Prompts Registry</td><td>Template prompts</td><td>Versioned</td></tr>
-      </table>
     </div>
-
   </div>
 
   <footer>
