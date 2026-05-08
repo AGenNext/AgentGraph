@@ -5,7 +5,7 @@ Five enterprise roles:
 - Project Driver: Drives multiple projects & products
 - Product Lead: Owns product direction  
 - Group Admin: Drives collaboration across groups
-- Team Lead: Leads team members
+- Team Lead: Leads multiple teams, projects & products
 - Employee Assistant: Supports employees
 """
 
@@ -32,17 +32,13 @@ class AgentRoleConfig:
     groups: List[str] = field(default_factory=list)
     engages_with: List[str] = field(default_factory=list)
     manages: List[str] = field(default_factory=list)
+    teams: List[str] = field(default_factory=list)
 
 
 ROLE_BEHAVIORS = {
-    AgentRole.PROJECT_DRIVER: {
-        "behavior": "drives", 
-        "delegates": True, 
-        "approves": True,
-        "multi": True,  # Drives multiple
-    },
+    AgentRole.PROJECT_DRIVER: {"behavior": "drives", "delegates": True, "approves": True},
     AgentRole.PRODUCT_LEAD: {"behavior": "owns", "delegates": True, "approves": True},
     AgentRole.GROUP_ADMIN: {"behavior": "collaborates", "facilitates": True, "engages": True},
-    AgentRole.TEAM_LEAD: {"behavior": "leads", "manages": True, "coaches": True},
+    AgentRole.TEAM_LEAD: {"behavior": "leads", "manages": True, "coaches": True, "drives": True},
     AgentRole.EMPLOYEE_ASSISTANT: {"behavior": "assists", "supports": True},
 }
