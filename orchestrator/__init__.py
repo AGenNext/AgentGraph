@@ -1,46 +1,43 @@
 """
-LangChain Deep Agent Orchestrator - Runtime Engine.
+LangGraph Runtime Engine for Multi-Agent Workflows.
 
-Provides multi-agent workflow execution at runtime.
+Execute multi-agent workflows at runtime.
 """
 
-# Direct runtime usage:
-#   from orchestrator import run_workflow
-#   result = run_workflow(task, agents)
+# Usage: from orchestrator import execute_workflow
+#        result = execute_workflow(task, agents)
 
-def run_workflow(task: str, agents: list = None, **config):
+def execute_workflow(task: str, agents: list = None, **config):
     """
-    Run multi-agent workflow at runtime.
+    Execute a multi-agent workflow at runtime.
     
     Args:
-        task: The task to execute
-        agents: List of agent names to use (auto-select if None)
-        **config: Additional config
+        task: The task string
+        agents: List of agent names (auto-select if None)
+        **config: content_type, style, length
     
     Returns:
-        Workflow result with synthesized content
+        dict with result, quality_score
     """
     from .langgraph_workflow import create_workflow, TeamCoordinator
     
     coordinator = TeamCoordinator()
-    workflow = create_workflow(coordinator)
+    wf = create_workflow(coordinator)
     
-    initial_state = {
+    state = {
         "topic": task,
         "content_type": config.get("content_type", "general"),
         "style": config.get("style", "professional"),
         "length": config.get("length", "medium"),
     }
     
-    result = workflow.invoke(initial_state)
-    return result
+    return wf.invoke(state)
 
 
-def create_team_workflow(agent_ids: list = None):
+def create_workflow(agent_ids: list = None):
     """
-    Create a workflow for specific agents at runtime.
+    Create a workflow instance.
     """
     from .langgraph_workflow import create_workflow, TeamCoordinator
-    
     coordinator = TeamCoordinator(agents=agent_ids)
     return create_workflow(coordinator)
