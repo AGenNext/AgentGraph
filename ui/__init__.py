@@ -14,6 +14,11 @@ from .salesforce_ui import SalesforceUI
 # Builders (actual working code)
 from .gradio_builder import GradioBuilder, create_chat
 from .streamlit_builder import chat_ui, agent_card, config_form, metrics_dashboard, file_uploader
+from .openai_builder import OpenAIBuilder
+from .google_builder import GoogleBuilder
+from .microsoft_builder import MicrosoftBuilder
+from .langchain_builder import LangChainBuilder
+from .langgraph_builder import LangGraphBuilder
 
 __all__ = [
     # Toolkits
@@ -34,4 +39,10 @@ __all__ = [
     "config_form",
     "metrics_dashboard",
     "file_uploader",
+    # SDK Builders
+    "OpenAIBuilder",
+    "GoogleBuilder",
+    "MicrosoftBuilder",
+    "LangChainBuilder",
+    "LangGraphBuilder",
 ]
