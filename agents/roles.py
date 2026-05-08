@@ -1,8 +1,12 @@
 """
-Enterprise Agent - IAM/IGA Role references.
+Enterprise Agent Config - Simplified.
 
-Roles point to IAM/IGA systems - not hardcoded values.
-Just like credentials point to secret manager.
+Key fields only:
+- Identity (from SSO)
+- Owner/Sponsor (governance)
+- Secret ref (points to secret manager)
+- Business scope (projects, products, groups)
+- Runtime (orchestrator, LLM)
 """
 
 from enum import Enum
@@ -37,64 +41,33 @@ class DeprovisioningReason(Enum):
 
 @dataclass
 class AgentConfig:
-    """Enterprise agent - role refs from IAM/IGA."""
+    """Enterprise agent config - simplified."""
     role: AgentRole
     
-    # === IDENTITY (from SSO/IdP) ===
-    identity_id: Optional[str] = None
-    identity_provider: Optional[str] = None
-    principal_name: Optional[str] = None
-    display_name: Optional[str] = None
-    description: Optional[str] = None
+    # === IDENTITY (from SSO - just provide ID, system maps) ===
+    identity_id: Optional[str] = None  # Provided by IdP
+    identity_provider: Optional[str] = None  # entra/okta/google
     
-    # === SECRET MANAGER ===
-    secret_manager: Optional[str] = None  # aws-secrets/vault/azure-keyvault
-    secret_refs: List[str] = field(default_factory=list)
-    credential_rotation: str = "auto"
-    credential_expires_at: Optional[datetime] = None
+    # === SECRET REF (points to secret manager) ===
+    secret_ref: Optional[str] = None  # In secret manager
     
-    # === OAUTH SCOPES ===
-    oauth_scopes: List[str] = field(default_factory=list)
-    resources: List[str] = field(default_factory=list)
+    # === GOVERNANCE (mandatory) ===
+    owner: str  # Required
+    sponsor: str  # Required
     
-    # === IAM ROLES (reference from IdP) ===
-    iam_system: Optional[str] = None  # entra/okta/google
-    iam_role_refs: List[str] = field(default_factory=list)  # Role refs
-    iam_group_refs: List[str] = field(default_factory=list)  # Group refs
-    
-    # === IGA ROLES (reference from IGA) ===
-    iga_system: Optional[str] = None  # saviynt/sailpoint/sap-iga
-    iga_role_refs: List[str] = field(default_factory=list)  # Role refs
-    iga_entitlement_refs: List[str] = field(default_factory=list)  # Entitlement refs
-    access_certified: bool = False
-    access_certified_by: Optional[str] = None
-    access_certified_at: Optional[datetime] = None
-    
-    # === GOVERNANCE ===
-    owner: str
-    sponsor: str
+    # === SCOPE (business) ===
     reports_to: Optional[str] = None
     priority: int = 1
+    projects: List[str] = field(default_factory=list)
+    products: List[str] = field(default_factory=list)
+    groups: List[str] = field(default_factory=list)
     
     # === LIFECYCLE ===
     status: AgentStatus = AgentStatus.ACTIVE
     created_at: Optional[datetime] = None
     modified_at: Optional[datetime] = None
-    last_used_at: Optional[datetime] = None
-    
     deprovisioned_at: Optional[datetime] = None
     deprovisioning_reason: Optional[DeprovisioningReason] = None
-    disable_reason: Optional[str] = None
-    
-    expires_at: Optional[datetime] = None
-    renewal_required: bool = True
-    
-    # === SCOPE ===
-    projects: List[str] = field(default_factory=list)
-    products: List[str] = field(default_factory=list)
-    groups: List[str] = field(default_factory=list)
-    engages_with: List[str] = field(default_factory=list)
-    manages: List[str] = field(default_factory=list)
     
     # === EMPLOYEE ASSISTANT ===
     employee_email: Optional[str] = None
