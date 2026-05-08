@@ -228,3 +228,128 @@ def create_client(provider: str, config: Dict) -> AIClient:
     
     else:
         raise ValueError(f"Unknown provider: {provider}")
+
+
+# === MODEL SELECTION ===
+
+class ModelSelector:
+    """Select best model based on requirements."""
+    
+    CAPABILITY_REQUIREMENTS = {
+        "vision": ["gpt-4o", "claude-3-5-sonnet", "gemini-2.0-flash"],
+        "thinking": ["gpt-4o", "claude-3-5-sonnet", "o1", "gemini-2.5-pro"],
+        "fast": ["gpt-4o-mini", "claude-3-haiku", "groq-mixtral"],
+        "code": ["gpt-4o", "o1", "claude-3-5-sonnet", "gemini-2.5-pro"],
+        "math": ["o1", "o3-mini", "claude-3-opus"],
+    }
+    
+    def select(self, required_capabilities: List[str], preferred_provider: str = None) -> str:
+        """Select model based on required capabilities."""
+        for cap in required_capabilities:
+            models = self.CAPABILITY_REQUIREMENTS.get(cap, [])
+            if models:
+                return models[0]
+        return "gpt-4o"
+
+
+# === TOKEN MANAGEMENT ===
+
+class TokenManager:
+    """Manage tokens (rate limits, quotas)."""
+    
+    def __init__(self):
+        self._tokens = {}  # provider -> token info
+    
+    def set_token(self, provider: str, token: str, expires_at: str = None):
+        self._tokens[provider] = {"token": token, "expires_at": expires_at}
+    
+    def get_token(self, provider: str) -> Optional[str]:
+        info = self._tokens.get(provider, {})
+        return info.get("token")
+    
+    def is_expired(self, provider: str) -> bool:
+        from datetime import datetime
+        info = self._tokens.get(provider, {})
+        if info.get("expires_at"):
+            exp = datetime.fromisoformat(info["expires_at"])
+            return datetime.now() > exp
+        return False
+
+
+# === BILLING ===
+
+class BillingClient:
+    """Billing/reporting client for providers."""
+    
+    def __init__(self, provider: str, config: Dict):
+        self.provider = provider
+        self.config = config
+    
+    def get_usage(self, start_date: str, end_date: str) -> Dict:
+        """Get token usage for date range."""
+        # Placeholder - real implementation per provider
+        return {
+            "prompt_tokens": 0,
+            "completion_tokens": 0,
+            "total_cost": 0.0,
+            "requests": 0,
+        }
+    
+    def get_quota(self) -> Dict:
+        """Get quota limits."""
+        return {
+            "rpm": 500,  # requests per minute
+            "tpm": 30000,  # tokens per minute
+            "daily_limit": 1000000,
+        }
+    
+    def get_costs(self, period: str = "monthly") -> Dict:
+        """Get costs for period."""
+        return {
+            "total": 0.0,
+            "by_model": {},
+            "currency": "USD",
+        }
+
+
+# === REPORTING ===
+
+class ReportingClient:
+    """Usage reporting and analytics."""
+    
+    def __init__(self):
+        self._logs = []
+    
+    def log_request(self, provider: str, model: str, tokens: int, latency_ms: float):
+        self._logs.append({
+            "timestamp": str(datetime.now()),
+            "provider": provider,
+            "model": model,
+            "tokens": tokens,
+            "latency_ms": latency_ms,
+        })
+    
+    def get_report(self, start_date: str = None, end_date: str = None) -> Dict:
+        """Generate usage report."""
+        logs = self._logs
+        if start_date:
+            logs = [l for l in logs if l["timestamp"] >= start_date]
+        if end_date:
+            logs = [l for l in logs if l["timestamp"] <= end_date]
+        
+        total_tokens = sum(l["tokens"] for l in logs)
+        avg_latency = sum(l["latency_ms"] for l in logs) / max(len(logs), 1)
+        
+        return {
+            "total_requests": len(logs),
+            "total_tokens": total_tokens,
+            "avg_latency_ms": avg_latency,
+            "by_provider": {},
+        }
+
+
+# === GLOBAL INSTANCES ===
+model_selector = ModelSelector()
+token_manager = TokenManager()
+reporting_client = ReportingClient()
+from datetime import datetime
