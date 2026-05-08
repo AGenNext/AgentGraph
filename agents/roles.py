@@ -1,11 +1,9 @@
 """
-Enterprise Agent Roles - Microsoft Entra Agent ID aligned.
+Enterprise Agent - SSO Identity + Lifecycle.
 
-Includes:
-- Identity: object_id, UPN, displayName
-- Credentials & scopes  
-- Lifecycle management
-- Owner & Sponsor governance
+Identity from any SSO provider (Entra, Okta, Auth0, etc.)
+- No vendor-specific UUID
+- Generic identity_id from SSO
 """
 
 from enum import Enum
@@ -15,7 +13,6 @@ from datetime import datetime
 
 
 class AgentRole(Enum):
-    """Enterprise agent roles."""
     PROJECT_DRIVER = "project_driver"
     PRODUCT_LEAD = "product_lead"
     GROUP_ADMIN = "group_admin"
@@ -24,7 +21,6 @@ class AgentRole(Enum):
 
 
 class AgentStatus(Enum):
-    """Agent lifecycle status."""
     ACTIVE = "active"
     INACTIVE = "inactive"
     PENDING = "pending"
@@ -33,7 +29,6 @@ class AgentStatus(Enum):
 
 
 class DeprovisioningReason(Enum):
-    """Why agent was disabled."""
     DISABLED = "disabled"
     TERMINATED = "terminated"
     SECURITY_CONCERN = "security_concern"
@@ -43,14 +38,13 @@ class DeprovisioningReason(Enum):
 
 @dataclass
 class AgentConfig:
-    """
-    Enterprise agent config - Entra Agent ID aligned.
-    """
+    """Enterprise agent - SSO identity aligned."""
     role: AgentRole
     
-    # === IDENTITY ===
-    object_id: Optional[str] = None
-    user_principal_name: Optional[str] = None
+    # === SSO IDENTITY (provider agnostic) ===
+    identity_id: Optional[str] = None       # From SSO provider
+    identity_provider: Optional[str] = None    # Entra/Okta/Auth0/Cognito
+    principal_name: Optional[str] = None      # user@domain
     display_name: Optional[str] = None
     description: Optional[str] = None
     
@@ -66,18 +60,16 @@ class AgentConfig:
     reports_to: Optional[str] = None
     priority: int = 1
     
-    # === LIFECYCLE MANAGEMENT ===
+    # === LIFECYCLE ===
     status: AgentStatus = AgentStatus.ACTIVE
     created_at: Optional[datetime] = None
     modified_at: Optional[datetime] = None
     last_used_at: Optional[datetime] = None
     
-    # Deprovisioning
     deprovisioned_at: Optional[datetime] = None
     deprovisioning_reason: Optional[DeprovisioningReason] = None
     disable_reason: Optional[str] = None
     
-    # Expiration
     expires_at: Optional[datetime] = None
     renewal_required: bool = True
     
