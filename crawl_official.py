@@ -13,33 +13,31 @@ import re
 
 # OFFICIAL DOCUMENTATION URLs - Directly from each framework's website
 OFFICIAL_DOCS = {
-    # Core Agent Frameworks
+    # Core Agent Frameworks (VERIFIED URLS)
     "langgraph": {
         "name": "LangGraph",
-        "base_url": "https://docs.langgraph.ai",
+        "base_url": "https://python.langchain.com/docs/langgraph/",
         "doc_urls": [
-            "https://docs.langgraph.ai/concepts/",
-            "https://docs.langgraph.ai/how-to/",
+            "https://python.langchain.com/docs/langgraph/",
+            "https://python.langchain.com/docs/langgraph/concepts/",
+            "https://python.langchain.com/docs/langgraph/quickstart/",
         ],
-        "features_page": "https://docs.langgraph.ai/concepts/",
     },
     "langchain": {
         "name": "LangChain",
-        "base_url": "https://python.langchain.com",
+        "base_url": "https://python.langchain.com/docs/concepts/",
         "doc_urls": [
             "https://python.langchain.com/docs/concepts/",
             "https://python.langchain.com/docs/modules/",
         ],
-        "features_page": "https://python.langchain.com/docs/concepts/",
     },
     "autogen": {
         "name": "AutoGen",
-        "base_url": "https://microsoft.github.io/autogen",
+        "base_url": "https://microsoft.github.io/autogen/0.2/",
         "doc_urls": [
-            "https://microsoft.github.io/autogen/docs/",
-            "https://microsoft.github.io/autogen/docs/Use-Cases/",
+            "https://microsoft.github.io/autogen/0.2/docs/",
+            "https://microsoft.github.io/autogen/0.2/docs/Use-Cases/",
         ],
-        "features_page": "https://microsoft.github.io/autogen/docs/",
     },
     "crewai": {
         "name": "CrewAI",
@@ -48,16 +46,14 @@ OFFICIAL_DOCS = {
             "https://docs.crewai.com/",
             "https://docs.crewai.com/core-functionality/",
         ],
-        "features_page": "https://docs.crewai.com/",
     },
     "openai": {
         "name": "OpenAI Agents SDK",
-        "base_url": "https://platform.openai.com",
+        "base_url": "https://platform.openai.com/docs/agents",
         "doc_urls": [
             "https://platform.openai.com/docs/agents",
             "https://platform.openai.com/docs/agents/quickstart",
         ],
-        "features_page": "https://platform.openai.com/docs/agents",
     },
     "anthropic": {
         "name": "Anthropic Claude",

@@ -71,7 +71,59 @@ streamlit run ui/streamlit_examples.py
 
 ---
 
-*Last updated: 2026-05-08*
+## Documentation URLs (VERIFIED)
+
+| Framework | URL |
+|-----------|-----|
+| LangGraph | https://python.langchain.com/docs/langgraph/ |
+| LangChain | https://python.langchain.com/docs/concepts/ |
+| AutoGen | https://microsoft.github.io/autogen/0.2/ |
+| CrewAI | https://docs.crewai.com/ |
+| OpenAI | https://platform.openai.com/docs/agents/ |
+| Anthropic | https://docs.anthropic.com/en/docs/ |
+
+---
+
+## Feature Schema (15 Features)
+
+| Feature | Description |
+|---------|-------------|
+| checkpoints | Save and resume state |
+| short_term_memory | In-process memory |
+| long_term_memory | Persistent storage (PostgreSQL, Redis) |
+| semantic_memory | Embedding-based memory |
+| human_interrupt | Pause agent execution |
+| human_feedback | Request human input |
+| approval_gates | Require approval to proceed |
+| multi_agent | Multiple agent orchestration |
+| function_calling | Tool/function calling |
+| code_interpreter | Execute code |
+| web_search | Search the web |
+| streaming | Token-by-token streaming |
+| computer_use | Control computer directly |
+| mcp | Model Context Protocol |
+| guardrails | Input/output validation |
+
+---
+
+## LangGraph SDK API Structure
+
+**Core Classes:**
+- `StateGraph` - Create state-based graphs
+- `node` - Node in graph (function)
+- `START` / `END` - Graph entry/exit points
+- `add_node()` - Add node to graph
+- `add_edge()` - Connect nodes
+- `compile()` - Compile graph
+
+**Key Concepts:**
+- `state` - Agent state schema
+- `messages` - Chat message history
+- `checkpoint` - Save/resume state
+
+---
+
+*Last updated: 2026-05-09*
 ---
 
 ## Rules
