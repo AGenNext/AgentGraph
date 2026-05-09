@@ -42,7 +42,7 @@ jobs:
             type=ref,event=branch
             type=ref,event=pr
             type=sha,prefix=
-            type=raw,value=latest,enable={{-is_default_branch}}
+            type=raw,value=latest,enable={{is_default_branch}}
             type=raw,value={{version}},prefix=v,enable={{is_default_branch}}
 
       - name: Build and push
