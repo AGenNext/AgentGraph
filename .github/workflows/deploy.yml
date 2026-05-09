@@ -6,9 +6,17 @@ on:
   release:
     types: [published]
 
+# Org secrets used:
+# - GITHUB_TOKEN: Auto-provided by GH Actions (packages:write scope)
+# - VPS_HOST: Hostname for VPS deployment (e.g., vps.openautonomyx.com)
+# - VPS_SSH_KEY: SSH private key for VPS authentication
+
 jobs:
   build:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      packages: write
     
     steps:
       - uses: actions/checkout@v4
@@ -44,6 +52,24 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
+  deploy-vps:
+    runs-on: ubuntu-latest
+    needs: build
+    if: github.ref == 'refs/heads/main'
+    
+    steps:
+      - name: Deploy to VPS
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.VPS_HOST }}
+          username: ubuntu
+          key: ${{ secrets.VPS_SSH_KEY }}
+          script: |
+            docker pull ghcr.io/${{ github.repository }}:latest
+            docker stop agent-server || true
+            docker rm agent-server || true
+            docker run -d --name agent-server -p 8000:8000 ghcr.io/${{ github.repository }}:latest
+
   security:
     runs-on: ubuntu-latest
     needs: build
@@ -66,7 +92,7 @@ jobs:
 
   notify:
     runs-on: ubuntu-latest
-    needs: [build, security]
+    needs: [build, deploy-vps, security]
     
     steps:
       - name: Create GitHub Release
