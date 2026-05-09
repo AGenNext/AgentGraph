@@ -17,12 +17,7 @@ jobs:
     permissions:
       contents: read
       packages: write
-      id-token: write
-    环境: production
-    env:
-      GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }}
-      GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
-      GCP_REGION: ${{ secrets.GCP_REGION || 'us-central1' }}
+    environment: production
 
     steps:
       - name: Checkout code
@@ -60,26 +55,19 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Authenticate to Google Cloud
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: google-github-actions/auth@v2
-        with:
-          credentials_json: ${{ env.GCP_SA_KEY }}
-
-      - name: Set up Cloud Run
-        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
-        uses: google-github-actions/setup-gcloud@v2
-
-      - name: Deploy to Google Cloud Run
+      - name: Deploy to Coolify
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
-          GCP_PROJECT: ${{ secrets.GCP_PROJECT }}
-          GCP_REGION: ${{ secrets.GCP_REGION || 'us-central1' }}
+          COOLIFY_HOST: ${{ secrets.COOLIFY_HOST }}
+          COOLIFY_API_KEY: ${{ secrets.COOLIFY_API_KEY }}
+          RESOURCE_UUID: ${{ secrets.COOLIFY_RESOURCE_UUID }}
         run: |
-          gcloud run deploy agennext-enterprise \
-            --image ghcr.io/agennext/agennext-enterprise:latest \
-            --platform managed \
-            --region "$GCP_REGION" \
-            --allow-unauthenticated \
-            --port 8000 \
-            --project "$GCP_PROJECT"
+          if [ -n "$COOLIFY_HOST" ] && [ -n "$COOLIFY_API_KEY" ] && [ -n "$RESOURCE_UUID" ]; then
+            echo "Deploying to Coolify..."
+            IMAGE_TAG="${{ steps.meta.outputs.tags }}"
+            curl -s -X POST "$COOLIFY_HOST/api/v1/deploy?uuid=$RESOURCE_UUID&tag=latest" \
+              -H "Authorization: Bearer $COOLIFY_API_KEY" \
+              -H "Content-Type: application/json" || echo "Deploy failed"
+          else
+            echo "Skipping deploy - COOLIFY_HOST, COOLIFY_API_KEY, or RESOURCE_UUID not configured"
+          fi
