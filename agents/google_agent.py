@@ -1,11 +1,20 @@
 """Google Agent SDK - References capabilities from registry."""
 
-from typing import Optional, List
+from typing import Optional, List, Callable, Any
 import os
 
 from agents.base_agent import BaseAgent, ContentRequest, ContentResult
 from core.llm_client import LLMClient, LLMConfig
 from core.registry import REGISTRY
+
+
+class ToolCallHooks:
+    """Pre/post tool call hooks."""
+    def __init__(self):
+        self.pre = []
+        self.post = []
+    def on_before_tool(self, h): self.pre.append(h)
+    def on_after_tool(self, h): self.post.append(h)
 
 
 class GoogleAgent(BaseAgent):

@@ -1,10 +1,19 @@
 """LangChain Agent SDK - LLM agent framework."""
 
-from typing import Optional, List
+from typing import Optional, List, Callable, Any
 import os
 
 from agents.base_agent import BaseAgent, ContentRequest, ContentResult
 from core.llm_client import LLMClient, LLMConfig
+
+
+class ToolCallHooks:
+    """Pre/post tool call hooks."""
+    def __init__(self):
+        self.pre = []
+        self.post = []
+    def on_before_tool(self, h): self.pre.append(h)
+    def on_after_tool(self, h): self.post.append(h)
 
 
 class LangChainAgent(BaseAgent):
