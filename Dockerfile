@@ -20,7 +20,7 @@ RUN npm install && npm run build
 EXPOSE 3000
 
 FROM python:3.11-slim
-apt-get update && apt-get install -y --no-install-recommends nodejs npm
+RUN apt-get update && apt-get install -y --no-install-recommends nodejs npm
 COPY --from=backend /app /app
 COPY --from=frontend /app /frontend
 WORKDIR /app
