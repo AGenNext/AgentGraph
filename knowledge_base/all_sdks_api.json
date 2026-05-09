@@ -1,0 +1,1741 @@
+{
+  "langgraph": {
+    "endpoints": [
+      [
+        "class ",
+        "LangSmithTracing"
+      ],
+      [
+        "class ",
+        "Config"
+      ],
+      [
+        "class ",
+        "Checkpoint"
+      ],
+      [
+        "class ",
+        "GraphSchema"
+      ],
+      [
+        "class ",
+        "AssistantBase"
+      ],
+      [
+        "class ",
+        "AssistantVersion"
+      ],
+      [
+        "class ",
+        "Assistant"
+      ],
+      [
+        "class ",
+        "AssistantsSearchResponse"
+      ],
+      [
+        "class ",
+        "Interrupt"
+      ],
+      [
+        "class ",
+        "Thread"
+      ],
+      [
+        "class ",
+        "ThreadTask"
+      ],
+      [
+        "class ",
+        "ThreadState"
+      ],
+      [
+        "class ",
+        "ThreadUpdateStateResponse"
+      ],
+      [
+        "class ",
+        "Run"
+      ],
+      [
+        "class ",
+        "Cron"
+      ],
+      [
+        "class ",
+        "CronUpdate"
+      ],
+      [
+        "class ",
+        "RunCreate"
+      ],
+      [
+        "class ",
+        "Item"
+      ],
+      [
+        "class ",
+        "ListNamespaceResponse"
+      ],
+      [
+        "class ",
+        "SearchItem"
+      ],
+      [
+        "class ",
+        "SearchItemsResponse"
+      ],
+      [
+        "class ",
+        "StreamPart"
+      ],
+      [
+        "class ",
+        "TaskPayload"
+      ],
+      [
+        "class ",
+        "TaskResultPayload"
+      ],
+      [
+        "class ",
+        "CheckpointTaskPayload"
+      ],
+      [
+        "class ",
+        "CheckpointPayload"
+      ],
+      [
+        "class ",
+        "_DebugCheckpointPayload"
+      ],
+      [
+        "class ",
+        "_DebugTaskPayload"
+      ],
+      [
+        "class ",
+        "_DebugTaskResultPayload"
+      ],
+      [
+        "class ",
+        "RunMetadataPayload"
+      ],
+      [
+        "class ",
+        "ValuesStreamPart"
+      ],
+      [
+        "class ",
+        "UpdatesStreamPart"
+      ],
+      [
+        "class ",
+        "MessagesPartialStreamPart"
+      ],
+      [
+        "class ",
+        "MessagesCompleteStreamPart"
+      ],
+      [
+        "class ",
+        "MessagesMetadataStreamPart"
+      ],
+      [
+        "class ",
+        "MessagesTupleStreamPart"
+      ],
+      [
+        "class ",
+        "CustomStreamPart"
+      ],
+      [
+        "class ",
+        "CheckpointsStreamPart"
+      ],
+      [
+        "class ",
+        "TasksStreamPart"
+      ],
+      [
+        "class ",
+        "DebugStreamPart"
+      ],
+      [
+        "class ",
+        "MetadataStreamPart"
+      ],
+      [
+        "class ",
+        "Send"
+      ],
+      [
+        "class ",
+        "Command"
+      ],
+      [
+        "class ",
+        "RunCreateMetadata"
+      ],
+      [
+        "class ",
+        "_TypedDictLikeV1"
+      ],
+      [
+        "class ",
+        "_TypedDictLikeV2"
+      ],
+      [
+        "class ",
+        "_DataclassLike"
+      ],
+      [
+        "class ",
+        "_BaseModelLike"
+      ],
+      [
+        "def ",
+        "model_dump"
+      ],
+      [
+        "class ",
+        "SyncAssistantsClient"
+      ],
+      [
+        "def ",
+        "__init__"
+      ],
+      [
+        "def ",
+        "get"
+      ],
+      [
+        "def ",
+        "get_graph"
+      ],
+      [
+        "def ",
+        "get_schemas"
+      ],
+      [
+        "def ",
+        "get_subgraphs"
+      ],
+      [
+        "def ",
+        "create"
+      ],
+      [
+        "def ",
+        "update"
+      ],
+      [
+        "def ",
+        "delete"
+      ],
+      [
+        "def ",
+        "search"
+      ],
+      [
+        "def ",
+        "search"
+      ],
+      [
+        "def ",
+        "search"
+      ],
+      [
+        "def ",
+        "capture_pagination"
+      ],
+      [
+        "def ",
+        "count"
+      ],
+      [
+        "def ",
+        "get_versions"
+      ],
+      [
+        "def ",
+        "set_latest"
+      ],
+      [
+        "class ",
+        "SyncThreadsClient"
+      ],
+      [
+        "def ",
+        "__init__"
+      ],
+      [
+        "def ",
+        "get"
+      ],
+      [
+        "def ",
+        "create"
+      ],
+      [
+        "def ",
+        "update"
+      ],
+      [
+        "def ",
+        "update"
+      ],
+      [
+        "def ",
+        "update"
+      ],
+      [
+        "def ",
+        "update"
+      ],
+      [
+        "def ",
+        "delete"
+      ],
+      [
+        "def ",
+        "search"
+      ],
+      [
+        "def ",
+        "count"
+      ],
+      [
+        "def ",
+        "copy"
+      ],
+      [
+        "def ",
+        "prune"
+      ],
+      [
+        "def ",
+        "get_state"
+      ],
+      [
+        "def ",
+        "update_state"
+      ],
+      [
+        "def ",
+        "get_history"
+      ],
+      [
+        "def ",
+        "join_stream"
+      ],
+      [
+        "def ",
+        "_wrap_stream_v2_sync"
+      ],
+      [
+        "class ",
+        "SyncRunsClient"
+      ],
+      [
+        "def ",
+        "__init__"
+      ],
+      [
+        "def ",
+        "stream"
+      ],
+      [
+        "def ",
+        "stream"
+      ],
+      [
+        "def ",
+        "stream"
+      ],
+      [
+        "def ",
+        "stream"
+      ],
+      [
+        "def ",
+        "stream"
+      ],
+      [
+        "def ",
+        "on_response"
+      ],
+      [
+        "def ",
+        "create"
+      ],
+      [
+        "def ",
+        "create"
+      ],
+      [
+        "def ",
+        "create"
+      ],
+      [
+        "def ",
+        "on_response"
+      ],
+      [
+        "def ",
+        "create_batch"
+      ],
+      [
+        "def ",
+        "filter_payload"
+      ],
+      [
+        "def ",
+        "wait"
+      ],
+      [
+        "def ",
+        "wait"
+      ],
+      [
+        "def ",
+        "wait"
+      ],
+      [
+        "def ",
+        "on_response"
+      ],
+      [
+        "def ",
+        "list"
+      ],
+      [
+        "def ",
+        "get"
+      ],
+      [
+        "def ",
+        "cancel"
+      ],
+      [
+        "def ",
+        "cancel_many"
+      ],
+      [
+        "def ",
+        "join"
+      ],
+      [
+        "def ",
+        "join_stream"
+      ],
+      [
+        "def ",
+        "delete"
+      ],
+      [
+        "class ",
+        "SyncStoreClient"
+      ],
+      [
+        "def ",
+        "__init__"
+      ],
+      [
+        "def ",
+        "put_item"
+      ],
+      [
+        "def ",
+        "get_item"
+      ],
+      [
+        "def ",
+        "delete_item"
+      ],
+      [
+        "def ",
+        "search_items"
+      ],
+      [
+        "def ",
+        "list_namespaces"
+      ],
+      [
+        "class ",
+        "SyncCronClient"
+      ],
+      [
+        "def ",
+        "__init__"
+      ],
+      [
+        "def ",
+        "create_for_thread"
+      ],
+      [
+        "def ",
+        "create"
+      ],
+      [
+        "def ",
+        "delete"
+      ],
+      [
+        "def ",
+        "update"
+      ],
+      [
+        "def ",
+        "search"
+      ],
+      [
+        "def ",
+        "count"
+      ]
+    ],
+    "schemas": {
+      "LangSmithTracing": [
+        "project_name",
+        "example_id"
+      ],
+      "Config": [
+        "tags",
+        "recursion_limit",
+        "configurable"
+      ],
+      "Checkpoint": [
+        "thread_id",
+        "checkpoint_ns",
+        "checkpoint_id",
+        "checkpoint_map"
+      ],
+      "GraphSchema": [
+        "graph_id",
+        "input_schema",
+        "output_schema",
+        "state_schema",
+        "config_schema",
+        "context_schema"
+      ],
+      "AssistantBase": [
+        "assistant_id",
+        "graph_id",
+        "config",
+        "context",
+        "created_at",
+        "metadata",
+        "version",
+        "name",
+        "description"
+      ],
+      "AssistantsSearchResponse": [
+        "assistants",
+        "next"
+      ],
+      "Interrupt": [
+        "value",
+        "id"
+      ],
+      "Thread": [
+        "thread_id",
+        "created_at",
+        "updated_at",
+        "metadata",
+        "status",
+        "values",
+        "interrupts",
+        "extracted"
+      ],
+      "ThreadTask": [
+        "id",
+        "name",
+        "error",
+        "interrupts",
+        "checkpoint",
+        "state",
+        "result"
+      ],
+      "ThreadState": [
+        "values",
+        "next",
+        "checkpoint",
+        "metadata",
+        "created_at",
+        "parent_checkpoint",
+        "tasks",
+        "interrupts"
+      ],
+      "ThreadUpdateStateResponse": [
+        "checkpoint"
+      ],
+      "Run": [
+        "run_id",
+        "thread_id",
+        "assistant_id",
+        "created_at",
+        "updated_at",
+        "status",
+        "metadata",
+        "multitask_strategy"
+      ],
+      "Cron": [
+        "cron_id",
+        "assistant_id",
+        "thread_id",
+        "on_run_completed",
+        "end_time",
+        "schedule",
+        "timezone",
+        "created_at",
+        "updated_at",
+        "payload",
+        "user_id",
+        "next_run_date",
+        "metadata",
+        "enabled"
+      ],
+      "CronUpdate": [
+        "schedule",
+        "timezone",
+        "end_time",
+        "input",
+        "metadata",
+        "config",
+        "context",
+        "webhook",
+        "interrupt_before",
+        "interrupt_after",
+        "on_run_completed",
+        "enabled",
+        "stream_mode",
+        "stream_subgraphs",
+        "stream_resumable",
+        "durability"
+      ],
+      "RunCreate": [
+        "thread_id",
+        "assistant_id",
+        "input",
+        "metadata",
+        "config",
+        "context",
+        "checkpoint_id",
+        "interrupt_before",
+        "interrupt_after",
+        "webhook",
+        "multitask_strategy"
+      ],
+      "Item": [
+        "namespace",
+        "key",
+        "value",
+        "created_at",
+        "updated_at"
+      ],
+      "ListNamespaceResponse": [
+        "namespaces"
+      ],
+      "SearchItemsResponse": [
+        "items"
+      ],
+      "TaskPayload": [
+        "id",
+        "name",
+        "input",
+        "triggers"
+      ],
+      "TaskResultPayload": [
+        "id",
+        "name",
+        "error",
+        "interrupts",
+        "result"
+      ],
+      "CheckpointTaskPayload": [
+        "id",
+        "name",
+        "error",
+        "result",
+        "interrupts",
+        "state"
+      ],
+      "CheckpointPayload": [
+        "config",
+        "metadata",
+        "values",
+        "next",
+        "parent_config",
+        "tasks"
+      ],
+      "_DebugCheckpointPayload": [
+        "step",
+        "timestamp",
+        "type",
+        "payload"
+      ],
+      "_DebugTaskPayload": [
+        "step",
+        "timestamp",
+        "type",
+        "payload"
+      ],
+      "_DebugTaskResultPayload": [
+        "step",
+        "timestamp",
+        "type",
+        "payload"
+      ],
+      "RunMetadataPayload": [
+        "run_id"
+      ],
+      "ValuesStreamPart": [
+        "type",
+        "ns",
+        "data",
+        "interrupts"
+      ],
+      "UpdatesStreamPart": [
+        "type",
+        "ns",
+        "data"
+      ],
+      "MessagesPartialStreamPart": [
+        "type",
+        "ns",
+        "data"
+      ],
+      "MessagesCompleteStreamPart": [
+        "type",
+        "ns",
+        "data"
+      ],
+      "MessagesMetadataStreamPart": [
+        "type",
+        "ns",
+        "data"
+      ],
+      "MessagesTupleStreamPart": [
+        "type",
+        "ns",
+        "data"
+      ],
+      "CustomStreamPart": [
+        "type",
+        "ns",
+        "data"
+      ],
+      "CheckpointsStreamPart": [
+        "type",
+        "ns",
+        "data"
+      ],
+      "TasksStreamPart": [
+        "type",
+        "ns",
+        "data"
+      ],
+      "DebugStreamPart": [
+        "type",
+        "ns",
+        "data"
+      ],
+      "MetadataStreamPart": [
+        "type",
+        "ns",
+        "data"
+      ],
+      "Send": [
+        "node",
+        "input"
+      ],
+      "Command": [
+        "goto",
+        "update",
+        "resume"
+      ],
+      "RunCreateMetadata": [
+        "run_id",
+        "thread_id"
+      ]
+    }
+  },
+  "autogen": {
+    "endpoints": [],
+    "schemas": {}
+  },
+  "crewai": {
+    "endpoints": [],
+    "schemas": {}
+  },
+  "openai": {
+    "endpoints": [
+      [
+        "def ",
+        "_has_header"
+      ],
+      [
+        "def ",
+        "_has_omitted_header"
+      ],
+      [
+        "class ",
+        "OpenAI"
+      ],
+      [
+        "def ",
+        "__init__"
+      ],
+      [
+        "def ",
+        "completions"
+      ],
+      [
+        "def ",
+        "chat"
+      ],
+      [
+        "def ",
+        "embeddings"
+      ],
+      [
+        "def ",
+        "files"
+      ],
+      [
+        "def ",
+        "images"
+      ],
+      [
+        "def ",
+        "audio"
+      ],
+      [
+        "def ",
+        "moderations"
+      ],
+      [
+        "def ",
+        "models"
+      ],
+      [
+        "def ",
+        "fine_tuning"
+      ],
+      [
+        "def ",
+        "vector_stores"
+      ],
+      [
+        "def ",
+        "webhooks"
+      ],
+      [
+        "def ",
+        "beta"
+      ],
+      [
+        "def ",
+        "batches"
+      ],
+      [
+        "def ",
+        "uploads"
+      ],
+      [
+        "def ",
+        "admin"
+      ],
+      [
+        "def ",
+        "responses"
+      ],
+      [
+        "def ",
+        "realtime"
+      ],
+      [
+        "def ",
+        "conversations"
+      ],
+      [
+        "def ",
+        "evals"
+      ],
+      [
+        "def ",
+        "containers"
+      ],
+      [
+        "def ",
+        "skills"
+      ],
+      [
+        "def ",
+        "videos"
+      ],
+      [
+        "def ",
+        "with_raw_response"
+      ],
+      [
+        "def ",
+        "with_streaming_response"
+      ],
+      [
+        "def ",
+        "qs"
+      ],
+      [
+        "def ",
+        "_send_with_auth_retry"
+      ],
+      [
+        "def ",
+        "_send_request"
+      ],
+      [
+        "def ",
+        "_auth_headers"
+      ],
+      [
+        "def ",
+        "_bearer_auth"
+      ],
+      [
+        "def ",
+        "auth_headers"
+      ],
+      [
+        "def ",
+        "_admin_api_key_auth"
+      ],
+      [
+        "def ",
+        "default_headers"
+      ],
+      [
+        "def ",
+        "_validate_headers"
+      ],
+      [
+        "def ",
+        "_prepare_options"
+      ],
+      [
+        "def ",
+        "_refresh_api_key"
+      ],
+      [
+        "def ",
+        "copy"
+      ],
+      [
+        "def ",
+        "_make_status_error"
+      ],
+      [
+        "class ",
+        "AsyncOpenAI"
+      ],
+      [
+        "def ",
+        "__init__"
+      ],
+      [
+        "def ",
+        "completions"
+      ],
+      [
+        "def ",
+        "chat"
+      ],
+      [
+        "def ",
+        "embeddings"
+      ],
+      [
+        "def ",
+        "files"
+      ],
+      [
+        "def ",
+        "images"
+      ],
+      [
+        "def ",
+        "audio"
+      ],
+      [
+        "def ",
+        "moderations"
+      ],
+      [
+        "def ",
+        "models"
+      ],
+      [
+        "def ",
+        "fine_tuning"
+      ],
+      [
+        "def ",
+        "vector_stores"
+      ],
+      [
+        "def ",
+        "webhooks"
+      ],
+      [
+        "def ",
+        "beta"
+      ],
+      [
+        "def ",
+        "batches"
+      ],
+      [
+        "def ",
+        "uploads"
+      ],
+      [
+        "def ",
+        "admin"
+      ],
+      [
+        "def ",
+        "responses"
+      ],
+      [
+        "def ",
+        "realtime"
+      ],
+      [
+        "def ",
+        "conversations"
+      ],
+      [
+        "def ",
+        "evals"
+      ],
+      [
+        "def ",
+        "containers"
+      ],
+      [
+        "def ",
+        "skills"
+      ],
+      [
+        "def ",
+        "videos"
+      ],
+      [
+        "def ",
+        "with_raw_response"
+      ],
+      [
+        "def ",
+        "with_streaming_response"
+      ],
+      [
+        "def ",
+        "qs"
+      ],
+      [
+        "async def ",
+        "_send_with_auth_retry"
+      ],
+      [
+        "async def ",
+        "_send_request"
+      ],
+      [
+        "def ",
+        "_auth_headers"
+      ],
+      [
+        "def ",
+        "_bearer_auth"
+      ],
+      [
+        "def ",
+        "auth_headers"
+      ],
+      [
+        "def ",
+        "_admin_api_key_auth"
+      ],
+      [
+        "def ",
+        "default_headers"
+      ],
+      [
+        "def ",
+        "_validate_headers"
+      ],
+      [
+        "async def ",
+        "_prepare_options"
+      ],
+      [
+        "async def ",
+        "_refresh_api_key"
+      ],
+      [
+        "def ",
+        "copy"
+      ],
+      [
+        "def ",
+        "_make_status_error"
+      ],
+      [
+        "class ",
+        "OpenAIWithRawResponse"
+      ],
+      [
+        "def ",
+        "__init__"
+      ],
+      [
+        "def ",
+        "completions"
+      ],
+      [
+        "def ",
+        "chat"
+      ],
+      [
+        "def ",
+        "embeddings"
+      ],
+      [
+        "def ",
+        "files"
+      ],
+      [
+        "def ",
+        "images"
+      ],
+      [
+        "def ",
+        "audio"
+      ],
+      [
+        "def ",
+        "moderations"
+      ],
+      [
+        "def ",
+        "models"
+      ],
+      [
+        "def ",
+        "fine_tuning"
+      ],
+      [
+        "def ",
+        "vector_stores"
+      ],
+      [
+        "def ",
+        "beta"
+      ],
+      [
+        "def ",
+        "batches"
+      ],
+      [
+        "def ",
+        "uploads"
+      ],
+      [
+        "def ",
+        "admin"
+      ],
+      [
+        "def ",
+        "responses"
+      ],
+      [
+        "def ",
+        "realtime"
+      ],
+      [
+        "def ",
+        "conversations"
+      ],
+      [
+        "def ",
+        "evals"
+      ],
+      [
+        "def ",
+        "containers"
+      ],
+      [
+        "def ",
+        "skills"
+      ],
+      [
+        "def ",
+        "videos"
+      ],
+      [
+        "class ",
+        "AsyncOpenAIWithRawResponse"
+      ],
+      [
+        "def ",
+        "__init__"
+      ],
+      [
+        "def ",
+        "completions"
+      ],
+      [
+        "def ",
+        "chat"
+      ],
+      [
+        "def ",
+        "embeddings"
+      ],
+      [
+        "def ",
+        "files"
+      ],
+      [
+        "def ",
+        "images"
+      ],
+      [
+        "def ",
+        "audio"
+      ],
+      [
+        "def ",
+        "moderations"
+      ],
+      [
+        "def ",
+        "models"
+      ],
+      [
+        "def ",
+        "fine_tuning"
+      ],
+      [
+        "def ",
+        "vector_stores"
+      ],
+      [
+        "def ",
+        "beta"
+      ],
+      [
+        "def ",
+        "batches"
+      ],
+      [
+        "def ",
+        "uploads"
+      ],
+      [
+        "def ",
+        "admin"
+      ],
+      [
+        "def ",
+        "responses"
+      ],
+      [
+        "def ",
+        "realtime"
+      ],
+      [
+        "def ",
+        "conversations"
+      ],
+      [
+        "def ",
+        "evals"
+      ],
+      [
+        "def ",
+        "containers"
+      ],
+      [
+        "def ",
+        "skills"
+      ],
+      [
+        "def ",
+        "videos"
+      ],
+      [
+        "class ",
+        "OpenAIWithStreamedResponse"
+      ],
+      [
+        "def ",
+        "__init__"
+      ],
+      [
+        "def ",
+        "completions"
+      ],
+      [
+        "def ",
+        "chat"
+      ],
+      [
+        "def ",
+        "embeddings"
+      ],
+      [
+        "def ",
+        "files"
+      ],
+      [
+        "def ",
+        "images"
+      ],
+      [
+        "def ",
+        "audio"
+      ],
+      [
+        "def ",
+        "moderations"
+      ],
+      [
+        "def ",
+        "models"
+      ],
+      [
+        "def ",
+        "fine_tuning"
+      ],
+      [
+        "def ",
+        "vector_stores"
+      ],
+      [
+        "def ",
+        "beta"
+      ],
+      [
+        "def ",
+        "batches"
+      ],
+      [
+        "def ",
+        "uploads"
+      ],
+      [
+        "def ",
+        "admin"
+      ],
+      [
+        "def ",
+        "responses"
+      ],
+      [
+        "def ",
+        "realtime"
+      ],
+      [
+        "def ",
+        "conversations"
+      ],
+      [
+        "def ",
+        "evals"
+      ],
+      [
+        "def ",
+        "containers"
+      ],
+      [
+        "def ",
+        "skills"
+      ],
+      [
+        "def ",
+        "videos"
+      ],
+      [
+        "class ",
+        "AsyncOpenAIWithStreamedResponse"
+      ],
+      [
+        "def ",
+        "__init__"
+      ],
+      [
+        "def ",
+        "completions"
+      ],
+      [
+        "def ",
+        "chat"
+      ],
+      [
+        "def ",
+        "embeddings"
+      ],
+      [
+        "def ",
+        "files"
+      ],
+      [
+        "def ",
+        "images"
+      ],
+      [
+        "def ",
+        "audio"
+      ],
+      [
+        "def ",
+        "moderations"
+      ],
+      [
+        "def ",
+        "models"
+      ],
+      [
+        "def ",
+        "fine_tuning"
+      ],
+      [
+        "def ",
+        "vector_stores"
+      ],
+      [
+        "def ",
+        "beta"
+      ],
+      [
+        "def ",
+        "batches"
+      ],
+      [
+        "def ",
+        "uploads"
+      ],
+      [
+        "def ",
+        "admin"
+      ],
+      [
+        "def ",
+        "responses"
+      ],
+      [
+        "def ",
+        "realtime"
+      ],
+      [
+        "def ",
+        "conversations"
+      ],
+      [
+        "def ",
+        "evals"
+      ],
+      [
+        "def ",
+        "containers"
+      ],
+      [
+        "def ",
+        "skills"
+      ],
+      [
+        "def ",
+        "videos"
+      ]
+    ],
+    "schemas": {}
+  },
+  "anthropic": {
+    "endpoints": [
+      [
+        "def ",
+        "_is_base_client"
+      ],
+      [
+        "def ",
+        "_close_credentials"
+      ],
+      [
+        "def ",
+        "_bind_credentials_base_url"
+      ],
+      [
+        "def ",
+        "_warn_explicit_shadow"
+      ],
+      [
+        "def ",
+        "_warn_env_shadow"
+      ],
+      [
+        "class ",
+        "Anthropic"
+      ],
+      [
+        "def ",
+        "__init__"
+      ],
+      [
+        "def ",
+        "completions"
+      ],
+      [
+        "def ",
+        "messages"
+      ],
+      [
+        "def ",
+        "models"
+      ],
+      [
+        "def ",
+        "beta"
+      ],
+      [
+        "def ",
+        "with_raw_response"
+      ],
+      [
+        "def ",
+        "with_streaming_response"
+      ],
+      [
+        "def ",
+        "qs"
+      ],
+      [
+        "def ",
+        "auth_headers"
+      ],
+      [
+        "def ",
+        "_api_key_auth"
+      ],
+      [
+        "def ",
+        "_bearer_auth"
+      ],
+      [
+        "def ",
+        "default_headers"
+      ],
+      [
+        "def ",
+        "_validate_headers"
+      ],
+      [
+        "def ",
+        "custom_auth"
+      ],
+      [
+        "def ",
+        "_should_retry"
+      ],
+      [
+        "def ",
+        "close"
+      ],
+      [
+        "def ",
+        "copy"
+      ],
+      [
+        "def ",
+        "_make_status_error"
+      ],
+      [
+        "class ",
+        "AsyncAnthropic"
+      ],
+      [
+        "def ",
+        "__init__"
+      ],
+      [
+        "def ",
+        "completions"
+      ],
+      [
+        "def ",
+        "messages"
+      ],
+      [
+        "def ",
+        "models"
+      ],
+      [
+        "def ",
+        "beta"
+      ],
+      [
+        "def ",
+        "with_raw_response"
+      ],
+      [
+        "def ",
+        "with_streaming_response"
+      ],
+      [
+        "def ",
+        "qs"
+      ],
+      [
+        "def ",
+        "auth_headers"
+      ],
+      [
+        "def ",
+        "_api_key_auth"
+      ],
+      [
+        "def ",
+        "_bearer_auth"
+      ],
+      [
+        "def ",
+        "default_headers"
+      ],
+      [
+        "def ",
+        "_validate_headers"
+      ],
+      [
+        "def ",
+        "custom_auth"
+      ],
+      [
+        "def ",
+        "_should_retry"
+      ],
+      [
+        "async def ",
+        "close"
+      ],
+      [
+        "def ",
+        "copy"
+      ],
+      [
+        "def ",
+        "_make_status_error"
+      ],
+      [
+        "class ",
+        "AnthropicWithRawResponse"
+      ],
+      [
+        "def ",
+        "__init__"
+      ],
+      [
+        "def ",
+        "completions"
+      ],
+      [
+        "def ",
+        "messages"
+      ],
+      [
+        "def ",
+        "models"
+      ],
+      [
+        "def ",
+        "beta"
+      ],
+      [
+        "class ",
+        "AsyncAnthropicWithRawResponse"
+      ],
+      [
+        "def ",
+        "__init__"
+      ],
+      [
+        "def ",
+        "completions"
+      ],
+      [
+        "def ",
+        "messages"
+      ],
+      [
+        "def ",
+        "models"
+      ],
+      [
+        "def ",
+        "beta"
+      ],
+      [
+        "class ",
+        "AnthropicWithStreamedResponse"
+      ],
+      [
+        "def ",
+        "__init__"
+      ],
+      [
+        "def ",
+        "completions"
+      ],
+      [
+        "def ",
+        "messages"
+      ],
+      [
+        "def ",
+        "models"
+      ],
+      [
+        "def ",
+        "beta"
+      ],
+      [
+        "class ",
+        "AsyncAnthropicWithStreamedResponse"
+      ],
+      [
+        "def ",
+        "__init__"
+      ],
+      [
+        "def ",
+        "completions"
+      ],
+      [
+        "def ",
+        "messages"
+      ],
+      [
+        "def ",
+        "models"
+      ],
+      [
+        "def ",
+        "beta"
+      ]
+    ],
+    "schemas": {}
+  },
+  "smolagents": {
+    "endpoints": [],
+    "schemas": {}
+  }
+}
