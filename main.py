@@ -329,7 +329,13 @@ async def get_learnings(task_id: str):
 
 @app.get("/health")
 async def health():
-    return {"status": "ok", "frameworks": [f.value for f in FrameworkType]}
+    from core.registry import REGISTRY
+    tools = REGISTRY.list_tools()
+    return {
+        "status": "ok", 
+        "frameworks": [f.value for f in FrameworkType],
+        "tools": [{"name": t.name, "framework": t.framework} for t in tools]
+    }
 
 @app.get("/frameworks")
 async def list_frameworks():
