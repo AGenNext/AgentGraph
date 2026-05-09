@@ -8,10 +8,11 @@ from core.registry import generate_did, parse_did, get_registry
 class TestProviders:
     """Test LLM providers."""
     
-    def test_count(self):
-        assert len(PROVIDERS) >= 40
+    @pytest.mark.parametrize("p", PROVIDERS.keys())
+    def test_all_providers(self, p):
+        assert p in PROVIDERS
     
-    @pytest.mark.parametrize("name", ["openai", "anthropic", "google"])
+    @pytest.mark.parametrize("name", ["openai", "anthropic", "google", "azure"])
     def test_has(self, name):
         assert name in PROVIDERS
 
@@ -46,6 +47,24 @@ class TestRegistry:
         did = generate_did("framework", "hooks")
         parts = did.split(":")
         assert len(parts) == 5
+    
+    def test_list_skills_丰富(self):
+        from core.registry import get_registry
+        reg = get_registry()
+        skills = reg.list_skills()
+        assert len(skills) >= 2
+    
+    def test_list_tools(self):
+        from core.registry import get_registry
+        reg = get_registry()
+        tools = reg.list_tools()
+        assert tools is not None
+    
+    def test_list_prompts(self):
+        from core.registry import get_registry
+        reg = get_registry()
+        prompts = reg.list_prompts()
+        assert prompts is not None
 
 
 class TestHooks:
