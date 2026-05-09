@@ -31,7 +31,7 @@ class CrewAIAgent(BaseAgent):
     Skills: multi-agent, crew-orchestration, role-playing, task-delegation
     """
     
-    def __init__(self, api_key: Optional[str] = None):
+    def __init__(self, api_key: Optional[str] = None, enable_hooks: bool = False):
         super().__init__(
             agent_id="crewai-writer",
             name="CrewAI Writer",
@@ -50,6 +50,17 @@ class CrewAIAgent(BaseAgent):
         
         self.llm_config = LLMConfig.from_env()
         self._llm = None
+        
+        # Tool call hooks
+        self._hooks = ToolCallHooks() if enable_hooks else None
+    
+    @property
+    def pre_tool_call_hook(self):
+        return self._hooks.on_before_tool if self._hooks else None
+    
+    @property
+    def post_tool_call_hook(self):
+        return self._hooks.on_after_tool if self._hooks else None
     
     def _get_port(self) -> int:
         return 8015
