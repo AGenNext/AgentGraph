@@ -14,10 +14,10 @@ extracted from official documentation.
 |--------|----------|
 | checkpoints | ✅ |
 | short_term_memory | ✅ |
-| long_term_memory | ❌ |
+| long_term_memory | ✅ |
 | semantic_memory | ❌ |
 | human_interrupt | ✅ |
-| human_feedback | ❌ |
+| human_feedback | ✅ |
 | approval_gates | ✅ |
 | multi_agent | ✅ |
 | function_calling | ✅ |
@@ -25,7 +25,7 @@ extracted from official documentation.
 | web_search | ✅ |
 | streaming | ✅ |
 | computer_use | ❌ |
-| mcp | ✅ |
+| mcp | ❌ |
 | guardrails | ✅ |
 
 ---
@@ -309,7 +309,7 @@ extracted from official documentation.
 
 | Framework | Checkpoints | Memory | Human-in-Loop | Multi-Agent | Tools | Streaming | Computer Use | MCP |
 |-----------|-----------|--------|--------------|------------|-------|----------|-------------|-----|
-| LangGraph | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
+| LangGraph | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ❌ |
 | LangChain | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ❌ | ✅ |
 | AutoGen | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
 | CrewAI | ✅ | ✅ | ❌ | ✅ | ✅ | ❌ | ❌ | ❌ |

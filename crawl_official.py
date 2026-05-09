@@ -20,7 +20,7 @@ OFFICIAL_DOCS = {
         "doc_urls": [
             "https://python.langchain.com/docs/langgraph/",
             "https://python.langchain.com/docs/langgraph/concepts/",
-            "https://python.langchain.com/docs/langgraph/quickstart/",
+            "https://reference.langchain.com/python/langgraph/",
         ],
     },
     "langchain": {

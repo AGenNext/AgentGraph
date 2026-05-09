@@ -5,10 +5,10 @@
     "features": {
       "checkpoints": true,
       "short_term_memory": true,
-      "long_term_memory": false,
+      "long_term_memory": true,
       "semantic_memory": false,
       "human_interrupt": true,
-      "human_feedback": false,
+      "human_feedback": true,
       "approval_gates": true,
       "multi_agent": true,
       "function_calling": true,
@@ -16,7 +16,7 @@
       "web_search": true,
       "streaming": true,
       "computer_use": false,
-      "mcp": true,
+      "mcp": false,
       "guardrails": true
     },
     "pages_found": [

@@ -6,10 +6,10 @@ Documentation: https://python.langchain.com/docs/langgraph/
 
 - checkpoints: Yes
 - short_term_memory: Yes
-- long_term_memory: No
+- long_term_memory: Yes
 - semantic_memory: No
 - human_interrupt: Yes
-- human_feedback: No
+- human_feedback: Yes
 - approval_gates: Yes
 - multi_agent: Yes
 - function_calling: Yes
@@ -17,5 +17,5 @@ Documentation: https://python.langchain.com/docs/langgraph/
 - web_search: Yes
 - streaming: Yes
 - computer_use: No
-- mcp: Yes
+- mcp: No
 - guardrails: Yes

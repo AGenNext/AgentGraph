@@ -32,6 +32,18 @@ FRAMEWORKS = {
         "path": "google_adk",
         "files": ["agent.py", "runner.py", "session.py"],
     },
+    "langchain": {
+        "owner": "langchain-ai",
+        "repo": "langchain",
+        "path": "libs/langchain",
+        "files": ["__init__.py", "chains/__init__.py", "agents/__init__.py", "tools/__init__.py"],
+    },
+    "llamaindex": {
+        "owner": "run-llama",
+        "repo": "llama_index",
+        "path": "llama_index",
+        "files": ["__init__.py", "agent/__init__.py", "tools/__init__.py"],
+    },
 }
 
 GITHUB_RAW = "https://raw.githubusercontent.com/{owner}/{repo}/main/{path}/{file}"

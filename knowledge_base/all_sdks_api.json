@@ -1729,5 +1729,13 @@
   "google_adk": {
     "endpoints": [],
     "schemas": {}
+  },
+  "langchain": {
+    "endpoints": [],
+    "schemas": {}
+  },
+  "llamaindex": {
+    "endpoints": [],
+    "schemas": {}
   }
 }
