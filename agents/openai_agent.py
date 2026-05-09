@@ -1,14 +1,68 @@
 """OpenAI-compatible Creative Writer Agent."""
 
-from typing import Optional
+from typing import Optional, Callable, Any, Literal
 import os
+import time
+import logging
 
 from agents.base_agent import BaseAgent, ContentRequest, ContentResult
 from core.llm_client import LLMClient, LLMConfig
 
+logger = logging.getLogger(__name__)
+
+
+# === OpenAI Product Variants ===
+OpenAIProduct = Literal["chatgpt", "codex", "o1", "o3", "gpt4"]
+
+
+# === Tool Call Hooks (same as Microsoft Agent) ===
+class ToolCallHooks:
+    """Pre/post tool call hooks for any agent."""
+    
+    def __init__(self):
+        self.pre_hooks: list[Callable] = []
+        self.post_hooks: list[Callable] = []
+    
+    def on_before_tool(self, hook: Callable): self.pre_hooks.append(hook)
+    def on_after_tool(self, hook: Callable): self.post_hooks.append(hook)
+    
+    def run_pre(self, tool: str, inp: dict):
+        for h in self.pre_hooks: h(tool, inp)
+    
+    def run_post(self, tool: str, inp: dict, out: Any):
+        for h in self.post_hooks: h(tool, inp, out)
+
+
+# === Swarm Mode for Multi-Agent Orchestration ===
+class SwarmMode:
+    """OpenAI Swarm - handoffs between agents."""
+    
+    def __init__(self):
+        self.agents: dict[str, Any] = {}
+        self.current_agent: str = None
+    
+    def add_agent(self, name: str, agent: Any):
+        """Add agent to swarm."""
+        self.agents[name] = agent
+    
+    def transfer_to(self, agent_name: str):
+        """Handoff to another agent."""
+        self.current_agent = agent_name
+        return self.agents.get(agent_name)
+    
+    def run(self, prompt: str) -> str:
+        """Run swarm with handoffs."""
+        if not self.current_agent:
+            return "No agent selected"
+        agent = self.agents.get(self.current_agent)
+        return f"Running {self.current_agent} with: {prompt}"
+
 
 class OpenAIAgent(BaseAgent):
-    """Creative content writer - works with ANY LLM (OpenAI, Ollama, LM Studio, etc.)."""
+    """Creative content writer - works with ANY LLM (OpenAI, Ollama, LM Studio, etc.).
+    
+    Supports pre_tool_call_hook and post_tool_call_hook for monitoring.
+    """
     
     @property
     def preferred_model(self) -> str:
@@ -21,6 +75,9 @@ class OpenAIAgent(BaseAgent):
         base_url: Optional[str] = None,
         model: Optional[str] = None,
         provider: Optional[str] = None,
+        enable_hooks: bool = True,
+        enable_swarm: bool = False,
+        product: OpenAIProduct = "chatgpt",
     ):
         super().__init__(
             agent_id="openai-creative-writer",
@@ -45,6 +102,30 @@ class OpenAIAgent(BaseAgent):
             self.llm_config.provider = provider
         
         self._llm = None
+        
+        # Tool call hooks
+        self._hooks = ToolCallHooks() if enable_hooks else None
+        
+        # Swarm mode for multi-agent handoffs
+        self._swarm = SwarmMode() if enable_swarm else None
+        
+        # Product variant (chatgpt, codex, o1, o3, gpt4)
+        self.product = product
+    
+    @property
+    def swarm(self) -> SwarmMode:
+        """Access swarm mode for multi-agent orchestration."""
+        return self._swarm
+    
+    @property
+    def pre_tool_call_hook(self) -> Callable:
+        """Register pre-tool-call hook."""
+        return self._hooks.on_before_tool if self._hooks else None
+    
+    @property
+    def post_tool_call_hook(self) -> Callable:
+        """Register post-tool-call hook."""
+        return self._hooks.on_after_tool if self._hooks else None
     
     def _get_port(self) -> int:
         return 8001
