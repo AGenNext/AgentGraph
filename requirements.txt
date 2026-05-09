@@ -1,0 +1,22 @@
+# Agent Backend Dependencies
+fastapi>=0.100.0
+uvicorn>=0.23.0
+pydantic>=2.0.0
+
+# Optional: LangGraph (uncomment to enable)
+# langgraph>=0.0.20
+
+# Optional: LangChain (uncomment to enable)
+# langchain>=0.1.0
+
+# Optional: AutoGen (uncomment to enable)
+# pyautogen>=0.2.0
+
+# Optional: CrewAI (uncomment to enable)
+# crewai>=0.20.0
+
+# Optional: OpenAI (uncomment to enable)
+# openai>=1.0.0
+
+# Optional: Anthropic (uncomment to enable)
+# anthropic>=0.18.0
