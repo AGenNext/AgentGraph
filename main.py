@@ -8,8 +8,58 @@ from datetime import datetime
 from enum import Enum
 import uuid
 import asyncio
+import os
+import json
+import psycopg2
+from psycopg2.extras import RealDictCursor
+
+# Database setup - uses DATABASE_URL env var
+DATABASE_URL = os.getenv("DATABASE_URL")
 
 app = FastAPI(title="A2A Agent Multi-Framework Backend")
+
+def get_db():
+    return psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
+
+# Initialize tables on startup
+def init_db():
+    if not DATABASE_URL:
+        return
+    try:
+        conn = get_db()
+        c = conn.cursor()
+        c.execute('''CREATE TABLE IF NOT EXISTS tasks (
+            id TEXT PRIMARY KEY,
+            status TEXT,
+            framework TEXT,
+            submission JSONB,
+            context JSONB,
+            result JSONB,
+            created_at TIMESTAMP DEFAULT NOW()
+        )''')
+        c.execute('''CREATE TABLE IF NOT EXISTS checkpoints (
+            id SERIAL PRIMARY KEY,
+            task_id TEXT REFERENCES tasks(id),
+            step INTEGER,
+            learnings JSONB,
+            decisions JSONB,
+            mistakes_fixed JSONB,
+            context JSONB,
+            saved_at TIMESTAMP DEFAULT NOW()
+        )''')
+        c.execute('''CREATE TABLE IF NOT EXISTS learnings (
+            id SERIAL PRIMARY KEY,
+            task_id TEXT REFERENCES tasks(id),
+            learning TEXT,
+            created_at TIMESTAMP DEFAULT NOW()
+        )''')
+        conn.commit()
+        c.close()
+        conn.close()
+    except Exception as e:
+        print(f"DB init error: {e}")
+
+init_db()
 
 # ─── Models ─────────────────────────────────────────────────────────────────────────────
 
