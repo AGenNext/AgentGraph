@@ -344,7 +344,7 @@ async def list_frameworks():
 
 @app.get("/tools")
 async def list_tools(framework: str = None, search: str = None, category: str = None):
-    """List all available tools with config"""
+    """List all available features"""
     from core.registry import REGISTRY
     
     all_tools = REGISTRY.list_tools()
@@ -354,19 +354,14 @@ async def list_tools(framework: str = None, search: str = None, category: str = 
             continue
         if search and search.lower() not in tool.name.lower():
             continue
-        if category and tool.category != category:
-            continue
         tools.append({
             "name": tool.name,
             "description": tool.description,
             "framework": tool.framework,
-            "kind": tool.kind,
-            "category": tool.category,
-            "config": tool.config_schema,
             "id": tool.id
         })
     
-    return {"tools": tools, "total": len(tools)}
+    return {"features": tools, "total": len(tools)}
 
 # ─── Pre-Flight Context Endpoints ─────────────────────────────────────────────────
 

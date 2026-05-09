@@ -50,11 +50,6 @@ class PromptEntry(RegistryEntry):
 class ToolEntry(RegistryEntry):
     namespace: str = "tool"
     framework: Optional[str] = None
-    kind: str = "class"  # class, function
-    category: str = "core"  # core, agent, model, memory, tool, utils
-    parameters: dict = field(default_factory=dict)
-    config_schema: dict = field(default_factory=dict)
-    api_spec: Optional[str] = None  # OpenAPI spec for the tool
 
 
 class Registry:
@@ -72,83 +67,84 @@ class Registry:
         for pid, name, desc in [("creative", "Creative Writing", "Creative content")]:
             self._prompts[pid] = PromptEntry(id=generate_did("prompt", pid), name=name, description=desc, namespace="prompt")
         
-        # Framework tools with full config
-        framework_tools = [
-            # LangGraph SDK core classes
-            ("state_graph", "StateGraph", "Create state-based graphs", "langgraph", "class", "agent", 
-             {}, {"state_schema": {"type": "object", "description": "State schema"}}),
-            ("react_agent", "ReAct Agent", "Reasoning + Action agent", "langgraph", "class", "agent",
-             {}, {"llm": {"type": "object"}, "tools": {"type": "array"}}),
-            ("tool_node", "ToolNode", "Execute tools in graph", "langgraph", "class", "tool",
-             {}, {"tool": {"type": "function"}}),
-            ("chat_model", "ChatOpenAI", "OpenAI chat model", "langgraph", "class", "model",
-             {}, {"model": {"type": "string", "default": "gpt-4"}, "temperature": {"type": "number"}}),
-            ("agent_executor", "AgentExecutor", "Run agent with tools", "langgraph", "class", "agent",
-             {}, {"agent": {"type": "object"}, "tools": {"type": "array"}}),
-            ("streaming", "Streaming", "Stream agent output", "langgraph", "function", "utils", {}, {}),
-            ("checkpoint", "CheckpointSaver", "Save checkpoint", "langgraph", "class", "memory", {}, {}),
+        # Framework features (capabilities from documentation)
+        framework_features = [
+            # LangGraph features
+            ("checkpoints", "Checkpoints", "Save and resume state", "langgraph"),
+            ("short_term_memory", "Short-term Memory", "In-process memory", "langgraph"),
+            ("long_term_memory", "Long-term Memory", "Persistent storage", "langgraph"),
+            ("semantic_memory", "Semantic Memory", "Embedding-based memory", "langgraph"),
+            ("human_interrupt", "Human Interrupt", "Pause agent execution", "langgraph"),
+            ("human_feedback", "Human Feedback", "Request human input", "langgraph"),
+            ("multi_agent", "Multi-Agent", "Multiple agent orchestration", "langgraph"),
+            ("function_calling", "Function Calling", "Tool/function calling", "langgraph"),
+            ("code_interpreter", "Code Interpreter", "Execute code", "langgraph"),
+            ("web_search", "Web Search", "Search the web", "langgraph"),
+            ("streaming", "Streaming", "Stream agent output", "langgraph"),
+            ("mcp", "MCP", "Model Context Protocol", "langgraph"),
             
-            # LangChain
-            ("llm_chain", "LLMChain", "LLM chain wrapper", "langchain", "class", "agent",
-             {}, {"llm": {"type": "object"}, "prompt": {"type": "string"}}),
-            ("retriever", "Retriever", "Document retriever", "langchain", "class", "tool", {}, {}),
-            ("vectorstore", "VectorStore", "Vector database", "langchain", "class", "memory",
-             {}, {"embedding_function": {"type": "function"}}),
-            ("embeddings", "Embeddings", "Text embeddings", "langchain", "class", "model", {}, {}),
-            ("document_loader", "DocumentLoader", "Load documents", "langchain", "class", "utils", {}, {}),
-            ("text_splitter", "TextSplitter", "Split long text", "langchain", "class", "utils", 
-             {}, {"chunk_size": {"type": "number", "default": 1000}}),
+            # LangChain features
+            ("lc_checkpoints", "Checkpoints", "Save and resume state", "langchain"),
+            ("lc_memory", "Memory", "In-memory缓冲", "langchain"),
+            ("lc_retriever", "Retriever", "Document retriever", "langchain"),
+            ("lc_vectorstore", "VectorStore", "Vector database", "langchain"),
+            ("lc_embeddings", "Embeddings", "Text embeddings", "langchain"),
+            ("lc_document_loader", "DocumentLoader", "Load documents", "langchain"),
+            ("lc_text_splitter", "TextSplitter", "Split long text", "langchain"),
+            ("lc_tools", "LC Tools", "LangChain tools", "langchain"),
+            ("lc_agent", "Agent", "LangChain agent", "langchain"),
+            ("lc_chain", "Chain", "LC Chain", "langchain"),
             
-            # AutoGen
-            ("assistant", "AssistantAgent", "Multi-agent assistant", "autogen", "class", "agent",
-             {}, {"name": {"type": "string"}, "llm_config": {"type": "object"}}),
-            ("user_proxy", "UserProxyAgent", "User proxy agent", "autogen", "class", "agent",
-             {}, {"human_input_mode": {"type": "string"}}),
-            ("group_chat", "GroupChat", "Groupchat manager", "autogen", "class", "agent",
-             {}, {"agents": {"type": "array"}}),
-            ("code_executor", "CodeExecutor", "Execute code", "autogen", "class", "tool", {}, {}),
+            # AutoGen features
+            ("ag_conversable", "ConversableAgent", "Conversable agent", "autogen"),
+            ("ag_user_proxy", "UserProxyAgent", "User proxy agent", "autogen"),
+            ("ag_group_chat", "GroupChat", "Group chat manager", "autogen"),
+            ("ag_code_executor", "CodeExecutor", "Execute code", "autogen"),
+            ("ag_listener", "Listener", "Event listener", "autogen"),
+            ("ag_logger", "Logger", "Logging", "autogen"),
+            ("ag_cache", "Cache", "Cache agent", "autogen"),
+            ("ag_human", "HumanInput", "Human input", "autogen"),
             
-            # CrewAI
-            ("agent_crew", "Agent", "CrewAI agent", "crewai", "class", "agent",
-             {}, {"role": {"type": "string"}, "goal": {"type": "string"}}),
-            ("task_crew", "Task", "CrewAI task", "crewai", "class", "agent",
-             {}, {"description": {"type": "string"}, "agent": {"type": "object"}}),
-            ("crew_crew", "Crew", "Crew manager", "crewai", "class", "agent",
-             {}, {"agents": {"type": "array"}, "tasks": {"type": "array"}}),
-            ("process_crew", "Process", "Crew process", "crewai", "class", "utils", {}, {}),
+            # CrewAI features
+            ("crew_agent", "Agent", "CrewAI agent", "crewai"),
+            ("crew_task", "Task", "CrewAI task", "crewai"),
+            ("crew_crew", "Crew", "Crew manager", "crewai"),
+            ("crew_process", "Process", "Crew process", "crewai"),
+            ("crew_memory", "Memory", "Crew memory", "crewai"),
+            ("crew_storage", "Storage", "Crew storage", "crewai"),
+            ("crew_knowledge", "Knowledge", "Knowledge base", "crewai"),
+            ("crew_training", "Training", "Train agents", "crewai"),
             
-            # OpenAI
-            ("gpt4", "GPT-4", "GPT-4 model", "openai", "class", "model",
-             {}, {"model": {"type": "string", "default": "gpt-4"}, "temperature": {"type": "number"}}),
-            ("gpt35", "GPT-3.5", "GPT-3.5 model", "openai", "class", "model", {}, {}),
-            ("dalle", "DALL-E", "Image generation", "openai", "class", "model",
-             {}, {"model": {"type": "string"}, "size": {"type": "string"}}),
-            ("whisper", "Whisper", "Speech to text", "openai", "class", "tool", {}, {}),
-            ("tts", "TTS", "Text to speech", "openai", "class", "tool", {}, {}),
+            # OpenAI features
+            ("oa_instruction", "Instruction", "Agent instructions", "openai"),
+            ("oa_tools", "Tools", "OpenAI tools", "openai"),
+            ("oa_model", "Model", "Model selection", "openai"),
+            ("oa_context", "Context", "Context window", "openai"),
+            ("oa_file_search", "File Search", "Search files", "openai"),
+            ("oa_code_interpreter", "Code Interpreter", "Execute code", "openai"),
             
-            # Anthropic
-            ("claude3opus", "Claude 3 Opus", "Claude 3 Opus", "anthropic", "class", "model",
-             {}, {"model": {"type": "string"}, "max_tokens": {"type": "number"}}),
-            ("claude3sonnet", "Claude 3 Sonnet", "Claude 3 Sonnet", "anthropic", "class", "model", {}, {}),
-            ("claude3haiku", "Claude 3 Haiku", "Claude 3 Haiku", "anthropic", "class", "model", {}, {}),
+            # Anthropic features
+            ("ac_tool_use", "Tool Use", "Claude tool use", "anthropic"),
+            ("ac_computer_use", "Computer Use", "Computer use", "anthropic"),
+            ("ac_mcp", "MCP", "Model Context Protocol", "anthropic"),
+            ("ac_haiku", "Haiku", "Fast model", "anthropic"),
+            ("ac_sonnet", "Sonnet", "Balanced model", "anthropic"),
+            ("ac_opus", "Opus", "Powerful model", "anthropic"),
             
-            # Google
-            ("gemini", "Gemini", "Gemini model", "google", "class", "model",
-             {}, {"model": {"type": "string"}, "temperature": {"type": "number"}}),
-            ("vertex_ai", "Vertex AI", "Google Vertex AI", "google", "class", "model", {}, {}),
-            ("google_search", "Google Search", "Search via Google", "google", "function", "tool", {}, {}),
+            # Google features
+            ("gggemini", "Gemini", "Gemini model", "google"),
+            ("gg_vertex", "Vertex AI", "Google Vertex AI", "google"),
+            ("gg_search", "Google Search", "Search via Google", "google"),
+            ("gg_code_execution", "Code Execution", "Execute code", "google"),
+            ("gg_function", "Function Calling", "Google functions", "google"),
         ]
-        for tid, name, desc, fw, kind, cat, params, config in framework_tools:
-            self._tools[tid] = ToolEntry(
-                id=generate_did("tool", tid), 
+        for fid, name, desc, fw in framework_features:
+            self._tools[fid] = ToolEntry(
+                id=generate_did("tool", fid), 
                 name=name, 
                 description=desc, 
                 namespace="tool", 
-                framework=fw,
-                kind=kind,
-                category=cat,
-                parameters=params,
-                config_schema=config
+                framework=fw
             )
     
     def get_skill(self, name: str) -> Optional[SkillEntry]:
