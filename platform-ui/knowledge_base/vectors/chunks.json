@@ -1,0 +1,116 @@
+[
+  {
+    "framework": "smolagents",
+    "chunk_id": 0,
+    "text": "huggingface\n/\nsmolagents\nPublic\nNotifications\nYou must be signed in to change notification settings\nFork\n2.6k\nStar\n27.2k\nCode\nIssues\n259\nPull requests\n274\nDiscussions\nActions\nProjects\nSecurity and quality\n0\nInsights\nAdditional navigation options\nCode\nIssues\nPull requests\nDiscussions\nActions\nProjects\nSecurity and quality\nInsights\nhuggingface/smolagents\nmain\nBranches\nTags\nGo to file\nCode\nOpen more actions menu\nFolders and files\nName\nName\nLast commit message\nLast commit date\nLatest commit\nHistory\n1,037 Commits\n1,037 Commits\n.github\n.github\ndocs\ndocs\nexamples\nexamples\nsrc/\nsmolagents\nsrc/\nsmolagents\ntests\ntests\n.gitignore\n.gitignore\n.pre-commit-config.yaml\n.pre-commit-config.yaml\nAGENTS.md\nAGENTS.md\nCODE_OF_CONDUCT.md\nCODE_OF_CONDUCT.md\nCONTRIBUTING.md\nCONTRIBUTING.md\nLICENSE\nLICENSE\nMakefile\nMakefile\nREADME.md\nREADME.md\nSECURITY.md\nSECURITY.md\ne2b.toml\ne2b.toml\npyproject.toml\npyproject.toml\nView all files\nRepository files navigation\nREADME\nCode of conduct\nContributing\nApache-2.0 license\nS",
+    "url": "https://github.com/huggingface/smolagents"
+  },
+  {
+    "framework": "smolagents",
+    "chunk_id": 1,
+    "text": "subgraph ReAct[ReAct loop]\n        Memory -->|Memory as chat messages| Generate\n        Generate -->|Parse output to extract code action| Execute\n        Execute -->|No call to 'final_answer' tool => Store execution logs in memory and keep running| Memory\n    end\n    \n    Execute -->|Call to 'final_answer' tool| Answer",
+    "url": "https://github.com/huggingface/smolagents"
+  },
+  {
+    "framework": "smolagents",
+    "chunk_id": 2,
+    "text": "%% Styling\n    classDef default fill:#d4b702,stroke:#8b7701,color:#ffffff\n    classDef io fill:#4a5568,stroke:#2d3748,color:#ffffff\n    \n    class Task,Answer io\nLoading\nActions are now Python code snippets. Hence, tool calls will be performed as Python function calls. For instance, here is how the agent can perform web search over several websites in one single action:\nrequests_to_search\n=\n[\n\"gulf of mexico america\"\n,\n\"greenland denmark\"\n,\n\"tariffs\"\n]\nfor\nrequest\nin\nrequests_to_search\n:\nprint\n(\nf\"Here are the search results for\n{\nrequest\n}\n:\"\n,\nweb_search\n(\nrequest\n))\nWriting actions as code snippets is demonstrated to work better than the current industry practice of letting the LLM output a dictionary of the tools it wants to call:\nuses 30% fewer steps\n(thus 30% fewer LLM calls) and\nreaches higher performance on difficult benchmarks\n. Head to\nour high-level intro to agents\nto learn more on that.\nSince code execution can be a serious security concern (arbitrary code execution!),\nyou ",
+    "url": "https://github.com/huggingface/smolagents"
+  },
+  {
+    "framework": "crewai",
+    "chunk_id": 0,
+    "text": "Skip to main content\nCrewAI\nhome page\nv1.14.4\nEnglish\nSearch...\n\u2318\nK\nAsk AI\nSearch...\nNavigation\nWelcome\nCrewAI Documentation\nHome\nDocumentation\nAMP\nAPI Reference\nExamples\nChangelog\nWebsite\nForum\nBlog\nCrewGPT\nWelcome\nCrewAI Documentation\nDocumentation Index\nFetch the complete documentation index at:\nhttps://docs.crewai.com/llms.txt\nUse this file to discover all available pages before exploring further.\n\u200b\nShip multi\u2011agent systems with confidence\nDesign agents, orchestrate crews, and automate flows with guardrails, memory, knowledge, and observability baked in.\nGet started\nView changelog\nAPI Reference\n\u200b\nGet started\nIntroduction\nOverview of CrewAI concepts, architecture, and what you can build with agents, crews, and flows.\nInstallation\nInstall via\nuv\n, configure API keys, and set up the CLI for local development.\nQuickstart\nSpin up your first crew in minutes. Learn the core runtime, project layout, and dev loop.\n\u200b\nBuild the basics\nAgents\nCompose agents with tools, memory, knowledge, and s",
+    "url": "https://docs.crewai.com/"
+  },
+  {
+    "framework": "aws_bedrock",
+    "chunk_id": 0,
+    "text": "Getting started\nGet started with Amazon Bedrock\nGet started with the Amazon Bedrock console and API.\nGet started with Amazon Nova\nGet started with the Amazon Nova console and API.\nDocumentation and SDKs\nAmazon Bedrock User Guide\nDescribes how to use the Amazon Bedrock console and API.\nAPI Reference\nDescribes the Amazon Bedrock API operations and parameters.\nCode examples\nExamples that show how to write code for your Amazon Bedrock application.\nInference and assessment\nInference\nUse inference to generate responses from Amazon Bedrock models.\nCross-region inference\nRoute your inference requests across multiple AWS Regions during peak\n              utilization bursts.\nInference profiles\nUse a profile to route inference requests to a model and one or more\n              AWS Regions.\nBatch inference\nRun model inferences asynchronously in batches.\nProvisioned throughput\nDedicate capacity for your models.\nEvaluation\nEvaluate the performance of Amazon Bedrock resources.\nFoundation models\nFounda",
+    "url": "https://docs.aws.amazon.com/bedrock/"
+  },
+  {
+    "framework": "autogen",
+    "chunk_id": 0,
+    "text": "If you are not redirected automatically, follow this\nlink to example.com\n.\nIf you are not redirected automatically, follow this\nlink to example.com\n.",
+    "url": "https://microsoft.github.io/autogen/"
+  },
+  {
+    "framework": "vertex",
+    "chunk_id": 0,
+    "text": "Page Contents\nTry Gemini in Agent Platform\nDocumentation\nSample code and notebooks\nRelease notes\nAll the power of Vertex AI you know and love, now within\nGemini Enterprise Agent Platform.\nRead more in our announcement blog.\nGemini Enterprise Agent Platform\nInnovate, build and deploy enterprise ready agents\nGemini Enterprise Agent Platform is Google Cloud's comprehensive platform for developers to build, scale, govern and optimize agents. It's a single destination for technical teams to build agents that can transform enterprise applications and workflows into powerful agentic systems.\nNew customers get up to $300 in free credits\nto try Agent Platform and other Google Cloud products.\nTry Agent Platform free\nContact sales\nProduct highlights\nAccelerate agent development with unified data and AI\nBuild generative AI apps quickly with Gemini\nTrain, test, and tune ML models on a single platform\nStart building with Nano Banana Pro (Gemini 3 Pro Image) in the Gemini API today\nTry it in Agent Pl",
+    "url": "https://cloud.google.com/vertex-ai"
+  },
+  {
+    "framework": "vertex",
+    "chunk_id": 1,
+    "text": "response = client.models.generate_content(\n    model=\"gemini-2.5-flash\",\n    contents=\"Explain how AI works in a few words\",\n)",
+    "url": "https://cloud.google.com/vertex-ai"
+  },
+  {
+    "framework": "vertex",
+    "chunk_id": 2,
+    "text": "print(response.text)\ncontent_copy\nView more code samples\nSet up the Agent Platform\nGemini API\nLearn multimodal design\nbest practices\nRepository\nfor sample code and notebooks\nTutorials, quickstarts, & labs\nGet started with Google's multimodal models\nUse Agent Studio to design, test, and manage prompts for Gemini models using natural language, code, images, or video. Try\nsample prompts\nfor extracting text from images, image mock up to HTML, and even generate answers about uploaded images or videos.\nYou can also start testing Gemini on Agent Platform with an\nAPI key\n.\nTry Gemini in Agent Platform\nSet up the Agent Platform\nGemini API\nCreate an effective\nprompt\nFeatured\nGemini\nmodels\nCode sample\nAccess Gemini models via the Gemini API in Agent Platform\nView code samples for Python, JavaScript, Java, Go, and Curl\nPython\nPython\nJavaScript\nJava\nGo\nCurl\nLoading...\nfrom google import genai",
+    "url": "https://cloud.google.com/vertex-ai"
+  },
+  {
+    "framework": "vertex",
+    "chunk_id": 3,
+    "text": "response = client.models.generate_content(\n    model=\"gemini-2.5-flash\",\n    contents=\"Explain how AI works in a few words\",\n)",
+    "url": "https://cloud.google.com/vertex-ai"
+  },
+  {
+    "framework": "vertex",
+    "chunk_id": 4,
+    "text": "print(response.text)\ncontent_copy\nView more code samples\nSet up the Agent Platform\nGemini API\nLearn multimodal design\nbest practices\nRepository\nfor sample code and notebooks\nExtract, summarize, and classify data\nTutorials, quickstarts, & labs\nUse gen AI for summarization, classification, and extraction\nLearn how to create text prompts for handling any number of tasks with Agent Platform's generative AI support. Some of the most common tasks are classification, summarization, and extraction. Gemini on Agent Platform lets you design prompts with flexibility in terms of their structure and format.\nView text prompt design docs\nOverview of\nprompting strategies\nLearn about\nAI-powered prompt writing tools\nin Agent Studio\nView all generative AI\nprompt samples\nTutorials, quickstarts, & labs\nUse gen AI for summarization, classification, and extraction\nLearn how to create text prompts for handling any number of tasks with Agent Platform's generative AI support. Some of the most common tasks are c",
+    "url": "https://cloud.google.com/vertex-ai"
+  },
+  {
+    "framework": "anthropic",
+    "chunk_id": 0,
+    "text": "Loading...\nLoading...\nLoading...\nLoading...\nLoading...\nLoading...\nLoading...\nLoading...\nLoading...\nLoading...\nLoading...\nLoading...",
+    "url": "https://docs.anthropic.com/en/docs/"
+  },
+  {
+    "framework": "google",
+    "chunk_id": 0,
+    "text": "Vertex AI is transitioning to become part of Gemini Enterprise Agent Platform. See the most up-to-date information in the\nAgent Platform documentation\n.\nHome\nDocumentation\nAI and ML\nVertex AI\nSend feedback\nStay organized with collections\nSave and categorize content based on your preferences.\nVertex AI documentation\nVertex AI is a machine learning (ML) platform that lets you train and deploy ML models and\n  AI applications. Vertex AI combines data engineering, data science, and ML engineering\n  workflows, which lets teams collaborate using a common toolset.\nLearn more about Vertex AI\nGemini\nUse Gemini, Google's multimodal generative AI model, to process images, videos, and text.\nGenerative AI\nAccess Google's generative AI models to test, tune, and deploy them for use in your AI-powered applications.\nModel Garden\nUse Model Garden to discover, test, customize, and deploy Google proprietary and select open source software generative AI models and large language models.\nGet started with gen",
+    "url": "https://cloud.google.com/vertex-ai/docs/"
+  },
+  {
+    "framework": "langgraph",
+    "chunk_id": 0,
+    "text": "Skip to main content\nJoin us May 13th & May 14th at Interrupt, the Agent Conference by LangChain.\nBuy tickets >\nDocs by LangChain\nhome page\nOpen source\nSearch...\n\u2318\nK\nSearch...\nNavigation\nLangGraph overview\nDeep Agents\nLangChain\nLangGraph\nIntegrations\nLearn\nReference\nContribute\nPython\nOverview\nGet started\nInstall\nQuickstart\nLocal server\nChangelog\nThinking in LangGraph\nWorkflows + agents\nCapabilities\nPersistence\nDurable execution\nFault tolerance\nStreaming\nInterrupts\nTime travel\nMemory\nSubgraphs\nProduction\nApplication structure\nTest\nBackward compatibility\nLangSmith Studio\nAgent Chat UI\nLangSmith Deployment\nLangSmith Observability\nFrontend\nOverview\nGraph execution\nLangGraph APIs\nGraph API\nFunctional API\nRuntime\nOn this page\nInstall\nCore benefits\nLangGraph ecosystem\nAcknowledgements\nDocumentation Index\nFetch the complete documentation index at:\nhttps://docs.langchain.com/llms.txt\nUse this file to discover all available pages before exploring further.\nTrusted by companies shaping the future ",
+    "url": "https://python.langchain.com/docs/langgraph/"
+  },
+  {
+    "framework": "github",
+    "chunk_id": 0,
+    "text": "GitHub Copilot documentation\nYou can use GitHub Copilot to enhance your productivity and assist as you work on code.\nOverview\nQuickstart\nArticles\nAll categories\nLearn about Copilot\nAuthor and optimize with Copilot\nAbout agent management\nUse one centralized control page to jump between agent sessions, check progress, and stay in control without losing your place.\nLearn about Copilot\nAbout agent skills\nSkills allow Copilot to perform specialized tasks.\nLearn about Copilot\nAbout agentic memory for GitHub Copilot\nFind out how Copilot can store details it has learned about a codebase and use that knowledge for future work in a repository.\nManage Copilot for a team\nAbout billing for GitHub Copilot in organizations and enterprises\nLearn about pricing and billing cycles for Copilot.\nLearn about Copilot\nAbout billing for individual GitHub Copilot plans\nLearn how billing works for Copilot Pro and Copilot Pro+.\nLearn about Copilot\nAbout Copilot auto model selection\nAutomatically select models for",
+    "url": "https://docs.github.com/en/copilot"
+  },
+  {
+    "framework": "docker",
+    "chunk_id": 0,
+    "text": "How can we help?\nHow do I get started with Docker?\nCan I run my AI agent in a sandbox?\nWhat is a container?\nWhat are Docker Hardened Images?\nWhy should I use Docker Compose?\nGet started\nLearn Docker basics.\nGuides\nOptimize your development workflows with Docker.\nManuals\nInstall, set up, configure, and use Docker products.\nReference\nBrowse the CLI and API documentation.\nFeatured topics\nDocker Hardened Images\nGet started with Docker Sandboxes\nDocker Desktop overview\nInstall Docker Engine\nDockerfile reference\nDocker Build overview",
+    "url": "https://docs.docker.com/"
+  },
+  {
+    "framework": "azure_ai",
+    "chunk_id": 0,
+    "text": "Microsoft Foundry documentation\nThe AI app and agent factory - build, optimize, and govern AI apps and agents at scale.\nOverview\nWhat is Microsoft Foundry?\nOverview\nLooking for Foundry (classic) portal documentation?\nConcept\nExplore Foundry Models\nOverview\nManage agents, models, and tools\nCreate apps with code\nQuickstart - Create Foundry resources\nQuickstart - Chat with an agent\nStart with an AI template\nFoundry Models\nFoundry Models sold directly by Azure\nDeployment types\nGet started with DeepSeek-R1\nLearn how to fine-tune models\nFoundry Agent Service\nOrchestrate and host AI agents to automate and execute business processes\nAzure AI app template for agents\nAI Red Teaming Agent (preview)\nFoundry Control Plane\nTrustworthy AI\nWhat is Content Safety?\nTrace your application with Microsoft Foundry project library\nEvaluate agentic workflows\nMonitor your generative AI applications\nFoundry IQ\nWhat is Foundry IQ?\nFrequently asked questions\nConnect knowledge base to agents\nFoundry Tools\nSpeech\nT",
+    "url": "https://learn.microsoft.com/azure/ai-services/"
+  },
+  {
+    "framework": "mcp",
+    "chunk_id": 0,
+    "text": "Skip to main content\nModel Context Protocol\nhome page\nSearch...\n\u2318\nK\nBlog\nGitHub\nSearch...\nNavigation\nGet started\nWhat is the Model Context Protocol (MCP)?\nDocumentation\nExtensions\nSpecification\nRegistry\nSEPs\nCommunity\nGet started\nWhat is MCP?\nAbout MCP\nArchitecture\nServers\nClients\nVersioning\nDevelop with MCP\nConnect to local MCP servers\nConnect to remote MCP Servers\nBuild with Agent Skills\nBuild an MCP server\nClients\nSDKs\nSecurity\nDeveloper tools\nMCP Inspector\nDebugging\nExamples\nExample Clients\nExample Servers\nOn this page\nWhat can MCP enable?\nWhy does MCP matter?\nBroad ecosystem support\nStart Building\nLearn more\nGet started\nWhat is the Model Context Protocol (MCP)?\nCopy page\nCopy page\nDocumentation Index\nFetch the complete documentation index at:\nhttps://modelcontextprotocol.io/llms.txt\nUse this file to discover all available pages before exploring further.\nMCP (Model Context Protocol) is an open-source standard for connecting AI applications to external systems.\nUsing MCP, AI applica",
+    "url": "https://modelcontextprotocol.io/introduction"
+  },
+  {
+    "framework": "langchain",
+    "chunk_id": 0,
+    "text": "Skip to main content\nJoin us May 13th & May 14th at Interrupt, the Agent Conference by LangChain.\nBuy tickets >\nDocs by LangChain\nhome page\nOpen source\nSearch...\n\u2318\nK\nSearch...\nNavigation\nLangChain overview\nDeep Agents\nLangChain\nLangGraph\nIntegrations\nLearn\nReference\nContribute\nPython\nOverview\nGet started\nInstall\nQuickstart\nChangelog\nPhilosophy\nCore components\nAgents\nModels\nMessages\nTools\nShort-term memory\nStreaming\nStructured output\nMiddleware\nOverview\nPrebuilt middleware\nCustom middleware\nFrontend\nOverview\nPatterns\nIntegrations\nAdvanced usage\nGuardrails\nRuntime\nContext engineering\nModel Context Protocol (MCP)\nHuman-in-the-loop\nMulti-agent\nRetrieval\nLong-term memory\nAgent development\nLangSmith Studio\nTest\nAgent Chat UI\nDeploy with LangSmith\nDeployment\nObservability\nOn this page\nCreate an agent\nCore benefits\nDocumentation Index\nFetch the complete documentation index at:\nhttps://docs.langchain.com/llms.txt\nUse this file to discover all available pages before exploring further.\nBuild comp",
+    "url": "https://python.langchain.com/docs/"
+  }
+]
