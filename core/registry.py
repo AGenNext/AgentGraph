@@ -69,18 +69,62 @@ class Registry:
         
         # Framework tools (populated from integrations)
         framework_tools = [
+            # LangGraph tools
             ("web_search", "Web Search", "Search the web for information", "langgraph"),
-            ("langchain_code", "LangChain Code", "Generate LangChain code", "langchain"),
-            ("autogen_code", "AutoGen Code", "Generate AutoGen agents", "autogen"),
-            ("crewai_code", "CrewAI Code", "Generate CrewAI pipelines", "crewai"),
-            ("openai_api", "OpenAI API", "Interact with OpenAI models", "openai"),
-            ("anthropic_api", "Anthropic API", "Interact with Claude models", "anthropic"),
-            ("google_search", "Google Search", "Search via Google", "google"),
             ("state_graph", "StateGraph", "Create state-based graphs", "langgraph"),
             ("react_agent", "ReAct Agent", "Reasoning + Action agent", "langgraph"),
-            ("tool_use", "Tool Use", "Use tools in chains", "langchain"),
-            ("memory", "Memory", "Persistent memory", "langchain"),
+            ("tool_node", "ToolNode", "Execute tools in graph", "langgraph"),
+            ("chat_model", "ChatOpenAI", "OpenAI chat model", "langgraph"),
+            ("llm_chain", "LLMChain", "LLM chain wrapper", "langgraph"),
+            ("agent_executor", "AgentExecutor", "Run agent with tools", "langgraph"),
             ("streaming", "Streaming", "Stream agent output", "langgraph"),
+            ("checkpoint", "CheckpointSaver", "Save checkpoint", "langgraph"),
+            ("memory", "Memory", "Agent memory", "langgraph"),
+            
+            # LangChain tools
+            ("langchain_code", "LangChain Code", "Generate LangChain code", "langchain"),
+            ("tool_use", "Tool Use", "Use tools in chains", "langchain"),
+            ("retriever", "Retriever", "Document retriever", "langchain"),
+            ("vectorstore", "VectorStore", "Vector database", "langchain"),
+            ("embeddings", "Embeddings", "Text embeddings", "langchain"),
+            ("document_loader", "DocumentLoader", "Load documents", "langchain"),
+            ("text_splitter", "TextSplitter", "Split long text", "langchain"),
+            ("hub", "Hub", "LangChain hub", "langchain"),
+            
+            # AutoGen tools  
+            ("autogen_code", "AutoGen Code", "Generate AutoGen agents", "autogen"),
+            ("assistant", "AssistantAgent", "Multi-agent assistant", "autogen"),
+            ("user_proxy", "UserProxyAgent", "User proxy agent", "autogen"),
+            ("group_chat", "GroupChat", "Groupchat manager", "autogen"),
+            ("code_executor", "CodeExecutor", "Execute code", "autogen"),
+            
+            # CrewAI tools
+            ("crewai_code", "CrewAI Code", "Generate CrewAI pipelines", "crewai"),
+            ("agent_crew", "Agent", "CrewAI agent", "crewai"),
+            ("task_crew", "Task", "CrewAI task", "crewai"),
+            ("crew_crew", "Crew", "Crew manager", "crewai"),
+            ("process_crew", "Process", "Crew process", "crewai"),
+            
+            # OpenAI tools
+            ("openai_api", "OpenAI API", "Interact with OpenAI models", "openai"),
+            ("gpt4", "GPT-4", "GPT-4 model", "openai"),
+            ("gpt35", "GPT-3.5", "GPT-3.5 model", "openai"),
+            ("dalle", "DALL-E", "Image generation", "openai"),
+            ("whisper", "Whisper", "Speech to text", "openai"),
+            ("tts", "TTS", "Text to speech", "openai"),
+            
+            # Anthropic tools
+            ("anthropic_api", "Anthropic API", "Interact with Claude models", "anthropic"),
+            ("claude3", "Claude 3", "Claude 3 model", "anthropic"),
+            ("claude3opus", "Claude 3 Opus", "Claude 3 Opus", "anthropic"),
+            ("claude3sonnet", "Claude 3 Sonnet", "Claude 3 Sonnet", "anthropic"),
+            ("claude3haiku", "Claude 3 Haiku", "Claude 3 Haiku", "anthropic"),
+            ("claude2", "Claude 2", "Claude 2 model", "anthropic"),
+            
+            # Google tools
+            ("google_search", "Google Search", "Search via Google", "google"),
+            ("gemini", "Gemini", "Gemini model", "google"),
+            ("vertex_ai", "Vertex AI", "Google Vertex AI", "google"),
         ]
         for tid, name, desc, fw in framework_tools:
             self._tools[tid] = ToolEntry(id=generate_did("tool", tid), name=name, description=desc, namespace="tool", framework=fw)
