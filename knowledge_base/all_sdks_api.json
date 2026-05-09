@@ -760,14 +760,6 @@
       ]
     }
   },
-  "autogen": {
-    "endpoints": [],
-    "schemas": {}
-  },
-  "crewai": {
-    "endpoints": [],
-    "schemas": {}
-  },
   "openai": {
     "endpoints": [
       [
@@ -1734,7 +1726,7 @@
     ],
     "schemas": {}
   },
-  "smolagents": {
+  "google_adk": {
     "endpoints": [],
     "schemas": {}
   }

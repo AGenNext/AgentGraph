@@ -14,18 +14,6 @@ FRAMEWORKS = {
         "path": "libs/sdk-py/langgraph_sdk",
         "files": ["schema.py", "_sync/assistants.py", "_sync/threads.py", "_sync/runs.py", "_sync/store.py", "_sync/cron.py"],
     },
-    "autogen": {
-        "owner": "microsoft",
-        "repo": "autogen",
-        "path": "python/autogen/agentchat",
-        "files": ["__init__.py", "completion.py", "conversation.py"],
-    },
-    "crewai": {
-        "owner": "crewAIInc", 
-        "repo": "crewAI",
-        "path": "src/crewai",
-        "files": ["agent.py", "task.py", "crew.py", "tools.py"],
-    },
     "openai": {
         "owner": "openai",
         "repo": "openai-python",
@@ -38,11 +26,11 @@ FRAMEWORKS = {
         "path": "src/anthropic",
         "files": ["_client.py"],
     },
-    "smolagents": {
-        "owner": "HuggingFaceTB",
-        "repo": "smolagents",
-        "path": "src/smolagents",
-        "files": ["agent.py", "tools.py"],
+    "google_adk": {
+        "owner": "google",
+        "repo": "adk-agentkit",
+        "path": "google_adk",
+        "files": ["agent.py", "runner.py", "session.py"],
     },
 }
 
