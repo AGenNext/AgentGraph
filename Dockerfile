@@ -1,35 +1,28 @@
-# AGenNext Agent Registry - Docker Image
-# Status: ALPHA
+FROM python:3.11-slim as backend
+WORKDIR /app
+RUN pip install --no-cache-dir fastapi uvicorn pydantic aiohttp
+COPY main.py .
+COPY api_registry/ ./api_registry/
+COPY a2a/ ./a2a/
+COPY agents/ ./agents/
+COPY config.py .
+EXPOSE 8000
+
+FROM node:20-alpine as frontend
+WORKDIR /app
+COPY agennext-ui/package.json agennext-ui/tsconfig.json agennext-ui/next.config.js ./
+COPY agennext-ui/lib ./lib
+COPY agennext-ui/components ./components
+COPY agennext-ui/hooks ./hooks
+COPY agennext-ui/types ./types
+COPY agennext-ui/app ./app
+RUN npm install && npm run build
+EXPOSE 3000
 
 FROM python:3.11-slim
-
-LABEL maintainer="AGenNext <info@agennext.io>"
-LABEL version="0.1.0"
-LABEL description="Enterprise Multi-Agent Team Platform"
-
-# Set working directory
+apt-get update && apt-get install -y --no-install-recommends nodejs npm
+COPY --from=backend /app /app
+COPY --from=frontend /app /frontend
 WORKDIR /app
-
-# Install dependencies
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
-
-# Copy application code
-COPY agents/ /app/agents/
-COPY ui/ /app/ui/
-COPY examples/ /app/examples/
-COPY platform-ui/ /app/platform-ui/
-COPY *.md /app/
-COPY *.json /app/
-COPY *.yaml /app/
-
-# Expose ports
-EXPOSE 7860 8501
-
-# Default command
-CMD ["python", "ui/examples.py", "chat"]
-
-# Healthcheck for container health
-HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD curl -f http://localhost:7860/health || exit 1
-
+EXPOSE 8000 3000
+CMD ["sh", "-c", "npm install -g serve && serve /frontend/.next/standalone & uvicorn main:app --host 0.0.0.0 --port 8000"]

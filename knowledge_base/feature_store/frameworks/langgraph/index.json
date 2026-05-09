@@ -1,0 +1,18 @@
+{
+  "framework": "langgraph",
+  "version": "1.1.10",
+  "total_features": 639,
+  "categories": {
+    "module": 32,
+    "function": 99,
+    "attribute": 365,
+    "class": 133,
+    "typeAlias": 10
+  },
+  "source": "https://docs.langchain.com/oss/python/reference/langgraph-python.md",
+  "crawled_at": "2026-05-09",
+  "files": {
+    "full": "full.json",
+    "summary": "summary.json"
+  }
+}
