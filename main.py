@@ -343,8 +343,8 @@ async def list_frameworks():
     return {"frameworks": [{"name": f.value} for f in FrameworkType]}
 
 @app.get("/tools")
-async def list_tools(framework: str = None, search: str = None):
-    """List all available tools, optionally filtered by framework or search term"""
+async def list_tools(framework: str = None, search: str = None, category: str = None):
+    """List all available tools with config"""
     from core.registry import REGISTRY
     
     all_tools = REGISTRY.list_tools()
@@ -354,10 +354,15 @@ async def list_tools(framework: str = None, search: str = None):
             continue
         if search and search.lower() not in tool.name.lower():
             continue
+        if category and tool.category != category:
+            continue
         tools.append({
             "name": tool.name,
             "description": tool.description,
             "framework": tool.framework,
+            "kind": tool.kind,
+            "category": tool.category,
+            "config": tool.config_schema,
             "id": tool.id
         })
     

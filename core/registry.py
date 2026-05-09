@@ -50,6 +50,11 @@ class PromptEntry(RegistryEntry):
 class ToolEntry(RegistryEntry):
     namespace: str = "tool"
     framework: Optional[str] = None
+    kind: str = "class"  # class, function
+    category: str = "core"  # core, agent, model, memory, tool, utils
+    parameters: dict = field(default_factory=dict)
+    config_schema: dict = field(default_factory=dict)
+    api_spec: Optional[str] = None  # OpenAPI spec for the tool
 
 
 class Registry:
@@ -67,67 +72,84 @@ class Registry:
         for pid, name, desc in [("creative", "Creative Writing", "Creative content")]:
             self._prompts[pid] = PromptEntry(id=generate_did("prompt", pid), name=name, description=desc, namespace="prompt")
         
-        # Framework tools (populated from integrations)
+        # Framework tools with full config
         framework_tools = [
-            # LangGraph tools
-            ("web_search", "Web Search", "Search the web for information", "langgraph"),
-            ("state_graph", "StateGraph", "Create state-based graphs", "langgraph"),
-            ("react_agent", "ReAct Agent", "Reasoning + Action agent", "langgraph"),
-            ("tool_node", "ToolNode", "Execute tools in graph", "langgraph"),
-            ("chat_model", "ChatOpenAI", "OpenAI chat model", "langgraph"),
-            ("llm_chain", "LLMChain", "LLM chain wrapper", "langgraph"),
-            ("agent_executor", "AgentExecutor", "Run agent with tools", "langgraph"),
-            ("streaming", "Streaming", "Stream agent output", "langgraph"),
-            ("checkpoint", "CheckpointSaver", "Save checkpoint", "langgraph"),
-            ("memory", "Memory", "Agent memory", "langgraph"),
+            # LangGraph SDK core classes
+            ("state_graph", "StateGraph", "Create state-based graphs", "langgraph", "class", "agent", 
+             {}, {"state_schema": {"type": "object", "description": "State schema"}}),
+            ("react_agent", "ReAct Agent", "Reasoning + Action agent", "langgraph", "class", "agent",
+             {}, {"llm": {"type": "object"}, "tools": {"type": "array"}}),
+            ("tool_node", "ToolNode", "Execute tools in graph", "langgraph", "class", "tool",
+             {}, {"tool": {"type": "function"}}),
+            ("chat_model", "ChatOpenAI", "OpenAI chat model", "langgraph", "class", "model",
+             {}, {"model": {"type": "string", "default": "gpt-4"}, "temperature": {"type": "number"}}),
+            ("agent_executor", "AgentExecutor", "Run agent with tools", "langgraph", "class", "agent",
+             {}, {"agent": {"type": "object"}, "tools": {"type": "array"}}),
+            ("streaming", "Streaming", "Stream agent output", "langgraph", "function", "utils", {}, {}),
+            ("checkpoint", "CheckpointSaver", "Save checkpoint", "langgraph", "class", "memory", {}, {}),
             
-            # LangChain tools
-            ("langchain_code", "LangChain Code", "Generate LangChain code", "langchain"),
-            ("tool_use", "Tool Use", "Use tools in chains", "langchain"),
-            ("retriever", "Retriever", "Document retriever", "langchain"),
-            ("vectorstore", "VectorStore", "Vector database", "langchain"),
-            ("embeddings", "Embeddings", "Text embeddings", "langchain"),
-            ("document_loader", "DocumentLoader", "Load documents", "langchain"),
-            ("text_splitter", "TextSplitter", "Split long text", "langchain"),
-            ("hub", "Hub", "LangChain hub", "langchain"),
+            # LangChain
+            ("llm_chain", "LLMChain", "LLM chain wrapper", "langchain", "class", "agent",
+             {}, {"llm": {"type": "object"}, "prompt": {"type": "string"}}),
+            ("retriever", "Retriever", "Document retriever", "langchain", "class", "tool", {}, {}),
+            ("vectorstore", "VectorStore", "Vector database", "langchain", "class", "memory",
+             {}, {"embedding_function": {"type": "function"}}),
+            ("embeddings", "Embeddings", "Text embeddings", "langchain", "class", "model", {}, {}),
+            ("document_loader", "DocumentLoader", "Load documents", "langchain", "class", "utils", {}, {}),
+            ("text_splitter", "TextSplitter", "Split long text", "langchain", "class", "utils", 
+             {}, {"chunk_size": {"type": "number", "default": 1000}}),
             
-            # AutoGen tools  
-            ("autogen_code", "AutoGen Code", "Generate AutoGen agents", "autogen"),
-            ("assistant", "AssistantAgent", "Multi-agent assistant", "autogen"),
-            ("user_proxy", "UserProxyAgent", "User proxy agent", "autogen"),
-            ("group_chat", "GroupChat", "Groupchat manager", "autogen"),
-            ("code_executor", "CodeExecutor", "Execute code", "autogen"),
+            # AutoGen
+            ("assistant", "AssistantAgent", "Multi-agent assistant", "autogen", "class", "agent",
+             {}, {"name": {"type": "string"}, "llm_config": {"type": "object"}}),
+            ("user_proxy", "UserProxyAgent", "User proxy agent", "autogen", "class", "agent",
+             {}, {"human_input_mode": {"type": "string"}}),
+            ("group_chat", "GroupChat", "Groupchat manager", "autogen", "class", "agent",
+             {}, {"agents": {"type": "array"}}),
+            ("code_executor", "CodeExecutor", "Execute code", "autogen", "class", "tool", {}, {}),
             
-            # CrewAI tools
-            ("crewai_code", "CrewAI Code", "Generate CrewAI pipelines", "crewai"),
-            ("agent_crew", "Agent", "CrewAI agent", "crewai"),
-            ("task_crew", "Task", "CrewAI task", "crewai"),
-            ("crew_crew", "Crew", "Crew manager", "crewai"),
-            ("process_crew", "Process", "Crew process", "crewai"),
+            # CrewAI
+            ("agent_crew", "Agent", "CrewAI agent", "crewai", "class", "agent",
+             {}, {"role": {"type": "string"}, "goal": {"type": "string"}}),
+            ("task_crew", "Task", "CrewAI task", "crewai", "class", "agent",
+             {}, {"description": {"type": "string"}, "agent": {"type": "object"}}),
+            ("crew_crew", "Crew", "Crew manager", "crewai", "class", "agent",
+             {}, {"agents": {"type": "array"}, "tasks": {"type": "array"}}),
+            ("process_crew", "Process", "Crew process", "crewai", "class", "utils", {}, {}),
             
-            # OpenAI tools
-            ("openai_api", "OpenAI API", "Interact with OpenAI models", "openai"),
-            ("gpt4", "GPT-4", "GPT-4 model", "openai"),
-            ("gpt35", "GPT-3.5", "GPT-3.5 model", "openai"),
-            ("dalle", "DALL-E", "Image generation", "openai"),
-            ("whisper", "Whisper", "Speech to text", "openai"),
-            ("tts", "TTS", "Text to speech", "openai"),
+            # OpenAI
+            ("gpt4", "GPT-4", "GPT-4 model", "openai", "class", "model",
+             {}, {"model": {"type": "string", "default": "gpt-4"}, "temperature": {"type": "number"}}),
+            ("gpt35", "GPT-3.5", "GPT-3.5 model", "openai", "class", "model", {}, {}),
+            ("dalle", "DALL-E", "Image generation", "openai", "class", "model",
+             {}, {"model": {"type": "string"}, "size": {"type": "string"}}),
+            ("whisper", "Whisper", "Speech to text", "openai", "class", "tool", {}, {}),
+            ("tts", "TTS", "Text to speech", "openai", "class", "tool", {}, {}),
             
-            # Anthropic tools
-            ("anthropic_api", "Anthropic API", "Interact with Claude models", "anthropic"),
-            ("claude3", "Claude 3", "Claude 3 model", "anthropic"),
-            ("claude3opus", "Claude 3 Opus", "Claude 3 Opus", "anthropic"),
-            ("claude3sonnet", "Claude 3 Sonnet", "Claude 3 Sonnet", "anthropic"),
-            ("claude3haiku", "Claude 3 Haiku", "Claude 3 Haiku", "anthropic"),
-            ("claude2", "Claude 2", "Claude 2 model", "anthropic"),
+            # Anthropic
+            ("claude3opus", "Claude 3 Opus", "Claude 3 Opus", "anthropic", "class", "model",
+             {}, {"model": {"type": "string"}, "max_tokens": {"type": "number"}}),
+            ("claude3sonnet", "Claude 3 Sonnet", "Claude 3 Sonnet", "anthropic", "class", "model", {}, {}),
+            ("claude3haiku", "Claude 3 Haiku", "Claude 3 Haiku", "anthropic", "class", "model", {}, {}),
             
-            # Google tools
-            ("google_search", "Google Search", "Search via Google", "google"),
-            ("gemini", "Gemini", "Gemini model", "google"),
-            ("vertex_ai", "Vertex AI", "Google Vertex AI", "google"),
+            # Google
+            ("gemini", "Gemini", "Gemini model", "google", "class", "model",
+             {}, {"model": {"type": "string"}, "temperature": {"type": "number"}}),
+            ("vertex_ai", "Vertex AI", "Google Vertex AI", "google", "class", "model", {}, {}),
+            ("google_search", "Google Search", "Search via Google", "google", "function", "tool", {}, {}),
         ]
-        for tid, name, desc, fw in framework_tools:
-            self._tools[tid] = ToolEntry(id=generate_did("tool", tid), name=name, description=desc, namespace="tool", framework=fw)
+        for tid, name, desc, fw, kind, cat, params, config in framework_tools:
+            self._tools[tid] = ToolEntry(
+                id=generate_did("tool", tid), 
+                name=name, 
+                description=desc, 
+                namespace="tool", 
+                framework=fw,
+                kind=kind,
+                category=cat,
+                parameters=params,
+                config_schema=config
+            )
     
     def get_skill(self, name: str) -> Optional[SkillEntry]:
         return self._skills.get(name)
