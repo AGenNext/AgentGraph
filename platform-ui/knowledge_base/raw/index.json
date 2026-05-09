@@ -1,0 +1,34 @@
+{
+  "langgraph": {
+    "url": "https://python.langchain.com/docs/langgraph/",
+    "sections": 8
+  },
+  "langchain": {
+    "url": "https://python.langchain.com/docs/",
+    "sections": 7
+  },
+  "autogen": {
+    "url": "https://microsoft.github.io/autogen/",
+    "sections": 0
+  },
+  "crewai": {
+    "url": "https://docs.crewai.com/",
+    "sections": 20
+  },
+  "anthropic": {
+    "url": "https://docs.anthropic.com/en/docs/",
+    "sections": 4
+  },
+  "github": {
+    "url": "https://docs.github.com/en/copilot",
+    "sections": 11
+  },
+  "docker": {
+    "url": "https://docs.docker.com/",
+    "sections": 7
+  },
+  "google": {
+    "url": "https://cloud.google.com/vertex-ai/docs/",
+    "sections": 11
+  }
+}

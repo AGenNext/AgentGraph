@@ -1,0 +1,602 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Enterprise Multi-Agent Team - Documentation</title>
+  <meta name="description" content="Multi-agent content writing team with LangGraph orchestration and A2A Protocol">
+  <link rel="canonical" href="https://agennext.github.io/AGenNext-Registry/">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@300;400;500;600;700&family=IBM+Plex+Mono&display=swap" rel="stylesheet">
+  <style>
+    /* IBM Carbon Design System Theme */
+    :root {
+      --ibm-blue-60: #0f62fe;
+      --ibm-blue-50: #0043ce;
+      --ibm-blue-40: #0043ce;
+      --ibm-blue-30: #0043ce;
+      --ibm-blue-20: #002d9c;
+      --ibm-blue-10: #002d9c;
+      --gray-100: #161616;
+      --gray-90: #393939;
+      --gray-80: #525252;
+      --gray-70: #6f6f6f;
+      --gray-60: #8d8d8d;
+      --gray-50: #a8a8a8;
+      --gray-40: #c6c6c6;
+      --gray-30: #e0e0e0;
+      --gray-20: #f4f4f4;
+      --gray-10: #fafafa;
+      --white: #ffffff;
+      --primary: var(--ibm-blue-60);
+      --primary-hover: var(--ibm-blue-50);
+      --bg-primary: var(--gray-100);
+      --bg-secondary: var(--gray-90);
+      --bg-ui: var(--gray-20);
+      --text-primary: var(--white);
+      --text-secondary: var(--gray-40);
+      --text-hint: var(--gray-60);
+      --border: var(--gray-70);
+      --success: #24a148;
+      --warning: #f1c21b;
+      --error: #da1e28;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'IBM Plex Sans', -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+      font-size: 14px;
+      line-height: 1.5;
+      color: var(--text-primary);
+      background: var(--bg-primary);
+      -webkit-font-smoothing: antialiased;
+    }
+    .container { max-width: 1280px; margin: 0 auto; padding: 0 2rem; }
+    
+    /* Header */
+    header {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--gray-80);
+      padding: 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+    .header-container {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      height: 48px;
+    }
+    .logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      color: var(--text-primary);
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 14px;
+    }
+    .logo-icon {
+      width: 24px;
+      height: 24px;
+      background: var(--primary);
+      border-radius: 2px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 14px;
+    }
+    nav { display: flex; gap: 1.5rem; }
+    nav a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 14px;
+      padding: 0.5rem 0;
+      transition: color 0.15s;
+    }
+    nav a:hover { color: var(--text-primary); }
+    
+    /* POLISHED HERO SECTION */
+    .hero {
+      background: var(--bg-primary);
+      padding: 0;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: 
+        radial-gradient(ellipse 80% 50% at 50% -20%, rgba(15, 98, 254, 0.15), transparent),
+        radial-gradient(ellipse 60% 40% at 100% 100%, rgba(0, 67, 206, 0.1), transparent);
+      pointer-events: none;
+    }
+    .hero-content {
+      position: relative;
+      z-index: 1;
+      padding: 5rem 0 4rem;
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 4rem;
+      align-items: center;
+    }
+    .hero-text h1 {
+      font-size: 56px;
+      font-weight: 300;
+      letter-spacing: -0.03em;
+      line-height: 1.1;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(135deg, var(--white) 0%, var(--gray-40) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      background-clip: text;
+    }
+    .hero-text p {
+      font-size: 18px;
+      color: var(--text-secondary);
+      max-width: 540px;
+      margin-bottom: 2rem;
+      font-weight: 400;
+    }
+    .hero-actions {
+      display: flex;
+      gap: 1rem;
+      margin-bottom: 2.5rem;
+    }
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      padding: 0.75rem 1.5rem;
+      font-size: 14px;
+      font-weight: 500;
+      border-radius: 0;
+      text-decoration: none;
+      cursor: pointer;
+      transition: all 0.15s;
+      font-family: inherit;
+    }
+    .btn-primary {
+      background: var(--primary);
+      color: var(--white);
+      border: none;
+    }
+    .btn-primary:hover { background: var(--primary-hover); text-decoration: none; }
+    .btn-secondary {
+      background: transparent;
+      color: var(--primary);
+      border: 1px solid var(--gray-60);
+    }
+    .btn-secondary:hover { background: var(--gray-80); color: var(--text-primary); border-color: var(--gray-60); text-decoration: none; }
+    
+    .badges {
+      display: flex;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+    }
+    .badge {
+      background: var(--gray-80);
+      color: var(--text-primary);
+      padding: 0.5rem 1rem;
+      border-radius: 0;
+      font-size: 12px;
+      font-weight: 500;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      border: 1px solid var(--gray-70);
+    }
+    
+    /* Hero Visual */
+    .hero-visual {
+      position: relative;
+      width: 400px;
+      height: 320px;
+      background: var(--bg-secondary);
+      border: 1px solid var(--gray-80);
+      border-radius: 0;
+      padding: 1.5rem;
+      display: flex;
+      flex-direction: column;
+    }
+    .hero-visual-header {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+      padding-bottom: 1rem;
+      border-bottom: 1px solid var(--gray-80);
+    }
+    .dot { width: 12px; height: 12px; border-radius: 50%; }
+    .dot-red { background: #ff5f57; }
+    .dot-yellow { background: #febc2e; }
+    .dot-green { background: #28c840; }
+    .hero-visual-title {
+      font-size: 12px;
+      color: var(--text-secondary);
+      margin-left: 0.5rem;
+    }
+    .code-block {
+      flex: 1;
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 12px;
+      line-height: 1.6;
+      color: var(--text-secondary);
+    }
+    .code-keyword { color: var(--primary); }
+    .code-string { color: #98c379; }
+    .code-comment { color: var(--gray-60); font-style: italic; }
+    .code-method { color: #d19a66; }
+    
+    /* Content */
+    .content {
+      background: var(--bg-primary);
+      padding: 4rem 0;
+      border-top: 1px solid var(--gray-80);
+    }
+    .content h2 {
+      font-size: 20px;
+      font-weight: 600;
+      margin: 3rem 0 1.25rem;
+      color: var(--text-primary);
+      border-bottom: 1px solid var(--gray-80);
+      padding-bottom: 0.75rem;
+      letter-spacing: -0.01em;
+    }
+    .content h2:first-child { margin-top: 0; }
+    .content h3 {
+      font-size: 16px;
+      font-weight: 600;
+      margin: 2rem 0 0.75rem;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+    }
+    .content p { color: var(--text-secondary); margin: 1rem 0; font-size: 14px; }
+    .content ul, .content ol { margin: 1rem 0; padding-left: 1.25rem; color: var(--text-secondary); }
+    .content li { margin: 0.5rem 0; }
+    
+    code {
+      background: var(--gray-80);
+      color: var(--gray-30);
+      padding: 0.25rem 0.5rem;
+      border-radius: 0;
+      font-size: 12px;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    pre {
+      background: var(--gray-90);
+      color: var(--gray-30);
+      padding: 1.25rem;
+      border-radius: 0;
+      overflow-x: auto;
+      margin: 1.25rem 0;
+      border-left: 3px solid var(--primary);
+      font-family: 'IBM Plex Mono', monospace;
+      font-size: 13px;
+      line-height: 1.6;
+    }
+    pre code { background: none; padding: 0; color: inherit; }
+    
+    /* Cards */
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1rem;
+      margin: 1.5rem 0;
+    }
+    .card {
+      background: var(--gray-90);
+      border: 1px solid var(--gray-80);
+      padding: 1.5rem;
+      border-radius: 0;
+      transition: border-color 0.15s;
+    }
+    .card:hover { border-color: var(--primary); }
+    .card h4 {
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+    .card p { font-size: 14px; color: var(--text-secondary); margin: 0; }
+    
+    /* Table */
+    table { width: 100%; border-collapse: collapse; margin: 1.25rem 0; background: var(--gray-90); }
+    th, td {
+      padding: 0.875rem 1rem;
+      text-align: left;
+      border-bottom: 1px solid var(--gray-80);
+      font-size: 14px;
+    }
+    th {
+      background: var(--gray-80);
+      font-weight: 600;
+      color: var(--text-primary);
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+    td { color: var(--text-secondary); }
+    tr:hover td { background: var(--gray-80); }
+    a { color: var(--primary); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    
+    .endpoint { display: flex; align-items: center; gap: 1rem; margin: 1.5rem 0 1rem; flex-wrap: wrap; }
+    .method {
+      font-weight: 600;
+      padding: 0.35rem 0.75rem;
+      font-size: 11px;
+      text-transform: uppercase;
+      border-radius: 0;
+      font-family: 'IBM Plex Mono', monospace;
+    }
+    .get { background: var(--success); color: white; }
+    .post { background: var(--primary); color: white; }
+    .put { background: var(--warning); color: var(--gray-100); }
+    .delete { background: var(--error); color: white; }
+    .path { font-family: 'IBM Plex Mono', monospace; font-size: 14px; color: var(--text-secondary); }
+    
+    /* Footer */
+    footer {
+      background: var(--gray-90);
+      border-top: 1px solid var(--gray-80);
+      padding: 2rem 0;
+      text-align: center;
+    }
+    footer p { color: var(--text-secondary); font-size: 12px; margin: 0.25rem 0; }
+    footer strong { color: var(--text-primary); font-weight: 500; }
+    
+    @media (max-width: 900px) {
+      .hero-content { grid-template-columns: 1fr; gap: 2rem; }
+      .hero-visual { display: none; }
+      .hero-text h1 { font-size: 36px; }
+    }
+    @media (max-width: 768px) {
+      .header-container { flex-direction: column; height: auto; padding: 1rem 0; gap: 1rem; }
+      nav { flex-wrap: wrap; justify-content: center; }
+      .hero-actions { flex-direction: column; }
+      .grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="container header-container">
+      <a href="https://github.com/AGenNext/AGenNext-Registry" class="logo">
+        <span class="logo-icon">🤖</span>
+        <span>Content Writing Team</span>
+      </a>
+      <nav>
+        <a href="#overview">Overview</a>
+        <a href="#getting-started">Getting Started</a>
+        <a href="#api">API</a>
+        <a href="#agents">Agents</a>
+        <a href="#providers">Providers</a>
+        <a href="glossary.html">Glossary</a>
+        <a href="agents.html">Agents</a>
+      </nav>
+    </div>
+  </header>
+
+  <section class="hero">
+    <div class="container hero-content">
+      <div class="hero-text">
+        <h1>Enterprise Multi-Agent Team</h1>
+        <p>Enterprise-grade LLM Agnostic AI agent framework powered by 15+ SDKs with LangGraph orchestration and A2A Protocol for scalable content creation.</p>
+        <div class="hero-actions">
+          <a href="#getting-started" class="btn btn-primary">Get Started →</a>
+          <a href="https://github.com/AGenNext/AGenNext-Registry" class="btn btn-secondary">View on GitHub</a>
+        </div>
+        <div class="badges">
+          <span class="badge">🤖 15+ SDK Agents</span>
+          <span class="badge">📊 LangGraph</span>
+          <span class="badge">🔗 A2A Protocol</span>
+          <span class="badge">📄 OpenAPI 3.0</span>
+        </div>
+      </div>
+      <div class="hero-visual">
+        <div class="hero-visual-header">
+          <span class="dot dot-red"></span>
+          <span class="dot dot-yellow"></span>
+          <span class="dot dot-green"></span>
+          <span class="hero-visual-title">content_team.py</span>
+        </div>
+        <div class="code-block">
+          <span class="code-comment"># Multi-agent content creation</span>
+          <br>
+          <span class="code-keyword">from</span> agents <span class="code-keyword">import</span> TeamCoordinator
+          <br><br>
+          team = <span class="code-method">TeamCoordinator</span>()
+          <br>
+          result = team.<span class="code-method">run</span>(
+          <br>
+          &nbsp;&nbsp;task=<span class="code-string">"Write enterprise docs"</span>,
+          <br>
+          &nbsp;&nbsp;strategy=<span class="code-string">"parallel"</span>
+          <br>
+          )
+          <br><br>
+          <span class="code-comment"># Output: quality_score: 0.95</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content" id="overview">
+    <div class="container">
+      <h2>Overview</h2>
+      <p>The Enterprise Multi-Agent Team is a collaborative AI agent framework that coordinates multiple specialized agents to handle complex content creation tasks. Built on LangGraph for workflow orchestration and A2A Protocol for agent-to-agent communication.</p>
+      
+      <h3>LLM Agnostic Key Features</h3>
+      <div class="grid">
+        <div class="card">
+          <h4>🤖 Multiple SDK Support</h4>
+          <p>Built-in support for OpenAI, Salesforce, Microsoft, Google, and 10+ other agent frameworks.</p>
+        </div>
+        <div class="card">
+          <h4>📊 LangGraph Workflows</h4>
+          <p>Graph-based task orchestration with parallel and sequential execution strategies.</p>
+        </div>
+        <div class="card">
+          <h4>🔗 A2A Protocol</h4>
+          <p>Standardized agent-to-agent communication for task delegation and results sharing.</p>
+        </div>
+        <div class="card">
+          <h4>📄 OpenAPI 3.0</h4>
+          <p>REST API specification for easy integration and documentation.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="content" id="getting-started">
+    <div class="container">
+      <h2>Getting Started</h2>
+      
+      <h3>Installation</h3>
+      <pre><code>git clone https://github.com/AGenNext/AGenNext-Registry.git
+cd AGenNext-Registry
+pip install -r requirements.txt</code></pre>
+
+      <h3>Environment Variables</h3>
+      <pre><code># Create .env file
+cp .env.example .env
+
+# Edit with your API keys
+OPENAI_API_KEY=sk-...
+ANTHROPIC_API_KEY=sk-ant-...
+GOOGLE_API_KEY=...</code></pre>
+
+      <h3>Quick Start</h3>
+      <pre><code># View all agent cards
+python main.py --mode cards
+
+# Single agent demo
+python main.py --mode demo --agent openai --topic "AI Writing"
+
+# Multi-agent team demo
+python main.py --mode team --topic "Cloud Computing"
+
+# A2A protocol demo
+python main.py --mode a2a</code></pre>
+
+      <h3>Run the Server</h3>
+      <pre><code># Start A2A server
+python main.py --mode server --port 8000</code></pre>
+    </div>
+  </section>
+
+  <section class="content" id="api">
+    <div class="container">
+      <h2>API Reference</h2>
+      <p>Full OpenAPI specification available in <a href="openapi.yaml">openapi.yaml</a></p>
+      
+      <h3>Base URL</h3>
+      <pre><code>Local:     http://localhost:8000
+Production: https://your-domain.com</code></pre>
+
+      <h3>Endpoints</h3>
+      
+      <h4>Health Check</h4>
+      <div class="endpoint">
+        <span class="method get">GET</span>
+        <span class="path">/health</span>
+      </div>
+      <pre><code>curl http://localhost:8000/health</code></pre>
+
+      <h4>Run Agent Task</h4>
+      <div class="endpoint">
+        <span class="method post">POST</span>
+        <span class="path">/agents/{agentId}/run</span>
+      </div>
+      <pre><code>curl -X POST http://localhost:8000/agents/openai/run \
+  -H "Content-Type: application/json" \
+  -d '{"task": "Write a blog post", "content_type": "blog"}'</code></pre>
+
+      <h4>Run Team Workflow</h4>
+      <div class="endpoint">
+        <span class="method post">POST</span>
+        <span class="path">/team/run</span>
+      </div>
+      <pre><code>curl -X POST http://localhost:8000/team/run \
+  -d '{"task": "Create a project", "strategy": "parallel"}'</code></pre>
+    </div>
+  </section>
+
+  <section class="content" id="agents">
+    <div class="container">
+      <h2>Agents</h2>
+      <p>Each agent is specialized for different content types and integrates with specific SDKs.</p>
+      
+      <table>
+        <tr><th>Agent</th><th>Preferred Model</th><th>SDK</th><th>Specialization</th><th>Content Types</th></tr>
+        <tr><td>OpenAIAgent</td><td>OpenAI SDK</td><td>Coding, reasoning</td><td>Code, configs</td></tr>
+        <tr><td>SalesforceAgent</td><td>Salesforce SDK</td><td>CRM automation</td><td>SQL, reports</td></tr>
+        <tr><td>MicrosoftAgent</td><td>Azure AI Foundry</td><td>Enterprise</td><td>Docs</td></tr>
+        <tr><td>GoogleAgent</td><td>Google ADK</td><td>Research</td><td>Research, blogs</td></tr>
+        <tr><td>LangChainAgent</td><td>LangChain</td><td>Tool use</td><td>Code, SQL</td></tr>
+        <tr><td>LlamaIndexAgent</td><td>LlamaIndex</td><td>RAG</td><td>Documentation</td></tr>
+        <tr><td>DockerAgent</td><td>Docker SDK</td><td>Container configs</td><td>Dockerfiles</td></tr>
+        <tr><td>GitHubAgent</td><td>GitHub SDK</td><td>Repository ops</td><td>GitHub Actions</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="content" id="providers">
+    <div class="container">
+      <h2>LLM Agnostic Providers</h2>
+      <table>
+        <tr><th>Provider</th><th>Default Model</th><th>Environment</th></tr>
+        <tr><td>OpenAI</td><td>gpt-4o</td><td>OPENAI_API_KEY</td></tr>
+        <tr><td>Anthropic</td><td>claude-3.5-sonnet</td><td>ANTHROPIC_API_KEY</td></tr>
+        <tr><td>Google</td><td>gemini-2.0-flash</td><td>GOOGLE_API_KEY</td></tr>
+        <tr><td>Azure OpenAI</td><td>gpt-4</td><td>AZURE_OPENAI_*</td></tr>
+        <tr><td>Ollama</td><td>llama3</td><td>Local only</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="content" id="docker">
+    <div class="container">
+      <h2>Docker</h2>
+      
+      <h3>Build Image</h3>
+      <pre><code>docker build -t content-writers .</code></pre>
+
+      <h3>Run Container</h3>
+      <pre><code>docker run -d -p 8000:8000 \
+  -e OPENAI_API_KEY=sk-... \
+  content-writers</code></pre>
+
+      <h3>Use Pre-built</h3>
+      <pre><code>docker run -p 8000:8000 ghcr.io/agennext/agennext-registry:latest</code></pre>
+    </div>
+  </section>
+
+  <section class="content" id="source">
+    <div class="container">
+      <h2>Source Code</h2>
+      <p>For detailed implementation, see the source files.</p>
+      <table>
+        <tr><th>Component</th><th>File</th><th>Description</th></tr>
+        <tr><td>Config</td><td><a href="https://github.com/AGenNext/AGenNext-Registry/blob/main/config.py">config.py</a></td><td>Configuration</td></tr>
+        <tr><td>LLM Agnostic Client</td><td><a href="https://github.com/AGenNext/AGenNext-Registry/blob/main/core/llm_client.py">core/llm_client.py</a></td><td>40+ LLM providers</td></tr>
+        <tr><td>Registry</td><td><a href="https://github.com/AGenNext/AGenNext-Registry/blob/main/core/registry.py">core/registry.py</a></td><td>Skills, prompts</td></tr>
+        <tr><td>LangGraph</td><td><a href="https://github.com/AGenNext/AGenNext-Registry/blob/main/orchestrator/langgraph_workflow.py">orchestrator/</a></td><td>Workflow</td></tr>
+        <tr><td>A2A Protocol</td><td><a href="https://github.com/AGenNext/AGenNext-Registry/blob/main/a2a/">a2a/</a></td><td>Protocol</td></tr>
+        <tr><td>Agents</td><td><a href="https://github.com/AGenNext/AGenNext-Registry/blob/main/agents/">agents/</a></td><td>SDK agents</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <div class="container">
+      <p>© 2026 Built & Managed by <strong>OpenAutonomyx (OPC) Private Limited</strong></p>
+      <p>All Rights Reserved.</p>
+    </div>
+  </footer>
+</body>
+</html>

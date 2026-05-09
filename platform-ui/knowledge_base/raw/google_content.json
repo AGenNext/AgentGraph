@@ -1,0 +1,173 @@
+{
+  "url": "https://cloud.google.com/vertex-ai/docs/",
+  "text": "Vertex AI is transitioning to become part of Gemini Enterprise Agent Platform. See the most up-to-date information in the\nAgent Platform documentation\n.\nHome\nDocumentation\nAI and ML\nVertex AI\nSend feedback\nStay organized with collections\nSave and categorize content based on your preferences.\nVertex AI documentation\nVertex AI is a machine learning (ML) platform that lets you train and deploy ML models and\n  AI applications. Vertex AI combines data engineering, data science, and ML engineering\n  workflows, which lets teams collaborate using a common toolset.\nLearn more about Vertex AI\nGemini\nUse Gemini, Google's multimodal generative AI model, to process images, videos, and text.\nGenerative AI\nAccess Google's generative AI models to test, tune, and deploy them for use in your AI-powered applications.\nModel Garden\nUse Model Garden to discover, test, customize, and deploy Google proprietary and select open source software generative AI models and large language models.\nGet started with generative AI\nIntroduction to prompting\nTry the Gemini API in Vertex AI quickstart\nDiscover models in Model Garden\nGet started with Vertex AI\nIntroduction to Vertex AI\nTrain a model using the Python SDK\nAutoML beginner's guide\nTrain your own models\nIntroduction to training\nTrain a model from tabular data using AutoML\nVertex AI serverless training overview\nVertex AI training clusters overview\nManage your workflow\nIntroduction to MLOps\nUse pipelines to orchestrate your workflow\nUse Model Registry to manage model versions\nUse Vertex AI Feature Store to serve ML features\nMonitor your model's performance\nExperiment with your model using different ML techniques\nUse Ray on Vertex AI to scale training\nTutorials and samples\nAll tutorials\nJupyter notebooks\nBrowse code samples\nResources\nPricing\nQuotas and limits\nRelease notes\nGet support\nVertex AI and Cloud machine learning (ML) products\nSolution type\nCategory\nProducts\nGenerative AI and pre-trained models\nGenerative AI\nGenerative AI on Vertex AI\nModel Garden\nText embeddings\nMultimodal embeddings\nCodey\nExtensions\nGenerative AI Evaluation Service\nVertex AI Studio\nImagen for image generation\nTask-specific solutions\nCloud Vision\nVideo Intelligence API\nVisual Inspection AI\nCloud Natural Language API\nAI solutions\nFinance\nAnti Money Laundering AI\nCloud Contact Center\nTranslation\nCloud Translation API\nRetail\nRetail API\nRetail Search\nHealthcare\nCloud Healthcare API\nHealthcare Data Engine\nHealthcare Natural Language API\nHealthcare Solutions\nSearch and recommendations\nEnterprise Knowledge Graph\nVector Search\nVertex AI Search\nVertex AI Search Recommendations\nDocument management\nDocument AI\nDocument AI Warehouse\nDocument AI Workbench\nEnterprise Document OCR\nOCR On-Prem (Deprecated)\nHuman-in-the-Loop AI\nCustomer service\nConversational Insights\nGoogle Cloud Contact Center as a Service\nDialogflow CX\nDialogflow ES\nAgent Assist\nConversations and speech\nVertex AI Agents\nSpeech-to-Text\nText-to-Speech\nSpeaker ID\nSpeech-to-Text On-Prem\nSpeech On Device\nVision and video\nVision AI\nLive Stream API\nTranscoder API\nVideo Stitcher API\nModel training and development\nAutomatic training\nVertex AI AutoML Tabular\nVertex AI AutoML Image\nCustom training\nVertex AI Training\nVertex AI Neural Architecture Search\nRay on Vertex AI\nDeep Learning Containers\nDeep Learning VM Images\nMLOps and production\nDeployment\nVertex AI Inference\nDeveloper tools\nColab Enterprise\nVertex AI Workbench\nModel iteration\nVertex AI Experiments\nMonitoring and evaluation\nVertex Explainable AI\nVertex AI Model Monitoring\nVertex AI Model Evaluation\nVertex AI TensorBoard\nData and features\nVertex AI Datasets\nVertex AI Feature Store\nOrchestration\nVertex AI Pipelines\nVertex AI Model Registry\nExcept as otherwise noted, the content of this page is licensed under the\nCreative Commons Attribution 4.0 License\n, and code samples are licensed under the\nApache 2.0 License\n. For details, see the\nGoogle Developers Site Policies\n. Java is a registered trademark of Oracle and/or its affiliates.\nLast updated 2026-04-22 UTC.",
+  "sections": [
+    {
+      "heading": "Vertex AI documentation",
+      "content": "Vertex AI is a machine learning (ML) platform that lets you train and deploy ML models and\n  AI applications. Vertex AI combines data engineering, data science, and ML engineering\n  workflows, which lets teams collaborate using a common toolset.Learn more about Vertex AI"
+    },
+    {
+      "heading": "Gemini",
+      "content": "Use Gemini, Google's multimodal generative AI model, to process images, videos, and text."
+    },
+    {
+      "heading": "Generative AI",
+      "content": "Access Google's generative AI models to test, tune, and deploy them for use in your AI-powered applications."
+    },
+    {
+      "heading": "Model Garden",
+      "content": "Use Model Garden to discover, test, customize, and deploy Google proprietary and select open source software generative AI models and large language models."
+    },
+    {
+      "heading": "Get started with generative AI",
+      "content": "Introduction to promptingTry the Gemini API in Vertex AI quickstartDiscover models in Model Garden"
+    },
+    {
+      "heading": "Get started with Vertex AI",
+      "content": "Introduction to Vertex AITrain a model using the Python SDKAutoML beginner's guide"
+    },
+    {
+      "heading": "Train your own models",
+      "content": "Introduction to trainingTrain a model from tabular data using AutoMLVertex AI serverless training overviewVertex AI training clusters overview"
+    },
+    {
+      "heading": "Manage your workflow",
+      "content": "Introduction to MLOpsUse pipelines to orchestrate your workflowUse Model Registry to manage model versionsUse Vertex AI Feature Store to serve ML featuresMonitor your model's performanceExperiment with your model using different ML techniquesUse Ray on Vertex AI to scale training"
+    },
+    {
+      "heading": "Tutorials and samples",
+      "content": "All tutorialsJupyter notebooksBrowse code samples"
+    },
+    {
+      "heading": "Resources",
+      "content": "PricingQuotas and limitsRelease notesGet support"
+    },
+    {
+      "heading": "Vertex AI and Cloud machine learning (ML) products",
+      "content": "Solution typeCategoryProductsGenerative AI and pre-trained modelsGenerative AIGenerative AI on Vertex AIModel GardenText embeddingsMultimodal embeddingsCodeyExtensionsGenerative AI Evaluation ServiceVertex AI StudioImagen for image generationTask-specific solutionsCloud VisionVideo Intelligence APIVisual Inspection AICloud Natural Language APIAI solutionsFinanceAnti Money Laundering AICloud Contact CenterTranslationCloud Translation APIRetailRetail APIRetail SearchHealthcareCloud Healthcare APIHealthcare Data EngineHealthcare Natural Language APIHealthcare SolutionsSearch and recommendationsEnterprise Knowledge GraphVector SearchVertex AI SearchVertex AI Search RecommendationsDocument managementDocument AIDocument AI WarehouseDocument AI WorkbenchEnterprise Document OCROCR On-Prem (Deprecated)Human-in-the-Loop AICustomer serviceConversational InsightsGoogle Cloud Contact Center as a ServiceDialogflow CXDialogflow ESAgent AssistConversations and speechVertex AI AgentsSpeech-to-TextText-to-SpeechSpeaker IDSpeech-to-Text On-PremSpeech On DeviceVision and videoVision AILive Stream APITranscoder APIVideo Stitcher APIModel training and developmentAutomatic trainingVertex AI AutoML TabularVertex AI AutoML ImageCustom trainingVertex AI TrainingVertex AI Neural Architecture SearchRay on Vertex AIDeep Learning ContainersDeep Learning VM ImagesMLOps and productionDeploymentVertex AI InferenceDeveloper toolsColab EnterpriseVertex AI WorkbenchModel iterationVertex AI ExperimentsMonitoring and evaluationVertex Explainable AIVertex AI Model MonitoringVertex AI Model EvaluationVertex AI TensorBoardData and featuresVertex AI DatasetsVertex AI Feature StoreOrchestrationVertex AI PipelinesVertex AI Model Registry"
+    }
+  ],
+  "code_blocks": [],
+  "links": [
+    {
+      "text": "Skip to main content",
+      "href": "#main-content"
+    },
+    {
+      "text": "",
+      "href": "/"
+    },
+    {
+      "text": "Console",
+      "href": "//console.cloud.google.com/"
+    },
+    {
+      "text": "",
+      "href": "https://docs.cloud.google.com/vertex-ai/docs"
+    },
+    {
+      "text": "Vertex AI",
+      "href": "https://docs.cloud.google.com/vertex-ai/docs"
+    },
+    {
+      "text": "Start free",
+      "href": "//console.cloud.google.com/freetrial"
+    },
+    {
+      "text": "Agent Platform documentation",
+      "href": "/gemini-enterprise-agent-platform"
+    },
+    {
+      "text": "Home",
+      "href": "https://docs.cloud.google.com/"
+    },
+    {
+      "text": "Documentation",
+      "href": "https://docs.cloud.google.com/docs"
+    },
+    {
+      "text": "AI and ML",
+      "href": "https://docs.cloud.google.com/docs/ai-ml"
+    },
+    {
+      "text": "Vertex AI",
+      "href": "https://docs.cloud.google.com/vertex-ai/docs"
+    },
+    {
+      "text": "Learn more about Vertex AI",
+      "href": "/vertex-ai/docs/start/introduction-unified-platform"
+    },
+    {
+      "text": "",
+      "href": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models"
+    },
+    {
+      "text": "Gemini",
+      "href": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/models"
+    },
+    {
+      "text": "",
+      "href": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/overview"
+    },
+    {
+      "text": "Generative AI",
+      "href": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/overview"
+    },
+    {
+      "text": "",
+      "href": "https://docs.cloud.google.com/vertex-ai/docs/start/explore-models"
+    },
+    {
+      "text": "Model Garden",
+      "href": "https://docs.cloud.google.com/vertex-ai/docs/start/explore-models"
+    },
+    {
+      "text": "Introduction to prompting",
+      "href": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/learn/prompts/introduction-prompt-design"
+    },
+    {
+      "text": "Try the Gemini API in Vertex AI quickstart",
+      "href": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/start/quickstart"
+    },
+    {
+      "text": "Discover models in Model Garden",
+      "href": "https://docs.cloud.google.com/vertex-ai/generative-ai/docs/model-garden/explore-models"
+    },
+    {
+      "text": "Introduction to Vertex AI",
+      "href": "https://docs.cloud.google.com/vertex-ai/docs/start/introduction-unified-platform"
+    },
+    {
+      "text": "Train a model using the Python SDK",
+      "href": "https://docs.cloud.google.com/vertex-ai/docs/tutorials/tabular-bq-prediction"
+    },
+    {
+      "text": "AutoML beginner's guide",
+      "href": "https://docs.cloud.google.com/vertex-ai/docs/beginner/beginners-guide"
+    },
+    {
+      "text": "Introduction to training",
+      "href": "https://docs.cloud.google.com/vertex-ai/docs/training-overview"
+    },
+    {
+      "text": "Train a model from tabular data using AutoML",
+      "href": "https://docs.cloud.google.com/vertex-ai/docs/tabular-data/overview"
+    },
+    {
+      "text": "Vertex AI serverless training overview",
+      "href": "https://docs.cloud.google.com/vertex-ai/docs/training/overview"
+    },
+    {
+      "text": "Vertex AI training clusters overview",
+      "href": "https://docs.cloud.google.com/vertex-ai/docs/training/training-clusters/overview"
+    },
+    {
+      "text": "Introduction to MLOps",
+      "href": "https://docs.cloud.google.com/vertex-ai/docs/start/introduction-mlops"
+    },
+    {
+      "text": "Use pipelines to orchestrate your workflow",
+      "href": "https://docs.cloud.google.com/vertex-ai/docs/pipelines/introduction"
+    }
+  ]
+}

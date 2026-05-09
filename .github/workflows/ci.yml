@@ -1,0 +1,74 @@
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  lint:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install flake8 black mypy
+      
+      - name: Lint with flake8
+        run: |
+          flake8 agents/ ui/ --max-line-length=100 --ignore=E501,W503
+      
+      - name: Check formatting
+        run: |
+          black --check agents/ ui/
+
+  test:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+      
+      - name: Run tests
+        run: |
+          echo "No tests yet"
+          # pytest tests/ --cov=agents --cov=ui
+
+  docker:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - uses: actions/checkout@v4
+      
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+      
+      - name: Build Docker image
+        uses: docker/build-push-action@v5
+        with:
+          context: .
+          push: false
+          tags: agennext/agent-registry:test
+          labels: |
+            org.opencontainers.image.source=https://github.com/AGenNext/AGenNext-Enterprise
+            org.opencontainers.image.description=Enterprise Multi-Agent Platform
+      
+      - name: Verify image
+        run: |
+          docker run --rm agennext/agent-registry:test python --version

@@ -1,0 +1,48 @@
+Automation and Environments
+Get Started
+Onboard to the Amazon SageMaker AI role and domain.
+Use Automated ML
+Learn how to automate machine learning from start to finish.
+Use Machine Learning Environments
+Learn about machine learning environments that Amazon SageMaker AI offers.
+Work with Data
+Label Data with a Human-in-the-loop
+Learn how to use a human-in-the-loop to help label data more accurately.
+Prepare Data
+Learn how to prepare data for machine learning.
+Process Data
+Learn how to process data for machine learning.
+Create, Store, and Share Features
+Learn how to create, store, and share extracted data signals (features) for machine learning.
+Work with Models
+Train Models
+Learn how to train your machine learning models.
+Deploy Models for Inference
+Learn how to deploy your machine learning models for inference.
+Implement MLOps
+Learn how to implement machine learning operations on Amazon SageMaker AI.
+Monitor Data and Model Quality
+Learn how to monitor data and model quality.
+Use Docker Containers to Build Models
+Learn how to use Docker containers to build your machine learning models.
+Responsible AI
+Detect Bias and Understand Explanations
+Learn how to detect bias and understand explanations in machine learning models.
+Use Governance
+Learn how to use governance to document and track model performance.
+Configure Security in Amazon SageMaker AI
+Learn how to secure resources in Amazon SageMaker AI.
+Reference
+API Reference
+Describes all of the API operations for Amazon SageMaker AI in detail.
+HTML
+PDF
+Amazon SageMaker AI Python SDK
+Use the Amazon SageMaker AI Python SDK library to train and deploy models using popular deep learning frameworks and algorithms.
+HTML
+GitHub
+AWS SDK for Python (Boto3)
+Use the AWS SDK for Python (Boto3) to format model data and build applications to build, train, and deploy machine learning models.
+Instalar
+SageMaker
+SageMakerRuntime

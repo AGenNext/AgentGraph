@@ -1,0 +1,309 @@
+{
+  "langgraph": {
+    "url": "https://docs.langgraph.ai",
+    "methods": {
+      "StateGraph": {
+        "syntax": "StateGraph(state_schema)",
+        "params": {
+          "state_schema": "Pydantic model or TypedDict"
+        },
+        "returns": "StateGraph",
+        "example": "graph = StateGraph(MessagesState)"
+      },
+      "add_node": {
+        "syntax": "graph.add_node(name, handler)",
+        "params": {
+          "name": "str - node name",
+          "handler": "callable - node function"
+        },
+        "returns": "self",
+        "example": "graph.add_node('process', handler)"
+      },
+      "add_edge": {
+        "syntax": "graph.add_edge(source, target)",
+        "params": {
+          "source": "str - source node",
+          "target": "str|END - target node"
+        },
+        "returns": "self",
+        "example": "graph.add_edge('process', END)"
+      },
+      "compile": {
+        "syntax": "graph.compile(checkpoint=None, store=None)",
+        "params": {
+          "checkpoint": "Checkpointer - optional",
+          "store": "Store - optional"
+        },
+        "returns": "CompiledGraph",
+        "example": "app = graph.compile(checkpoint=MemorySaver())"
+      },
+      "invoke": {
+        "syntax": "app.invoke(input, config?)",
+        "params": {
+          "input": "dict - input state",
+          "config": "RunnableConfig - optional"
+        },
+        "returns": "dict - final state",
+        "example": "result = app.invoke({'messages': [...]})"
+      },
+      "stream": {
+        "syntax": "app.stream(input, config?)",
+        "params": {
+          "input": "dict",
+          "config": "RunnableConfig"
+        },
+        "returns": "Generator[dict]",
+        "example": "for chunk in app.stream(input): print(chunk)"
+      },
+      "interrupt": {
+        "syntax": "interrupt(resume_value?)",
+        "params": {
+          "resume_value": "any - value to resume with"
+        },
+        "returns": "Interrupt",
+        "example": "return interrupt('waiting for input')"
+      },
+      "get_state": {
+        "syntax": "app.get_state(config)",
+        "params": {
+          "config": "RunnableConfig with thread_id"
+        },
+        "returns": "StateSnapshot",
+        "example": "state = app.get_state(config)"
+      },
+      "update_state": {
+        "syntax": "app.update_state(config, values)",
+        "params": {
+          "config": "RunnableConfig",
+          "values": "dict - state updates"
+        },
+        "returns": "StateSnapshot",
+        "example": "app.update_state(config, {'key': 'value'})"
+      }
+    }
+  },
+  "langchain": {
+    "url": "https://python.langchain.com",
+    "methods": {
+      "create_openai_functions_agent": {
+        "syntax": "create_openai_functions_agent(llm, tools, prompt)",
+        "params": {
+          "llm": "BaseChatModel",
+          "tools": "list[BaseTool]",
+          "prompt": "ChatPromptTemplate"
+        },
+        "returns": "Runnable",
+        "example": "agent = create_openai_functions_agent(llm, tools, prompt)"
+      },
+      "ConversationChain": {
+        "syntax": "ConversationChain(llm, memory, prompt?)",
+        "params": {
+          "llm": "BaseChatModel",
+          "memory": "BaseMemory",
+          "prompt": "BasePromptTemplate"
+        },
+        "returns": "ConversationChain",
+        "example": "chain = ConversationChain(llm, memory)"
+      },
+      "LLMChain": {
+        "syntax": "LLMChain(llm, prompt)",
+        "params": {
+          "llm": "BaseLLM",
+          "prompt": "BasePromptTemplate"
+        },
+        "returns": "LLMChain",
+        "example": "chain = LLMChain(llm, prompt)"
+      },
+      "RetrievalQAChain": {
+        "syntax": "RetrievalQAChain.from_retriever(llm, retriever)",
+        "params": {
+          "llm": "BaseLLM",
+          "retriever": "BaseRetriever"
+        },
+        "returns": "RetrievalQAChain",
+        "example": "chain = RetrievalQAChain.from_retriever(llm, retriever)"
+      },
+      "BufferMemory": {
+        "syntax": "BufferMemory(return_messages?, chat_history?)",
+        "params": {
+          "return_messages": "bool",
+          "chat_history": "list"
+        },
+        "returns": "BufferMemory",
+        "example": "memory = BufferMemory(return_messages=True)"
+      }
+    }
+  },
+  "crewai": {
+    "url": "https://docs.crewai.com",
+    "methods": {
+      "Agent": {
+        "syntax": "Agent(role, goal, backstory, tools?, verbose?)",
+        "params": {
+          "role": "str",
+          "goal": "str",
+          "backstory": "str",
+          "tools": "list",
+          "verbose": "bool"
+        },
+        "returns": "Agent",
+        "example": "agent = Agent(role='Researcher', goal='Find info', backstory='Expert')"
+      },
+      "Task": {
+        "syntax": "Task(description, agent, expected_output?)",
+        "params": {
+          "description": "str",
+          "agent": "Agent",
+          "expected_output": "str"
+        },
+        "returns": "Task",
+        "example": "task = Task(description='Research AI', agent=agent)"
+      },
+      "Crew": {
+        "syntax": "Crew(agents, tasks, process?, verbose?)",
+        "params": {
+          "agents": "list[Agent]",
+          "tasks": "list[Task]",
+          "process": "Process",
+          "verbose": "bool"
+        },
+        "returns": "Crew",
+        "example": "crew = Crew(agents=[a], tasks=[t], process=Process.SEQUENTIAL)"
+      },
+      "Crew.kickoff": {
+        "syntax": "crew.kickoff(inputs?)",
+        "params": {
+          "inputs": "dict - task inputs"
+        },
+        "returns": "str",
+        "example": "result = crew.kickoff({'topic': 'AI'})"
+      }
+    }
+  },
+  "autogen": {
+    "url": "https://microsoft.github.io/autogen",
+    "methods": {
+      "ConversableAgent": {
+        "syntax": "ConversableAgent(name, system_message?, llm_config?, human_input_mode?)",
+        "params": {
+          "name": "str",
+          "system_message": "str",
+          "llm_config": "dict",
+          "human_input_mode": "str"
+        },
+        "returns": "ConversableAgent",
+        "example": "assistant = ConversableAgent('assistant', system_message='You are helpful')"
+      },
+      "UserProxyAgent": {
+        "syntax": "UserProxyAgent(name, human_input_mode?, max_consecutive_auto_reply?)",
+        "params": {
+          "name": "str",
+          "human_input_mode": "str",
+          "max_consecutive_auto_reply": "int"
+        },
+        "returns": "UserProxyAgent",
+        "example": "user = UserProxyAgent('user', human_input_mode='NEVER')"
+      },
+      "GroupChat": {
+        "syntax": "GroupChat(agents, messages?, max_round?)",
+        "params": {
+          "agents": "list[Agent]",
+          "messages": "list",
+          "max_round": "int"
+        },
+        "returns": "GroupChat",
+        "example": "group = GroupChat(agents=[a1, a2], max_round=10)"
+      },
+      "GroupChatManager": {
+        "syntax": "GroupChatManager(groupchat, llm_config?)",
+        "params": {
+          "groupchat": "GroupChat",
+          "llm_config": "dict"
+        },
+        "returns": "GroupChatManager",
+        "example": "manager = GroupChatManager(groupchat=group)"
+      }
+    }
+  },
+  "anthropic": {
+    "url": "https://docs.anthropic.com",
+    "methods": {
+      "messages.create": {
+        "syntax": "POST /v1/messages",
+        "params": {
+          "model": "claude-3-5-sonnet-20241022",
+          "max_tokens": "int",
+          "messages": "[{'role': 'user', 'content': '...'}]",
+          "tools": "[{'name': 'tool_name', 'description': '...'}]"
+        },
+        "returns": "Message",
+        "example": "response = client.messages.create(model='claude-3-5-sonnet', messages=[...])"
+      },
+      "computer_use": {
+        "syntax": "Use screen, mouse, keyboard tools",
+        "params": {
+          "screen": "screenshot",
+          "mouse": "move|click",
+          "keyboard": "type"
+        },
+        "returns": "ToolUseBlock",
+        "example": "Use bash tool with computer_use enabled"
+      }
+    }
+  },
+  "smolagents": {
+    "url": "https://smolagents.ai",
+    "methods": {
+      "CodeAgent": {
+        "syntax": "CodeAgent(model, tools?, add_base_tools?)",
+        "params": {
+          "model": "HfApiModel",
+          "tools": "list",
+          "add_base_tools": "bool"
+        },
+        "returns": "CodeAgent",
+        "example": "agent = CodeAgent(model=HfApiModel('meta-llama/Meta-Llama-3-70B-Instruct'))"
+      },
+      "ReactAgent": {
+        "syntax": "ReactAgent(model, tools?)",
+        "params": {
+          "model": "HfApiModel",
+          "tools": "list"
+        },
+        "returns": "ReactAgent",
+        "example": "agent = ReactAgent(model=model)"
+      }
+    }
+  },
+  "llamaindex": {
+    "url": "https://docs.llamaindex.ai",
+    "methods": {
+      "VectorStoreIndex": {
+        "syntax": "VectorStoreIndex.from_documents(documents)",
+        "params": {
+          "documents": "list[Document]"
+        },
+        "returns": "VectorStoreIndex",
+        "example": "index = VectorStoreIndex.from_documents(docs)"
+      },
+      "RetrieverQueryEngine": {
+        "syntax": "RetrieverQueryEngine(retriever, response_synthesizer?)",
+        "params": {
+          "retriever": "BaseRetriever",
+          "response_synthesizer": "BaseSynthesizer"
+        },
+        "returns": "RetrieverQueryEngine",
+        "example": "query = RetrieverQueryEngine(retriever)"
+      },
+      "QueryEngineAgent": {
+        "syntax": "QueryEngineAgent(query_engine, llm?)",
+        "params": {
+          "query_engine": "QueryEngine",
+          "llm": "BaseLLM"
+        },
+        "returns": "QueryEngineAgent",
+        "example": "agent = QueryEngineAgent(query_engine=query)"
+      }
+    }
+  }
+}
