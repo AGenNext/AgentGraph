@@ -123,3 +123,32 @@ FrameworkSelector
 ## License
 
 MIT
+
+## Deployment (Coolify)
+
+### Set GitHub Secrets
+
+Go to **GitHub → AGenNext → Settings → Secrets → Actions**, add:
+
+| Secret | Value |
+|--------|-------|
+| `COOLIFY_HOST` | Coolify URL (e.g., `https://coolify.yourdomain.com`) |
+| `COOLIFY_API_KEY` | Coolify API token |
+| `COOLIFY_RESOURCE_UUID` | App UUID from Coolify dashboard |
+
+### Get Coolify Resource UUID
+
+1. Open your Coolify dashboard
+2. Go to your application
+3. Click **Settings** (gear icon)
+4. The UUID is shown at the top (e.g., `a1b2c3d4-...`)
+
+### Get Coolify API Key
+
+1. Open Coolify dashboard  
+2. Go to **Keys & Tokens** → **API tokens**
+3. Create a new token
+
+### Deploy
+
+Push to `main` branch → GitHub Actions builds → Deploys to Coolify.
