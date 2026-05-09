@@ -57,8 +57,15 @@ jobs:
 
       - name: Deploy to Coolify
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+        env:
+          COOLIFY_WEBHOOK: ${{ secrets.COOLIFY_WEBHOOK || 'https://coolify.example.com/api/deploy' }}
         run: |
-          echo " deploying to Coolify..."
-          curl -X POST ${{ secrets.COOLIFY_WEBHOOK }} \
-            -H "Content-Type: application/json" \
-            -d '{"text": "Image ${{ steps.meta.outputs.tags }} deployed"}'
+          if [ -n "$COOLIFY_WEBHOOK" ] && [ "$COOLIFY_WEBHOOK" != "https://coolify.example.com/api/deploy" ]; then
+            echo " deploying to Coolify..."
+            curl -s -X POST "$COOLIFY_WEBHOOK" \
+              -H "Content-Type: application/json" \
+              -d '{"text": "Image ${{ steps.meta.outputs.tags }} deployed"}' || echo "Webhook call failed"
+          else
+            echo "Skipping deploy - COOLIFY_WEBHOOK not configured"
+            echo "Set secrets.COOLIFY_WEBHOOK in GitHub repo settings to enable"
+          fi
