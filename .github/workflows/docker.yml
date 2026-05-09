@@ -17,6 +17,7 @@ jobs:
     permissions:
       contents: read
       packages: write
+    environment: production
 
     steps:
       - name: Checkout code
@@ -54,8 +55,10 @@ jobs:
           cache-from: type=gha
           cache-to: type=gha,mode=max
 
-      - name: Updatedeployment available
-        if: github.event_name != 'pull_request'
+      - name: Deploy to Coolify
+        if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         run: |
-          echo "Docker image pushed successfully"
-          echo "Image: ${{ steps.meta.outputs.tags }}"
+          echo " deploying to Coolify..."
+          curl -X POST ${{ secrets.COOLIFY_WEBHOOK }} \
+            -H "Content-Type: application/json" \
+            -d '{"text": "Image ${{ steps.meta.outputs.tags }} deployed"}'
