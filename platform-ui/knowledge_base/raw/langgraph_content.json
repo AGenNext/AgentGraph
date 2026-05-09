@@ -1,0 +1,164 @@
+{
+  "url": "https://python.langchain.com/docs/langgraph/",
+  "text": "Skip to main content\nJoin us May 13th & May 14th at Interrupt, the Agent Conference by LangChain.\nBuy tickets >\nDocs by LangChain\nhome page\nOpen source\nSearch...\n\u2318\nK\nSearch...\nNavigation\nLangGraph overview\nDeep Agents\nLangChain\nLangGraph\nIntegrations\nLearn\nReference\nContribute\nPython\nOverview\nGet started\nInstall\nQuickstart\nLocal server\nChangelog\nThinking in LangGraph\nWorkflows + agents\nCapabilities\nPersistence\nDurable execution\nFault tolerance\nStreaming\nInterrupts\nTime travel\nMemory\nSubgraphs\nProduction\nApplication structure\nTest\nBackward compatibility\nLangSmith Studio\nAgent Chat UI\nLangSmith Deployment\nLangSmith Observability\nFrontend\nOverview\nGraph execution\nLangGraph APIs\nGraph API\nFunctional API\nRuntime\nOn this page\nInstall\nCore benefits\nLangGraph ecosystem\nAcknowledgements\nDocumentation Index\nFetch the complete documentation index at:\nhttps://docs.langchain.com/llms.txt\nUse this file to discover all available pages before exploring further.\nTrusted by companies shaping the future of agents\u2014 including Klarna, Uber, J.P. Morgan, and more\u2014 LangGraph is a low-level orchestration framework and runtime for building, managing, and deploying long-running, stateful agents.\nLangGraph is very low-level, and focused entirely on agent\norchestration\n. Before using LangGraph, we recommend you familiarize yourself with some of the components used to build agents, starting with\nmodels\nand\ntools\n.\nWe will commonly use\nLangChain\ncomponents throughout the documentation to integrate models and tools, but you don\u2019t need to use LangChain to use LangGraph. If you are just getting started with agents or want a higher-level abstraction, we recommend you use LangChain\u2019s\nagents\nthat provide prebuilt architectures for common LLM and tool-calling loops.\nLangGraph is focused on the underlying capabilities important for agent orchestration: durable execution, streaming, human-in-the-loop, and more.\nShow\nHow LangChain products fit together\nDeep Agents\nis an\nagent harness\n: planning, subagents, filesystem tools, and context management on top of LangGraph.\nLangChain\nis the agent framework: abstractions and integrations for models, tools, and agent loops.\nLangGraph\nis the orchestration runtime: durable execution, streaming, human-in-the-loop, and persistence.\nLangSmith\nis the platform for tracing, evaluation, prompts, and deployment across frameworks.\nLangSmith Fleet\nis the no-code agent builder for templates, integrations, and routine automation.\nRead\nFrameworks, runtimes, and harnesses\nfor a comparison of the open source stack.\n\u200b\nInstall\npip\nuv\npip\ninstall\n-U\nlanggraph\nThen, create a simple hello world example:\nfrom\nlanggraph\n.\ngraph\nimport\nStateGraph\n,\nMessagesState\n,\nSTART\n,\nEND\ndef\nmock_llm\n(\nstate\n:\nMessagesState\n):\nreturn\n{\n\"messages\"\n:\n[{\n\"role\"\n:\n\"ai\"\n,\n\"content\"\n:\n\"hello world\"\n}]}\ngraph\n=\nStateGraph\n(\nMessagesState\n)\ngraph\n.\nadd_node\n(\nmock_llm\n)\ngraph\n.\nadd_edge\n(\nSTART\n,\n\"mock_llm\"\n)\ngraph\n.\nadd_edge\n(\n\"mock_llm\"\n,\nEND\n)\ngraph\n=\ngraph\n.\ncompile\n()\ngraph\n.\ninvoke\n({\n\"messages\"\n:\n[{\n\"role\"\n:\n\"user\"\n,\n\"content\"\n:\n\"hi!\"\n}]})\nUse\nLangSmith\nto trace requests, debug agent behavior, and evaluate outputs. Set\nLANGSMITH_TRACING=true\nand your API key to get started.\n\u200b\nCore benefits\nLangGraph provides low-level supporting infrastructure for\nany\nlong-running, stateful workflow or agent. LangGraph does not abstract prompts or architecture, and provides the following central benefits:\nDurable execution\n: Build agents that persist through failures and can run for extended periods, resuming from where they left off.\nHuman-in-the-loop\n: Incorporate human oversight by inspecting and modifying agent state at any point.\nComprehensive memory\n: Create stateful agents with both short-term working memory for ongoing reasoning and long-term memory across sessions.\nDebugging with LangSmith\n: Gain deep visibility into complex agent behavior with visualization tools that trace execution paths, capture state transitions, and provide detailed runtime metrics.\nProduction-ready deployment\n: Deploy sophisticated agent systems confidently with scalable infrastructure designed to handle the unique challenges of stateful, long-running workflows.\n\u200b\nLangGraph ecosystem\nWhile LangGraph can be used standalone, it also integrates seamlessly with any LangChain product, giving developers a full suite of tools for building agents. To improve your LLM application development, pair LangGraph with:\nLangSmith Observability\nTrace requests, evaluate outputs, and monitor deployments in one place. Prototype locally with LangGraph, then move to production with integrated observability and evaluation to build more reliable agent systems.\nLearn more\nLangSmith Deployment\nDeploy and scale agents effortlessly with a purpose-built deployment platform for long running, stateful workflows. Discover, reuse, configure, and share agents across teams \u2014 and iterate quickly with visual prototyping in Studio.\nLearn more\nLangChain\nProvides integrations and composable components to streamline LLM application development. Contains agent abstractions built on top of LangGraph.\nLearn more\n\u200b\nAcknowledgements\nLangGraph is inspired by\nPregel\nand\nApache Beam\n. The public interface draws inspiration from\nNetworkX\n. LangGraph is built by LangChain Inc, the creators of LangChain, but can be used without LangChain.\nConnect these docs\nto Claude, VSCode, and more via MCP for real-time answers.\nEdit this page on GitHub\nor\nfile an issue\n.\nWas this page helpful?\nYes\nNo\nInstall LangGraph\nNext\n\u2318\nI",
+  "sections": [
+    {
+      "heading": "Documentation Index",
+      "content": "Fetch the complete documentation index at:https://docs.langchain.com/llms.txt Use this file to discover all available pages before exploring further."
+    },
+    {
+      "heading": "\u200bInstall",
+      "content": "pipuvpipinstall-Ulanggraph Then, create a simple hello world example: fromlanggraph.graphimportStateGraph,MessagesState,START,ENDdefmock_llm(state:MessagesState):return{\"messages\":[{\"role\":\"ai\",\"content\":\"hello world\"}]}graph=StateGraph(MessagesState)graph.add_node(mock_llm)graph.add_edge(START,\"mock_llm\")graph.add_edge(\"mock_llm\",END)graph=graph.compile()graph.invoke({\"messages\":[{\"role\":\"user\",\"content\":\"hi!\"}]}) UseLangSmithto trace requests, debug agent behavior, and evaluate outputs. SetLANGSMITH_TRACING=trueand your API key to get started."
+    },
+    {
+      "heading": "\u200bCore benefits",
+      "content": "LangGraph provides low-level supporting infrastructure foranylong-running, stateful workflow or agent. LangGraph does not abstract prompts or architecture, and provides the following central benefits: Durable execution: Build agents that persist through failures and can run for extended periods, resuming from where they left off.Human-in-the-loop: Incorporate human oversight by inspecting and modifying agent state at any point.Comprehensive memory: Create stateful agents with both short-term working memory for ongoing reasoning and long-term memory across sessions.Debugging with LangSmith: Gain deep visibility into complex agent behavior with visualization tools that trace execution paths, capture state transitions, and provide detailed runtime metrics.Production-ready deployment: Deploy sophisticated agent systems confidently with scalable infrastructure designed to handle the unique challenges of stateful, long-running workflows."
+    },
+    {
+      "heading": "\u200bLangGraph ecosystem",
+      "content": "While LangGraph can be used standalone, it also integrates seamlessly with any LangChain product, giving developers a full suite of tools for building agents. To improve your LLM application development, pair LangGraph with: LangSmith ObservabilityTrace requests, evaluate outputs, and monitor deployments in one place. Prototype locally with LangGraph, then move to production with integrated observability and evaluation to build more reliable agent systems.Learn moreLangSmith DeploymentDeploy and scale agents effortlessly with a purpose-built deployment platform for long running, stateful workflows. Discover, reuse, configure, and share agents across teams \u2014 and iterate quickly with visual prototyping in Studio.Learn moreLangChainProvides integrations and composable components to streamline LLM application development. Contains agent abstractions built on top of LangGraph.Learn more"
+    },
+    {
+      "heading": "LangSmith Observability",
+      "content": "Trace requests, evaluate outputs, and monitor deployments in one place. Prototype locally with LangGraph, then move to production with integrated observability and evaluation to build more reliable agent systems. Learn more"
+    },
+    {
+      "heading": "LangSmith Deployment",
+      "content": "Deploy and scale agents effortlessly with a purpose-built deployment platform for long running, stateful workflows. Discover, reuse, configure, and share agents across teams \u2014 and iterate quickly with visual prototyping in Studio. Learn more"
+    },
+    {
+      "heading": "LangChain",
+      "content": "Provides integrations and composable components to streamline LLM application development. Contains agent abstractions built on top of LangGraph. Learn more"
+    },
+    {
+      "heading": "\u200bAcknowledgements",
+      "content": "LangGraph is inspired byPregelandApache Beam. The public interface draws inspiration fromNetworkX. LangGraph is built by LangChain Inc, the creators of LangChain, but can be used without LangChain.  Connect these docsto Claude, VSCode, and more via MCP for real-time answers.Edit this page on GitHuborfile an issue."
+    }
+  ],
+  "code_blocks": [
+    "pipinstall-Ulanggraph",
+    "fromlanggraph.graphimportStateGraph,MessagesState,START,ENDdefmock_llm(state:MessagesState):return{\"messages\":[{\"role\":\"ai\",\"content\":\"hello world\"}]}graph=StateGraph(MessagesState)graph.add_node(mock_llm)graph.add_edge(START,\"mock_llm\")graph.add_edge(\"mock_llm\",END)graph=graph.compile()graph.invoke({\"messages\":[{\"role\":\"user\",\"content\":\"hi!\"}]})"
+  ],
+  "links": [
+    {
+      "text": "Skip to main content",
+      "href": "#content-area"
+    },
+    {
+      "text": "Buy tickets >",
+      "href": "https://interrupt.langchain.com/"
+    },
+    {
+      "text": "Docs by LangChainhome page",
+      "href": "/"
+    },
+    {
+      "text": "Deep Agents",
+      "href": "/oss/python/deepagents/overview"
+    },
+    {
+      "text": "LangChain",
+      "href": "/oss/python/langchain/overview"
+    },
+    {
+      "text": "LangGraph",
+      "href": "/oss/python/langgraph/overview"
+    },
+    {
+      "text": "Integrations",
+      "href": "/oss/python/integrations/providers/overview"
+    },
+    {
+      "text": "Learn",
+      "href": "/oss/python/learn"
+    },
+    {
+      "text": "Reference",
+      "href": "/oss/python/reference/overview"
+    },
+    {
+      "text": "Contribute",
+      "href": "/oss/python/contributing/overview"
+    },
+    {
+      "text": "Overview",
+      "href": "/oss/python/langgraph/overview"
+    },
+    {
+      "text": "Install",
+      "href": "/oss/python/langgraph/install"
+    },
+    {
+      "text": "Quickstart",
+      "href": "/oss/python/langgraph/quickstart"
+    },
+    {
+      "text": "Local server",
+      "href": "/oss/python/langgraph/local-server"
+    },
+    {
+      "text": "Changelog",
+      "href": "https://docs.langchain.com/oss/python/releases/changelog"
+    },
+    {
+      "text": "Thinking in LangGraph",
+      "href": "/oss/python/langgraph/thinking-in-langgraph"
+    },
+    {
+      "text": "Workflows + agents",
+      "href": "/oss/python/langgraph/workflows-agents"
+    },
+    {
+      "text": "Persistence",
+      "href": "/oss/python/langgraph/persistence"
+    },
+    {
+      "text": "Durable execution",
+      "href": "/oss/python/langgraph/durable-execution"
+    },
+    {
+      "text": "Fault tolerance",
+      "href": "/oss/python/langgraph/fault-tolerance"
+    },
+    {
+      "text": "Streaming",
+      "href": "/oss/python/langgraph/streaming"
+    },
+    {
+      "text": "Interrupts",
+      "href": "/oss/python/langgraph/interrupts"
+    },
+    {
+      "text": "Time travel",
+      "href": "/oss/python/langgraph/use-time-travel"
+    },
+    {
+      "text": "Memory",
+      "href": "/oss/python/langgraph/add-memory"
+    },
+    {
+      "text": "Subgraphs",
+      "href": "/oss/python/langgraph/use-subgraphs"
+    },
+    {
+      "text": "Application structure",
+      "href": "/oss/python/langgraph/application-structure"
+    },
+    {
+      "text": "Test",
+      "href": "/oss/python/langgraph/test"
+    },
+    {
+      "text": "Backward compatibility",
+      "href": "/oss/python/langgraph/backward-compatibility"
+    },
+    {
+      "text": "LangSmith Studio",
+      "href": "/oss/python/langgraph/studio"
+    },
+    {
+      "text": "Agent Chat UI",
+      "href": "/oss/python/langgraph/ui"
+    }
+  ]
+}
