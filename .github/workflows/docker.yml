@@ -58,14 +58,16 @@ jobs:
       - name: Deploy to Coolify
         if: github.event_name == 'push' && github.ref == 'refs/heads/main'
         env:
-          COOLIFY_WEBHOOK: ${{ secrets.COOLIFY_WEBHOOK || 'https://coolify.example.com/api/deploy' }}
+          COOLIFY_URL: ${{ vars.COOLIFY_URL }}
+          COOLIFY_API_KEY: ${{ secrets.COOLIFY_API_KEY }}
         run: |
-          if [ -n "$COOLIFY_WEBHOOK" ] && [ "$COOLIFY_WEBHOOK" != "https://coolify.example.com/api/deploy" ]; then
+          if [ -n "$COOLIFY_URL" ] && [ -n "$COOLIFY_API_KEY" ]; then
             echo " deploying to Coolify..."
-            curl -s -X POST "$COOLIFY_WEBHOOK" \
+            curl -s -X POST "$COOLIFY_URL/api/deploy" \
               -H "Content-Type: application/json" \
-              -d '{"text": "Image ${{ steps.meta.outputs.tags }} deployed"}' || echo "Webhook call failed"
+              -H "Authorization: Bearer $COOLIFY_API_KEY" \
+              -d '{"image": "${{ steps.meta.outputs.tags }}"}' || echo "Deploy failed"
           else
-            echo "Skipping deploy - COOLIFY_WEBHOOK not configured"
-            echo "Set secrets.COOLIFY_WEBHOOK in GitHub repo settings to enable"
+            echo "Skipping deploy - COOLIFY_URL or COOLIFY_API_KEY not configured"
+            echo "Set vars.COOLIFY_URL and secrets.COOLIFY_API_KEY in GitHub settings"
           fi
