@@ -493,7 +493,6 @@ async def respond_to_approval(task_id: str, response: dict):
         credentials={},
         repo={},
     ))
-=======
 """Main entry point for Multi-Agent Content Writing Team."""
 
 import asyncio
