@@ -1,6 +1,0 @@
-{
-  "/_not-found/page": "app/_not-found/page.js",
-  "/(dashboard)/approvals/page": "app/(dashboard)/approvals/page.js",
-  "/(dashboard)/page": "app/(dashboard)/page.js",
-  "/(workspace)/agents/page": "app/(workspace)/agents/page.js"
-}
