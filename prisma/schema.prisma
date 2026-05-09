@@ -1,0 +1,71 @@
+// Database Schema for AGenNext Agent Backend
+// Uses Prisma with PostgreSQL
+
+generator client {
+  provider = "prisma-client-py"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Models ─────────────────────────────────────────────
+
+model Task {
+  id          String   @id  // UUID
+  status      TaskStatus
+  framework  FrameworkType
+  submission Json    // Full TaskSubmission JSON
+  context    Json?   // TaskContext when provided
+  result     Json?   // Execution result
+  createdAt  DateTime @default(now())
+  
+  // Relations
+  checkpoints Checkpoint[]
+  learnings   Learning[]
+}
+
+model Checkpoint {
+  id            Int     @id @default(autoincrement())
+  taskId        String
+  step         Int
+  learnings    String[] // Array of learning strings
+  decisions   Json[]  // Array of decision objects
+  mistakesFixed Json[] // Array of fix objects
+  context     Json?   // Snapshot of task context
+  savedAt     DateTime @default(now())
+  
+  // Relation
+  task        Task    @relation(fields: [taskId], references: [id])
+}
+
+model Learning {
+  id        Int     @id @default(autoincrement())
+  taskId    String
+  learning String
+  createdAt DateTime @default(now())
+  
+  // Relation
+  task      Task    @relation(fields: [taskId], references: [id])
+}
+
+// ─── Enums ─────────────────────────────────────────
+
+enum TaskStatus {
+  PENDING_CONTEXT
+  RUNNING
+  COMPLETED
+  STOPPED
+  FAILED
+}
+
+enum FrameworkType {
+  LANGGRAPH
+  LANGCHAIN
+  AUTOGEN
+  CREWAI
+  OPENAI
+  ANTHROPIC
+  CUSTOM
+}
