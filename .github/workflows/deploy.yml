@@ -55,7 +55,8 @@ jobs:
     steps:
       - name: Deploy to Coolify
         run: |
-          SERVICE_UUID="${{ secrets.COOLIFY_SERVICE_UUID }}"
+          # Default service UUID: md4kbbkx6lcxc8uny6q1p6ca
+          SERVICE_UUID="${COOLIFY_SERVICE_UUID:-md4kbbkx6lcxc8uny6q1p6ca}"
           COOLIFY_URL="${{ secrets.COOLIFY_URL }}"
           API_TOKEN="${{ secrets.COOLIFY_API_TOKEN }}"
           curl -s -X POST "$COOLIFY_URL/api/v1/services/$SERVICE_UUID/start" \
