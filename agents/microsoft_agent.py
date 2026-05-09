@@ -1,15 +1,64 @@
 """Microsoft Enterprise Writer Agent."""
 
-from typing import Optional
+from typing import Optional, Callable, Any
 import os
+import time
+import logging
 
 from agents.base_agent import BaseAgent, ContentRequest, ContentResult
+
+logger = logging.getLogger(__name__)
+
+
+# === Middleware Hooks for Tool Calls ===
+class ToolCallMiddleware:
+    """Middleware hooks for pre/post tool call events."""
+    
+    def __init__(self):
+        self.pre_tool_call_hooks: list[Callable] = []
+        self.post_tool_call_hooks: list[Callable] = []
+    
+    def register_pre_tool_call_hook(self, hook: Callable[[str, dict], None]):
+        """Register a hook to run BEFORE tool call.
+        
+        Args:
+            hook: Callable that takes (tool_name, tool_input) and returns None
+        """
+        self.pre_tool_call_hooks.append(hook)
+        logger.info(f"Registered pre-tool-call hook: {hook.__name__}")
+    
+    def register_post_tool_call_hook(self, hook: Callable[[str, dict, Any], None]):
+        """Register a hook to run AFTER tool call.
+        
+        Args:
+            hook: Callable that takes (tool_name, tool_input, tool_result) and returns None
+        """
+        self.post_tool_call_hooks.append(hook)
+        logger.info(f"Registered post-tool-call hook: {hook.__name__}")
+    
+    def run_pre_tool_call_hooks(self, tool_name: str, tool_input: dict):
+        """Run all pre-tool-call hooks."""
+        for hook in self.pre_tool_call_hooks:
+            try:
+                hook(tool_name, tool_input)
+            except Exception as e:
+                logger.error(f"Pre-tool-call hook {hook.__name__} failed: {e}")
+    
+    def run_post_tool_call_hooks(self, tool_name: str, tool_input: dict, result: Any):
+        """Run all post-tool-call hooks."""
+        for hook in self.post_tool_call_hooks:
+            try:
+                hook(tool_name, tool_input, result)
+            except Exception as e:
+                logger.error(f"Post-tool-call hook {hook.__name__} failed: {e}")
 
 
 class MicrosoftAgent(BaseAgent):
     """Enterprise content writer using Microsoft Azure OpenAI.
 
     Preferred Model: gpt-4 (Azure Deployment)
+    
+    Supports pre_tool_call_hook and post_tool_call_hook for middleware.
     """
 
     def __init__(
@@ -17,6 +66,7 @@ class MicrosoftAgent(BaseAgent):
         api_key: Optional[str] = None,
         endpoint: Optional[str] = None,
         deployment: Optional[str] = None,
+        enable_middleware: bool = True,
     ):
         super().__init__(
             agent_id="microsoft-enterprise-writer",
@@ -29,6 +79,36 @@ class MicrosoftAgent(BaseAgent):
         self.endpoint = endpoint or os.getenv("AZURE_OPENAI_ENDPOINT")
         self.deployment = deployment or os.getenv("AZURE_OPENAI_DEPLOYMENT", "gpt-4")
         self._client = None
+        
+        # Middleware hooks for tool calls
+        self._middleware = ToolCallMiddleware() if enable_middleware else None
+    
+    @property
+    def pre_tool_call_hook(self) -> Callable[[str, dict], None]:
+        """Register pre-tool-call hook (runs before tool execution)."""
+        return self._middleware.register_pre_tool_call_hook
+    
+    @property
+    def post_tool_call_hook(self) -> Callable[[str, dict, Any], None]:
+        """Register post-tool-call hook (runs after tool execution)."""
+        return self._middleware.register_post_tool_call_hook
+    
+    def _execute_tool_with_middleware(self, tool_name: str, tool_input: dict, tool_func: Callable) -> Any:
+        """Execute tool with pre/post hooks."""
+        # Pre-tool-call hooks
+        if self._middleware:
+            self._middleware.run_pre_tool_call_hooks(tool_name, tool_input)
+        
+        start_time = time.time()
+        result = tool_func(**tool_input)
+        duration = int((time.time() - start_time) * 1000)
+        
+        # Post-tool-call hooks
+        if self._middleware:
+            self._middleware.run_post_tool_call_hooks(tool_name, tool_input, result)
+        
+        logger.info(f"Tool {tool_name} executed in {duration}ms")
+        return result
     
     def _get_port(self) -> int:
         return 8003
