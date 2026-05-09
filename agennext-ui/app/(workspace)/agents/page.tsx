@@ -4,15 +4,17 @@
 import { useState, useEffect } from "react";
 import { listAgents, registerAgent } from "@/lib/a2a-client";
 import { AgentCard } from "@/components/AgentCard";
-import type { AgentCard as AgentCardType } from "@/types/a2a";
+import { ToolsPanel } from "@/components/ToolsPanel";
+import { AgentBuilder } from "@/components/AgentBuilder";
+import type { AgentCardExtended } from "@/types/a2a";
 
 export default function AgentsWorkspacePage() {
-  const [agents, setAgents] = useState<AgentCardType[]>([]);
+  const [agents, setAgents] = useState<AgentCardExtended[]>([]);
   const [loading, setLoading] = useState(true);
   const [registerUrl, setRegisterUrl] = useState("");
   const [registering, setRegistering] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  const [selected, setSelected] = useState<AgentCardType | null>(null);
+  const [selected, setSelected] = useState<AgentCardExtended | null>(null);
 
   useEffect(() => {
     listAgents()
@@ -180,6 +182,12 @@ export default function AgentsWorkspacePage() {
               </div>
             )}
           </div>
+
+          {/* Tool Registry Panel */}
+          <ToolsPanel />
+          
+          {/* Agent Builder with Flow */}
+          <AgentBuilder />
         </div>
       </div>
 

@@ -5,11 +5,11 @@ import { useState, useEffect } from "react";
 import { listAgents, submitTask } from "@/lib/a2a-client";
 import { AgentCard } from "@/components/AgentCard";
 import { TaskStream } from "@/components/TaskStream";
-import type { AgentCard as AgentCardType, Task } from "@/types/a2a";
+import type { AgentCardExtended, Task } from "@/types/a2a";
 
 export default function DashboardPage() {
-  const [agents, setAgents] = useState<AgentCardType[]>([]);
-  const [selectedAgent, setSelectedAgent] = useState<AgentCardType | null>(null);
+  const [agents, setAgents] = useState<AgentCardExtended[]>([]);
+  const [selectedAgent, setSelectedAgent] = useState<AgentCardExtended | null>(null);
   const [message, setMessage] = useState("");
   const [task, setTask] = useState<Task | null>(null);
   const [loading, setLoading] = useState(false);
@@ -24,7 +24,7 @@ export default function DashboardPage() {
   }, []);
 
   const handleSubmit = async () => {
-    if (!selectedAgent || !message.trim()) return;
+    if (!selectedAgent || !selectedAgent.url || !message.trim()) return;
     setLoading(true);
     setError(null);
     setTask(null);

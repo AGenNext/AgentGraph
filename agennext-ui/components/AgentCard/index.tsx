@@ -1,7 +1,7 @@
 // components/AgentCard/index.tsx
 "use client";
 
-import type { AgentCard as AgentCardType } from "@/types/a2a";
+import type { AgentCardExtended } from "@/types/a2a";
 
 const FRAMEWORK_COLORS: Record<string, { bg: string; text: string; label: string }> = {
   openai:      { bg: "#10A37F18", text: "#10A37F", label: "OpenAI" },
@@ -22,10 +22,10 @@ function formatDuration(ms?: number): string {
 }
 
 interface AgentCardProps {
-  agent: AgentCardType;
+  agent: AgentCardExtended;
   variant?: "simple" | "detailed";
   selected?: boolean;
-  onSelect?: (agent: AgentCardType) => void;
+  onSelect?: (agent: AgentCardExtended) => void;
 }
 
 export function AgentCard({
@@ -86,7 +86,7 @@ export function AgentCard({
               ✋ Requires approval
             </span>
           )}
-          {agent.capabilities.streaming && (
+          {agent.capabilities?.streaming && (
             <span style={{ fontSize: 12, color: "#10B981" }}>
               ⚡ Streaming
             </span>
@@ -94,7 +94,7 @@ export function AgentCard({
         </div>
 
         {/* Skills */}
-        {agent.skills.length > 0 && (
+        {agent.skills && agent.skills.length > 0 && (
           <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
             {agent.skills.slice(0, 3).map((skill) => (
               <span key={skill.id} style={{
@@ -167,7 +167,7 @@ export function AgentCard({
           Skills
         </p>
         <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
-          {agent.skills.map((skill) => (
+          {agent.skills?.map((skill) => (
             <div key={skill.id} style={{
               padding: "10px 14px",
               background: "#F9FAFB",
@@ -186,7 +186,7 @@ export function AgentCard({
           Capabilities
         </p>
         <div style={{ display: "flex", gap: 8 }}>
-          {Object.entries(agent.capabilities).map(([key, val]) => val && (
+          {agent.capabilities && Object.entries(agent.capabilities).map(([key, val]) => val && (
             <span key={key} style={{
               padding: "3px 10px", borderRadius: 999, fontSize: 11,
               background: "#ECFDF5", color: "#059669",

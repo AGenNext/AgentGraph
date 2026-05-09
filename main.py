@@ -331,6 +331,32 @@ async def get_learnings(task_id: str):
 async def health():
     return {"status": "ok", "frameworks": [f.value for f in FrameworkType]}
 
+@app.get("/frameworks")
+async def list_frameworks():
+    """List all available agent frameworks"""
+    return {"frameworks": [{"name": f.value} for f in FrameworkType]}
+
+@app.get("/tools")
+async def list_tools(framework: str = None, search: str = None):
+    """List all available tools, optionally filtered by framework or search term"""
+    from core.registry import REGISTRY
+    
+    all_tools = REGISTRY.list_tools()
+    tools = []
+    for tool in all_tools:
+        if framework and tool.framework != framework:
+            continue
+        if search and search.lower() not in tool.name.lower():
+            continue
+        tools.append({
+            "name": tool.name,
+            "description": tool.description,
+            "framework": tool.framework,
+            "id": tool.id
+        })
+    
+    return {"tools": tools, "total": len(tools)}
+
 # ─── Pre-Flight Context Endpoints ─────────────────────────────────────────────────
 
 @app.post("/tasks/preflight")

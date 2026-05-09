@@ -49,6 +49,7 @@ class PromptEntry(RegistryEntry):
 @dataclass
 class ToolEntry(RegistryEntry):
     namespace: str = "tool"
+    framework: Optional[str] = None
 
 
 class Registry:
@@ -59,12 +60,30 @@ class Registry:
         self._load_builtins()
     
     def _load_builtins(self):
+        # Built-in skills
         for sid, name, desc in [("coding", "Coding", "Generate code"), ("research", "Research", "Research")]:
             self._skills[sid] = SkillEntry(id=generate_did("skill", sid), name=name, description=desc, namespace="skill")
+        # Built-in prompts
         for pid, name, desc in [("creative", "Creative Writing", "Creative content")]:
             self._prompts[pid] = PromptEntry(id=generate_did("prompt", pid), name=name, description=desc, namespace="prompt")
-        for tid, name, desc in [("web_search", "Web Search", "Search the web")]:
-            self._tools[tid] = ToolEntry(id=generate_did("tool", tid), name=name, description=desc, namespace="tool")
+        
+        # Framework tools (populated from integrations)
+        framework_tools = [
+            ("web_search", "Web Search", "Search the web for information", "langgraph"),
+            ("langchain_code", "LangChain Code", "Generate LangChain code", "langchain"),
+            ("autogen_code", "AutoGen Code", "Generate AutoGen agents", "autogen"),
+            ("crewai_code", "CrewAI Code", "Generate CrewAI pipelines", "crewai"),
+            ("openai_api", "OpenAI API", "Interact with OpenAI models", "openai"),
+            ("anthropic_api", "Anthropic API", "Interact with Claude models", "anthropic"),
+            ("google_search", "Google Search", "Search via Google", "google"),
+            ("state_graph", "StateGraph", "Create state-based graphs", "langgraph"),
+            ("react_agent", "ReAct Agent", "Reasoning + Action agent", "langgraph"),
+            ("tool_use", "Tool Use", "Use tools in chains", "langchain"),
+            ("memory", "Memory", "Persistent memory", "langchain"),
+            ("streaming", "Streaming", "Stream agent output", "langgraph"),
+        ]
+        for tid, name, desc, fw in framework_tools:
+            self._tools[tid] = ToolEntry(id=generate_did("tool", tid), name=name, description=desc, namespace="tool", framework=fw)
     
     def get_skill(self, name: str) -> Optional[SkillEntry]:
         return self._skills.get(name)

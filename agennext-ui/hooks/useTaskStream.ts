@@ -48,11 +48,13 @@ export function useTaskStream(taskId: string | null) {
           const newEvents = [...prev.events, event];
 
           if (event.type === "status" && event.status) {
-            const msg =
-              event.status.message?.parts
-                .filter((p) => p.type === "text")
-                .map((p) => (p as { type: "text"; text: string }).text)
-                .join("") ?? null;
+            const parts = event.status.message?.parts;
+            const msg = parts
+              ? parts
+                  .filter((p: { type: string }) => p.type === "text")
+                  .map((p: { type: string; text?: string }) => p.text)
+                  .join("")
+              : null;
 
             return {
               ...prev,

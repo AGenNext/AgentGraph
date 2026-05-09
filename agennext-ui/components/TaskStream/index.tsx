@@ -13,18 +13,24 @@ const STATE_LABELS: Record<TaskState, string> = {
   submitted: "Submitted",
   working: "Working",
   "input-required": "Waiting for your input",
+  "auth-required": "Authentication required",
   completed: "Completed",
   failed: "Failed",
   canceled: "Canceled",
+  rejected: "Rejected",
+  unknown: "Unknown",
 };
 
 const STATE_COLORS: Record<TaskState, string> = {
   submitted: "#6B7280",
   working: "#3B82F6",
   "input-required": "#F59E0B",
+  "auth-required": "#F59E0B",
   completed: "#10B981",
   failed: "#EF4444",
   canceled: "#6B7280",
+  rejected: "#EF4444",
+  unknown: "#6B7280",
 };
 
 function BusinessView({ events, state, statusMessage, isDone, isError, errorMessage }: ReturnType<typeof useTaskStream>) {
@@ -62,10 +68,13 @@ function BusinessView({ events, state, statusMessage, isDone, isError, errorMess
       {/* Progress steps */}
       <div style={{ display: "flex", flexDirection: "column", gap: 12 }}>
         {textEvents.map((event, i) => {
-          const text = event.status?.message?.parts
-            .filter((p) => p.type === "text")
-            .map((p) => (p as { type: "text"; text: string }).text)
-            .join("") ?? "";
+          const parts = event.status?.message?.parts;
+          const text = parts
+            ? parts
+                .filter((p: { type: string }) => p.type === "text")
+                .map((p: { type: string; text?: string }) => p.text)
+                .join("")
+            : "";
 
           const isLast = i === textEvents.length - 1;
 
