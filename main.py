@@ -14,12 +14,46 @@ import psycopg2
 from psycopg2.extras import RealDictCursor
 
 # Database setup - uses DATABASE_URL env var
-DATABASE_URL = os.getenv("DATABASE_URL")
+DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://agent:agent@host.docker.internal:5432/agent")
 
 app = FastAPI(title="A2A Agent Multi-Framework Backend")
 
 def get_db():
     return psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
+
+# ─── DB Operations ─────────────────────────────────────────────────────────────
+
+def save_task(task_id: str, data: dict):
+    """Save task to database"""
+    conn = get_db()
+    c = conn.cursor()
+    c.execute("""INSERT INTO tasks (id, status, framework, submission, created_at)
+                 VALUES (%s, %s, %s, %s, NOW())
+                 ON CONFLICT (id) DO UPDATE SET status = %s, result = %s""",
+              (task_id, data.get('status'), data.get('framework'), 
+               json.dumps(data.get('submission')), data.get('status'),
+               json.dumps(data.get('result'))))
+    conn.commit()
+    conn.close()
+
+def get_task_db(task_id: str) -> dict:
+    """Get task from database"""
+    conn = get_db()
+    c = conn.cursor(cursor_factory=RealDictCursor)
+    c.execute("SELECT * FROM tasks WHERE id = %s", (task_id,))
+    row = c.fetchone()
+    conn.close()
+    return dict(row) if row else None
+
+def list_tasks_db(limit: int = 10, offset: int = 0) -> list:
+    """List tasks from database"""
+    conn = get_db()
+    c = conn.cursor(cursor_factory=RealDictCursor)
+    c.execute("SELECT * FROM tasks ORDER BY created_at DESC LIMIT %s OFFSET %s", 
+               (limit, offset))
+    rows = c.fetchall()
+    conn.close()
+    return [dict(r) for r in rows]
 
 # Initialize tables on startup
 def init_db():
