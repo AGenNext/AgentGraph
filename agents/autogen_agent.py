@@ -1,39 +1,49 @@
-"""Microsoft AutoGen Agent SDK - Multi-agent orchestration."""
+"""AutoGen Agent SDK - LLM agent framework."""
 
-from typing import Optional, List, Dict
+from typing import Optional, List, Callable, Any
 import os
 
 from agents.base_agent import BaseAgent, ContentRequest, ContentResult
 from core.llm_client import LLMClient, LLMConfig
 
 
+class ToolCallHooks:
+    """Pre/post tool call hooks."""
+    def __init__(self):
+        self.pre = []
+        self.post = []
+    def on_before_tool(self, h): self.pre.append(h)
+    def on_after_tool(self, h): self.post.append(h)
+
+
 class AutoGenAgent(BaseAgent):
-    """Microsoft AutoGen (now AutoGen Studio) specialist.
+    """AutoGen agent specialist.
     
     Capabilities:
-    - Agent definitions (Conversational, Assistant, UserProxy)
-    - Group chat configurations
-    - Speaker selection policies
-    - Nested chat patterns
-    - Custom tool integration
+    - Agent definitions (ReAct, OpenAI Functions, Tool former)
+    - Chain creation
+    - Tool integration
+    - Memory management
+    - Output parsers
     
-    Tools: code_executor, websearch, file_read, serper
-    Skills: multi-agent, orchestration, tool-use, code-execution
+    Tools: SerpAPI, DALL-E, Calculator, PythonREPL, Search
+    Skills: chain-building, tool-use, memory, output-parsing
     """
     
     def __init__(self, api_key: Optional[str] = None):
         super().__init__(
             agent_id="autogen-writer",
-            name="Microsoft AutoGen Writer",
-            description="AutoGen - multi-agent orchestration, group chats",
+            name="AutoGen Agent Writer",
+            description="AutoGen - agents, chains, tools, memory",
             capabilities=[
                 "agent_definition",
-                "group_chat",
-                "speaker_selection",
-                "nested_chat",
+                "chain_creation",
                 "tool_integration",
+                "memory_management",
+                "output_parsing",
+                "prompt_templates",
             ],
-            skills=["multi-agent", "orchestration", "tool-use", "code-execution", "conversation"],
+            skills=["chain-building", "tool-use", "memory", "llm-ops"],
             api_key=api_key or os.getenv("LLM_API_KEY"),
         )
         
@@ -41,7 +51,7 @@ class AutoGenAgent(BaseAgent):
         self._llm = None
     
     def _get_port(self) -> int:
-        return 8014
+        return 8009
     
     def _get_llm(self) -> LLMClient:
         if self._llm is None:
@@ -51,172 +61,177 @@ class AutoGenAgent(BaseAgent):
     def _generate_content(self, request: ContentRequest) -> ContentResult:
         ct = request.content_type.lower()
         
-        if "agent" in ct and "group" not in ct:
+        if "agent" in ct:
             return self._agent_def(request)
-        elif "group" in ct:
-            return self._group_chat(request)
-        elif "speaker" in ct:
-            return self._speaker_selection(request)
-        elif "nested" in ct:
-            return self._nested_chat(request)
-        else:
+        elif "chain" in ct:
+            return self._chain_create(request)
+        elif "tool" in ct:
             return self._tool_integration(request)
+        elif "memory" in ct:
+            return self._memory_mgmt(request)
+        elif "parser" in ct:
+            return self._output_parser(request)
+        else:
+            return self._prompt_template(request)
     
     def _agent_def(self, request: ContentRequest) -> ContentResult:
         return ContentResult(
             content=f'''"""AutoGen Agent: {request.topic}"""
 
-from autogen import ConversableAgent, UserProxyAgent, AssistantAgent
+from autogen.agents import AgentExecutor, create_openai_functions_agent
+from autogen_openai import ChatOpenAI
+from autogen_core.tools import tool
 
-# Assistant agent (llm-based)
-assistant = AssistantAgent(
-    name="{request.topic.replace(' ', '_').lower()}_assistant",
-    llm_config={{
-        "model": "gpt-4",
-        "api_key": "your-api-key",
-    }},
-    system_message="You are a helpful {request.topic} assistant.",
-)
+llm = ChatOpenAI(model="gpt-4", temperature=0)
 
-# User proxy (human in the loop)
-user_proxy = UserProxyAgent(
-    name="user_proxy",
-    human_input_mode="ALWAYS",
-    code_execution_config={{"workdir": "coding"}},
+@tool
+def {request.topic.lower().replace(' ', '_')}(input: str) -> str:
+    """Tool for {request.topic}."""
+    return f"Result for: {{input}}"
 
-# Start conversation
-user_proxy.initiate_chat(
-    assistant,
-    message="Help me with {request.topic}"
-)
+tools = [{request.topic.lower().replace(' ', '_')}]
+
+# Create agent
+from autogen import hub
+prompt = hub.pull("hwchase17/openai-functions-agent")
+agent = create_openai_functions_agent(llm, tools, prompt)
+
+# Run
+agent_executor = AgentExecutor(agent=agent, tools=tools, verbose=True)
+result = agent_executor.invoke({{"input": "Your task"}})
 ''',
             agent_id=self.agent_id,
             quality_score=0.85,
-            metadata={"type": "agent-definition", "skill": "multi-agent"},
+            metadata={"type": "agent-definition", "skill": "chain-building"},
         )
     
-    def _group_chat(self, request: ContentRequest) -> ContentResult:
+    def _chain_create(self, request: ContentRequest) -> ContentResult:
         return ContentResult(
-            content=f'''"""Group Chat: {request.topic}"""
+            content=f'''"""AutoGen Chain: {request.topic}"""
 
-from autogen import ConversableAgent, GroupChat, GroupChatManager
+from autogen import LLMChain, PromptTemplate
+from autogen_openai import ChatOpenAI
 
-# Create multiple agents
-researcher = ConversableAgent(name="Researcher", llm_config={{...}})
-coder = ConversableAgent(name="Coder", llm_config={{...}})
-writer = ConversableAgent(name="Writer", llm_config={{...}})
+llm = ChatOpenAI(model="gpt-4")
 
-# Create group chat
-group_chat = GroupChat(
-    agents=[researcher, coder, writer],
-    messages=[],
-    max_round=5,
+prompt = PromptTemplate(
+    input_variables=["topic"],
+    template="Write about {{topic}}",
 )
 
-# Create manager
-manager = GroupChatManager(
-    groupchat=group_chat,
-    name="manager",
-)
+chain = LLMChain(llm=llm, prompt=prompt)
 
-# Initiate
-user_proxy.initiate_chat(
-    manager,
-    message="Write code for {request.topic}, then document it"
-)
+# Run
+result = chain.run(topic="{request.topic}")
+print(result)
 ''',
             agent_id=self.agent_id,
             quality_score=0.85,
-            metadata={"type": "group-chat", "skill": "orchestration"},
-        )
-    
-    def _speaker_selection(self, request: ContentRequest) -> ContentResult:
-        return ContentResult(
-            content=f'''"""Speaker Selection: {request.topic}"""
-
-from autogen import GroupChat, SpeakerSelection
-
-# Round robin selection
-round_robin = SpeakerSelection(
-    algorithm="round_robin",
-)
-
-# LLM-based selection
-llm_speaker = SpeakerSelection(
-    algorithm="llm",
-    llm=llm,
-    prompt="Select the best agent for: {{task}}",
-)
-
-# Use in group chat
-group_chat = GroupChat(
-    agents=[agent1, agent2, agent3],
-    speaker_selection=llm_speaker,
-)
-''',
-            agent_id=self.agent_id,
-            quality_score=0.85,
-            metadata={"type": "speaker-selection", "skill": "orchestration"},
-        )
-    
-    def _nested_chat(self, request: ContentRequest) -> ContentResult:
-        return ContentResult(
-            content=f'''"""Nested Chat: {request.topic}"""
-
-from autogen import ConversableAgent
-
-# Agent that can delegate
-manager_agent = ConversableAgent(
-    name="manager",
-    llm_config={{...}},
-)
-
-# Sub-agent
-sub_agent = ConversableAgent(
-    name="sub_{request.topic.replace(' ', '_').lower()}",
-    llm_config={{...}},
-)
-
-# Nested chat via initiate_chat
-manager_agent.initiate_chat(
-    sub_agent,
-    message=f"Help me with {request.topic}"
-)
-''',
-            agent_id=self.agent_id,
-            quality_score=0.85,
-            metadata={"type": "nested-chat", "skill": "multi-agent"},
+            metadata={"type": "chain", "skill": "chain-building"},
         )
     
     def _tool_integration(self, request: ContentRequest) -> ContentResult:
         return ContentResult(
-            content=f'''"""AutoGen Tool Integration: {request.topic}"""
+            content=f'''"""AutoGen Tool: {request.topic}"""
 
-from autogen import ConversableAgent, UserProxyAgent
-from autogen.code_utils import create_python_executor
-from autogen.agentchat import Tool
+from autogen_core.tools import tool, Tool
 
-# Code execution tool
-code_executor = create_python_executor()
+# Using @tool decorator
+@tool
+def {request.topic.lower().replace(' ', '_')}(query: str) -> str:
+    """Process {request.topic}."""
+    return f"Processed: {{query}}"
 
-# Custom tool
-def web_search(query: str) -> str:
-    return f"Results for: {{query}}"
-
-tool = Tool(
-    name="web_search",
-    func=web_search,
-    description="Search the web",
+# Or use structured Tool
+structured_tool = Tool(
+    name="{request.topic.replace(' ', '')}",
+    func=my_func,
+    description="Description of what it does",
 )
 
 # Use with agent
-agent = ConversableAgent(
-    name="{request.topic.replace(' ', '_').lower()}",
-    llm_config={{...}},
-    tools=[tool, code_executor],
-)
+tools = [structured_tool]
 ''',
             agent_id=self.agent_id,
             quality_score=0.85,
             metadata={"type": "tool-integration", "skill": "tool-use"},
+        )
+    
+    def _memory_mgmt(self, request: ContentRequest) -> ContentResult:
+        return ContentResult(
+            content=f'''"""AutoGen Memory: {request.topic}"""
+
+from autogen.memory import ConversationBufferMemory
+from autogen import ConversationChain
+
+# Buffer memory
+memory = ConversationBufferMemory(
+    memory_key="history",
+    return_messages=True,
+)
+
+# Chat with history
+chain = ConversationChain(llm=llm, memory=memory)
+response = chain.predict(input="Hello")
+print(response)
+
+# Other options:
+# - ConversationKGMemory
+# - EntityMemory  
+# - ReadOnlyMemory
+# - WindowIndexedScratchPad
+''',
+            agent_id=self.agent_id,
+            quality_score=0.85,
+            metadata={"type": "memory", "skill": "memory"},
+        )
+    
+    def _output_parser(self, request: ContentRequest) -> ContentResult:
+        return ContentResult(
+            content=f'''"""AutoGen Output Parser: {request.topic}"""
+
+from autogen.output_parsers import CommaSeparatedListOutputParser
+
+# Parse list
+parser = CommaSeparatedListOutputParser()
+result = parser.parse("item1, item2, item3")
+
+# Structured output
+from autogen.output_parsers import StructuredOutputParser, ResponseSchema
+
+schemas = [
+    ResponseSchema(name="answer", type="string", description="The answer"),
+]
+output_parser = StructuredOutputParser(response_schemas=schemas)
+''',
+            agent_id=self.agent_id,
+            quality_score=0.85,
+            metadata={"type": "output-parser", "skill": "llm-ops"},
+        )
+    
+    def _prompt_template(self, request: ContentRequest) -> ContentResult:
+        return ContentResult(
+            content=f'''"""Prompt Template: {request.topic}"""
+
+from autogen import PromptTemplate
+
+template = """You are {{role}}.
+Task: {{task}}
+Context: {{context}}
+Answer: """
+
+prompt = PromptTemplate(
+    input_variables=["role", "task", "context"],
+    template=template,
+)
+
+formatted = prompt.format(
+    role="Expert",
+    task="{request.topic}",
+    context="Relevant info",
+)
+''',
+            agent_id=self.agent_id,
+            quality_score=0.85,
+            metadata={"type": "prompt-template", "skill": "llm-ops"},
         )
