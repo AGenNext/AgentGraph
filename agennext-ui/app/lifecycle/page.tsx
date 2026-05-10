@@ -35,7 +35,59 @@ const STATUS_CONFIG: Record<AgentStatus, { label: string; color: string }> = {
   revoked: { label: 'Revoked', color: '#DA1E28' },
 };
 
-const FRAMEWORK_OPTIONS = ['langgraph', 'crewai', 'autogen', 'langchain'] as const;
+// Lifecycle Processes based on Microsoft Entra Agent ID
+// Source: https://learn.microsoft.com/en-us/azure/active-directory/
+
+const LIFECYCLE_PROCESSES = [
+  {
+    id: 'provision',
+    name: 'Agent Provisioning',
+    description: 'Create and register agent identity in Entra ID',
+    steps: [
+      { action: 'Create agent definition', duration: '5 min', auto: true },
+      { action: 'Generate Entra Agent ID', duration: '1 min', auto: true },
+      { action: 'Assign roles (RBAC)', duration: '2 min', auto: true },
+      { action: 'Provision credentials', duration: '3 min', auto: false },
+    ],
+    triggers: ['API', 'Admin', 'Blueprint'],
+  },
+  {
+    id: 'activate',
+    name: 'Agent Activation',
+    description: 'Activate registered agent for production',
+    steps: [
+      { action: 'Security review', duration: '10 min', auto: false },
+      { action: 'Compliance check', duration: '5 min', auto: true },
+      { action: 'Credential activation', duration: '2 min', auto: true },
+      { action: 'Health check', duration: '3 min', auto: true },
+    ],
+    triggers: ['Approval', 'Schedule'],
+  },
+  {
+    id: 'suspend',
+    name: 'Agent Suspension',
+    description: 'Temporarily suspend agent access',
+    steps: [
+      { action: 'Initiate suspension', duration: '1 min', auto: false },
+      { action: 'Revoke sessions', duration: '2 min', auto: true },
+      { action: 'Disable credentials', duration: '1 min', auto: true },
+    ],
+    triggers: ['Security', 'Admin', 'Policy'],
+  },
+  {
+    id: 'revoke',
+    name: 'Agent Revocation',
+    description: 'Permanently revoke agent identity',
+    steps: [
+      { action: 'Request revocation', duration: '1 min', auto: false },
+      { action: 'Approval workflow', duration: '15 min', auto: false },
+      { action: 'Revoke credentials', duration: '2 min', auto: true },
+      { action: 'Remove from directory', duration: '5 min', auto: true },
+    ],
+    triggers: ['Decommission', 'Breach'],
+  },
+];
+
 const STATUS_OPTIONS: AgentStatus[] = ['draft', 'registered', 'active', 'suspended', 'revoked'];
 
 // Mock data with owner/workspace
