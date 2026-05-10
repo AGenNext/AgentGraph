@@ -15,6 +15,10 @@ import {
   BackgroundVariant,
 } from '@xyflow/react';
 import '@xyflow/react/dist/style.css';
+
+type ToolNode = Node<{ label: string }>;
+type ToolEdge = Edge;
+
 import { listFrameworks, listTools, type Tool, type Framework } from '@/lib/api-registry';
 
 const nodeStyles = {
@@ -33,8 +37,8 @@ export function AgentBuilder() {
   const [tools, setTools] = useState<Tool[]>([]);
   const [search, setSearch] = useState('');
   
-  const [nodes, setNodes, onNodesChange] = useNodesState([]);
-  const [edges, setEdges, onEdgesChange] = useEdgesState([]);
+  const [nodes, setNodes, onNodesChange] = useNodesState<ToolNode>([]);
+  const [edges, setEdges, onEdgesChange] = useEdgesState<ToolEdge>([]);
 
   useEffect(() => {
     listFrameworks().then(fws => {
@@ -48,17 +52,17 @@ export function AgentBuilder() {
   }, [selectedFramework, search]);
 
   const addToolNode = (tool: Tool) => {
-    const newNode: Node = {
+    const newNode: ToolNode = {
       id: tool.canonical_id,
       position: { x: Math.random() * 400 + 100, y: Math.random() * 300 + 100 },
       data: { label: tool.name },
       style: nodeStyles,
     };
-    setNodes(nds => [...nds, newNode]);
+    setNodes((nds: ToolNode[]) => [...nds, newNode]);
   };
 
   const onConnect = useCallback(
-    (params: Connection) => setEdges(edgs => addEdge(params, edgs)),
+    (params: Connection) => setEdges((edgs: ToolEdge[]) => addEdge(params, edgs)),
     [setEdges],
   );
 
