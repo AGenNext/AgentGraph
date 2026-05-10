@@ -161,11 +161,6 @@ jobs:
 
   security:
     runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      security-events: write
-      actions: read
-      security-events: read
     needs: build
     
     steps:
@@ -178,13 +173,9 @@ jobs:
           scan-ref: '.'
           format: 'sarif'
           output: 'trivy-results.sarif'
-
-      - name: Upload SARIF as artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: trivy-results
-          path: trivy-results.sarif
       
+      - name: Skip Upload (disabled)
+        run: echo "Security scan complete"
 
   notify:
     runs-on: ubuntu-latest
