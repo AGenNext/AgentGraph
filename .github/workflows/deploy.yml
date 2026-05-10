@@ -164,6 +164,8 @@ jobs:
     permissions:
       contents: read
       security-events: write
+      actions: read
+      security-events: read
     needs: build
     
     steps:
