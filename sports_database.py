@@ -636,7 +636,7 @@ class SportsDatabase:
         return [t for t in self.teams.values() 
                 if t.sport == sport]
     
-    def get_league standings(self, league: League) -> List[Team]:
+    def get_league_standings(self, league: League) -> List[Team]:
         teams = self.get_teams_by_league(league)
         return sorted(teams, key=lambda t: t.win_pct(), reverse=True)
     

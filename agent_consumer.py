@@ -153,7 +153,8 @@ class AgentConsumer:
         # Sort by rating
         movies = sorted(movies, key=lambda m: m.imdb_rating or 0, reverse=True)
         
-        return [{"title": m.title, "rating": m.imdb_rating, "year": str(m.release_date)[:4] for m in movies[:10]]
+        movies_list = [{"title": m.title, "rating": m.imdb_rating, "year": str(m.release_date)[:4]} for m in movies[:10]]
+        return movies_list
     
     def getActorInfo(self, name: str) -> Dict:
         """Get actor info"""

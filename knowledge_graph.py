@@ -279,7 +279,7 @@ class WikipediaAPI:
             "P22": ("father", "text"),
             "P25": ("mother", "text"),
             "P40": ("children", "texts"),
-            P26": ("spouse", "texts"),
+            "P26": ("spouse", "texts"),
             "P7": ("siblings", "texts"),
             "P69": ("education", "texts"),
             "P69": ("alma_mater", "texts"),

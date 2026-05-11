@@ -629,13 +629,13 @@ def create_sample_database() -> MovieDatabase:
     # Create people
     actors = [
         Person(id="p1", name="Leonardo DiCaprio", 
-                occupation=["actor"], birth_date=1974-11-11),
+                occupation=["actor"], birth_date=date(1974,11,11)),
         Person(id="p2", name="Tom Hanks",
-                occupation=["actor"], birth_date=1956-07-09),
+                occupation=["actor"], birth_date=date(1956, 7, 9)),
         Person(id="p3", name="Robert De Niro",
-                occupation=["actor"], birth_date=1943-08-17),
+                occupation=["actor"], birth_date=date(1943,8,17)),
         Person(id="p4", name="Quentin Tarantino",
-                occupation=["director", "writer"], birth_date=1963-03-27),
+                occupation=["director", "writer"], birth_date=date(1963,3,27)),
         Person(id="p5", name="Steven Spielberg",
                 occupation=["director", "producer"], birth_date=1946-12-18),
     ]
