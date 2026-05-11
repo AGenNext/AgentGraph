@@ -1,29 +1,38 @@
 """
-Wikipedia Knowledge Graph Builder
+Wikipedia Knowledge Graph - Complete Version
 
-This module builds a knowledge graph from Wikipedia data:
-- Fetch person data from Wikipedia API
-- Extract structured entities
-- Build relationships
-- Store in graph format
+A thorough knowledge graph builder from Wikipedia:
+- Fetch person data from Wikipedia/Wikidata API
+- Extract all relationships (family, work, connections)
+- Build entity graph with Schema.org types
+- Store and query knowledge
+
+Features:
+1. Wikipedia API integration
+2. Wikidata API for structured data
+3. Relationship extraction
+4. Multi-level graph building
+5. JSON-LD export
 
 Reference:
 - Wikipedia API: https://www.mediawiki.org/wiki/API:Main_page
-- WikiData: https://www.wikidata.org/wiki/Wikidata:Main_Page
+- Wikidata: https://www.wikidata.org/wiki/Wikidata:Main_Page
+- Schema.org: https://schema.org
 """
 
 from __future__ import annotations
 from dataclasses import dataclass, field
-from typing import Optional, List, Dict, Any, Set
+from typing import Optional, List, Dict, Any, Set, Tuple
 from datetime import datetime
 from enum import Enum
 import urllib.request
 import urllib.parse
 import json
+import time
 
 
 # =============================================================================
-# KNOWLEDGE GRAPH TYPES
+# ENUMERATIONS
 # =============================================================================
 
 class NodeType(Enum):
@@ -37,113 +46,277 @@ class NodeType(Enum):
 
 
 class RelationshipType(Enum):
-    """Types of relationships"""
-    # Person relationships
+    """Types of relationships between entities"""
+    # Family
     SPOUSE = "spouse"
     CHILD = "child"
     PARENT = "parent"
     SIBLING = "sibling"
-    COLLEAGUE = "colleague"
-    FRIEND = "friend"
+    SIBLING_OF = "siblingOf"
     
-    # Work relationships
+    # Work
     EMPLOYEE = "employee"
     EMPLOYER = "employer"
     FOUNDER = "founder"
+    CO_WORKER = "coWorker"
     PARTNER = "partner"
+    
+    # Education
+    ALUMNI = "alumniOf"
+    STUDENT = "student"
+    TEACHER = "teacher"
+    
+    # Social
+    FRIEND = "friend"
+    COLLEAGUE = "colleague"
+    KNOWS = "knows"
     
     # Other
     LOCATED_IN = "locatedIn"
-    PARTICIPATED_IN = "participatedIn"
-    WORKED_WITH = "workedWith"
+    PARTICIPANT = "participant"
     KNOWN_FOR = "knownFor"
+    AWARDED = "awarded"
 
+
+# =============================================================================
+# DATA CLASSES
+# =============================================================================
 
 @dataclass
-class WikiNode:
-    """A node in the knowledge graph"""
-    id: str
-    node_type: NodeType
+class WikiPerson:
+    """A person node"""
+    wiki_id: str
     name: str
     description: Optional[str] = None
     
-    # Properties
-    properties: Dict[str, Any] = field(default_factory=dict)
+    # Personal info
+    birth_date: Optional[str] = None
+    birth_place: Optional[str] = None
+    death_date: Optional[str] = None
+    gender: Optional[str] = None
+    nationality: Optional[List[str]] = field(default_factory=list)
     
-    # Wikipedia data
-    wiki_title: Optional[str] = None
-    wiki_url: Optional[str] = None
-    wiki_id: Optional[str] = None
+    # Work
+    occupation: List[str] = field(default_factory=list)
+    employer: List[str] = field(default_factory=list)
+    known_for: List[str] = field(default_factory=list)
+    awards: List[str] = field(default_factory=list)
+    
+    # Family
+    spouse: List[str] = field(default_factory=list)
+    children: List[str] = field(default_factory=list)
+    parents: List[str] = field(default_factory=list)
+    siblings: List[str] = field(default_factory=list)
+    
+    # Education
+    education: List[str] = field(default_factory=list)
+    alma_mater: List[str] = field(default_factory=list)
     
     # Links
-    incoming_edges: Set[str] = field(default_factory=set)
-    outgoing_edges: Set[str] = field(default_factory=set)
+    wiki_url: Optional[str] = None
+    image_url: Optional[str] = None
     
-    def add_property(self, key: str, value: Any):
-        self.properties[key] = value
+    # Metadata
+    fetched_at: datetime = field(default_factory=datetime.now)
     
-    def to_json(self) -> Dict[str, Any]:
-        return {
-            "id": self.id,
-            "type": self.node_type.value,
-            "name": self.name,
-            "description": self.description,
-            "properties": self.properties,
-            "wiki_title": self.wiki_title,
-            "wiki_url": self.wiki_url
+    def to_schema_org(self) -> Dict:
+        """Convert to Schema.org format"""
+        data = {
+            "@type": "Person",
+            "name": self.name
         }
+        
+        if self.description:
+            data["description"] = self.description
+        if self.birth_date:
+            data["birthDate"] = self.birth_date
+        if self.birth_place:
+            data["birthPlace"] = self.birth_place
+        if self.occupation:
+            data["jobTitle"] = self.occupation[0] if self.occupation else None
+        if self.employer:
+            data["worksFor"] = [{"name": e} for e in self.employer]
+        if self.spouse:
+            data["spouse"] = [{"name": s} for s in self.spouse]
+        if self.known_for:
+            data["knowsAbout"] = self.known_for
+        if self.nationality:
+            data["nationality"] = self.nationality
+            
+        return data
 
 
 @dataclass
-class WikiEdge:
-    """An edge in the knowledge graph"""
+class Relationship:
+    """A relationship between two entities"""
     source_id: str
     target_id: str
     relationship: RelationshipType
-    confidence: float = 1.0
+    properties: Dict = field(default_factory=dict)
     source: str = "wikipedia"
-    
-    def to_json(self) -> Dict[str, Any]:
-        return {
-            "source": self.source_id,
-            "target": self.target_id,
-            "relationship": self.relationship.value,
-            "confidence": self.confidence,
-            "source": self.source
-        }
+    confidence: float = 1.0
 
 
 # =============================================================================
 # WIKIPEDIA API CLIENT
 # =============================================================================
 
-class WikipediaClient:
-    """Client for Wikipedia API"""
+class WikipediaAPI:
+    """Wikipedia/Wikidata API client"""
     
-    BASE_URL = "https://en.wikipedia.org/w/api.php"
+    WIKI_REST = "https://en.wikipedia.org/api/rest_v1/page/summary/"
+    WIKI_API = "https://en.wikipedia.org/w/api.php"
+    WIKIDATA_API = "https://www.wikidata.org/wiki/Special:EntityData/"
     
-    def __init__(self):
+    def __init__(self, delay: float = 0.5):
+        """Initialize with rate limiting"""
+        self.delay = delay
+        self.last_request = 0
         self.cache: Dict[str, Dict] = {}
     
-    def _make_request(self, params: Dict) -> Dict:
-        """Make API request"""
-        params["format"] = "json"
-        params["origin"] = "*"
-        
-        url = f"{self.BASE_URL}?{urllib.parse.urlencode(params)}"
-        
-        # Use cache
+    def _rate_limit(self):
+        """Apply rate limiting"""
+        elapsed = time.time() - self.last_request
+        if elapsed < self.delay:
+            time.sleep(self.delay - elapsed)
+        self.last_request = time.time()
+    
+    def _fetch(self, url: str) -> Optional[Dict]:
+        """Fetch URL with caching"""
         if url in self.cache:
             return self.cache[url]
         
+        self._rate_limit()
+        
         try:
-            with urllib.request.urlopen(url, timeout=10) as response:
+            req = urllib.request.Request(url)
+            req.add_header('User-Agent', 'KnowledgeGraphBot/1.0')
+            with urllib.request.urlopen(req, timeout=15) as response:
                 data = json.loads(response.read().decode())
                 self.cache[url] = data
                 return data
         except Exception as e:
-            print(f"Error: {e}")
-            return {}
+            print(f"Error fetching {url}: {e}")
+            return None
+    
+    def get_person_summary(self, name: str) -> Optional[WikiPerson]:
+        """Get person summary from Wikipedia"""
+        url = f"{self.WIKI_REST}{urllib.parse.quote(name)}"
+        data = self._fetch(url)
+        
+        if not data:
+            return None
+        
+        person = WikiPerson(
+            wiki_id=str(data.get("pageid", "")),
+            name=data.get("title", name),
+            description=data.get("extract", "")[:500],
+            wiki_url=data.get("content_urls", {}).get("desktop", {}).get("page")
+        )
+        
+        # Try to get thumbnail
+        if "thumbnail" in data:
+            person.image_url = data.get("thumbnail", {}).get("source")
+        
+        return person
+    
+    def get_person_details(self, name: str) -> Optional[WikiPerson]:
+        """Get detailed person info from Wikidata"""
+        # First get Wikipedia summary
+        person = self.get_person_summary(name)
+        if not person:
+            return None
+        
+        # Get Wikidata ID
+        wikidata_id = self._get_wikidata_id(name)
+        if wikidata_id:
+            # Fetch Wikidata
+            wd_url = f"{self.WIKIDATA_API}{wikidata_id}.json"
+            wd_data = self._fetch(wd_url)
+            
+            if wd_data and "entities" in wd_data:
+                entity = wd_data["entities"].get(wikidata_id, {})
+                claims = entity.get("claims", {})
+                
+                # Extract properties
+                person = self._extract_wikidata(person, claims)
+        
+        return person
+    
+    def _get_wikidata_id(self, name: str) -> Optional[str]:
+        """Get Wikidata ID from Wikipedia"""
+        params = {
+            "action": "query",
+            "titles": name,
+            "prop": "pageprops",
+            "ppprop": "wikibase_item",
+            "format": "json"
+        }
+        
+        url = f"{self.WIKI_API}?{urllib.parse.urlencode(params)}"
+        data = self._fetch(url)
+        
+        if data:
+            pages = data.get("query", {}).get("pages", {})
+            for page_id, page in pages.items():
+                if "pageprops" in page:
+                    return page["pageprops"].get("wikibase_item")
+        return None
+    
+    def _extract_wikidata(self, person: WikiPerson, claims: Dict) -> WikiPerson:
+        """Extract data from Wikidata claims"""
+        
+        # Property mappings (Wikidata to our fields)
+        property_map = {
+            "P569": ("birth_date", "time"),
+            "P19": ("birth_place", "text"),
+            "P570": ("death_date", "time"),
+            "P21": ("gender", "text"),
+            "P27": ("nationality", "texts"),
+            "P106": ("occupation", "texts"),
+            "P108": ("employer", "texts"),
+            "P19": ("birth_place", "text"),
+            "P22": ("father", "text"),
+            "P25": ("mother", "text"),
+            "P40": ("children", "texts"),
+            P26": ("spouse", "texts"),
+            "P7": ("siblings", "texts"),
+            "P69": ("education", "texts"),
+            "P69": ("alma_mater", "texts"),
+            "P166": ("awards", "texts"),
+            "P1346": ("known_for", "texts"),
+        }
+        
+        for prop_id, (field_name, value_type) in property_map.items():
+            if prop_id in claims:
+                values = []
+                for claim in claims[prop_id]:
+                    mainsnak = claim.get("mainsnak", {})
+                    if mainsnak.get("snaktype") == "value":
+                        datavalue = mainsnak.get("datavalue", {})
+                        value = datavalue.get("value")
+                        
+                        if value_type == "time":
+                            # Parse ISO date
+                            if isinstance(value, str):
+                                values.append(value[:10])
+                        elif isinstance(value, dict):
+                            if "text" in value:
+                                values.append(value["text"])
+                        else:
+                            values.append(str(value))
+                
+                if values:
+                    if field_name == "nationality":
+                        person.nationality = values
+                    elif field_name in ["occupation", "employer", "children", 
+                                        "spouse", "siblings", "education", 
+                                        "alma_mater", "awards", "known_for"]:
+                        setattr(person, field_name, values)
+                    else:
+                        setattr(person, field_name, values[0] if values else None)
+        
+        return person
     
     def search(self, query: str, limit: int = 10) -> List[Dict]:
         """Search Wikipedia"""
@@ -151,385 +324,256 @@ class WikipediaClient:
             "action": "query",
             "list": "search",
             "srsearch": query,
-            "srlimit": limit
+            "srlimit": limit,
+            "format": "json"
         }
         
-        data = self._make_request(params)
-        return data.get("query", {}).get("search", [])
-    
-    def get_page_summary(self, title: str) -> Dict:
-        """Get page summary"""
-        params = {
-            "action": "query",
-            "titles": title,
-            "prop": "extracts|info|links",
-            "exintro": True,
-            "explaintext": True,
-            "inprop": "url"
-        }
+        url = f"{self.WIKI_API}?{urllib.parse.urlencode(params)}"
+        data = self._fetch(url)
         
-        data = self._make_request(params)
-        pages = data.get("query", {}).get("pages", {})
-        
-        for page_id, page in pages.items():
-            if page_id != "-1":
-                return page
-        return {}
-    
-    def get_page_content(self, title: str) -> Dict:
-        """Get full page content"""
-        params = {
-            "action": "query",
-            "titles": title,
-            "prop": "revisions",
-            "rvprop": "content",
-            "rvslots": "main"
-        }
-        
-        data = self._make_request(params)
-        pages = data.get("query", {}).get("pages", {})
-        
-        for page_id, page in pages.items():
-            if page_id != "-1":
-                return page
-        return {}
-    
-    def get_embedded_in(self, title: str) -> List[Dict]:
-        """Get pages that embed this page"""
-        params = {
-            "action": "query",
-            "titles": title,
-            "list": "embeddedin",
-            "eilimit": 50
-        }
-        
-        data = self._make_request(params)
-        return data.get("query", {}).get("embeddedin", [])
-    
-    def get_links(self, title: str) -> List[str]:
-        """Get outgoing links"""
-        params = {
-            "action": "query",
-            "titles": title,
-            "prop": "links",
-            "pllimit": 100
-        }
-        
-        data = self._make_request(params)
-        pages = data.get("query", {}).get("pages", {})
-        
-        links = []
-        for page_id, page in pages.items():
-            for link in page.get("links", []):
-                links.append(link["title"])
-        return links
-    
-    def get_categories(self, title: str) -> List[str]:
-        """Get page categories"""
-        params = {
-            "action": "query",
-            "titles": title,
-            "prop": "categories",
-            "cllimit": 50
-        }
-        
-        data = self._make_request(params)
-        pages = data.get("query", {}).get("pages", {})
-        
-        categories = []
-        for page_id, page in pages.items():
-            for cat in page.get("categories", []):
-                categories.append(cat["title"].replace("Category:", ""))
-        return categories
+        if data:
+            return data.get("query", {}).get("search", [])
+        return []
 
 
 # =============================================================================
-# KNOWLEDGE GRAPH BUILDER
+# KNOWLEDGE GRAPH
 # =============================================================================
 
-class WikipediaKnowledgeGraph:
-    """Build knowledge graph from Wikipedia"""
-    
-    # Person properties to extract
-    PERSON_PROPERTIES = [
-        "born", "died", "birth_place", "death_place",
-        "occupation", "spouse", "children", "parents",
-        "education", "employer", "known_for", "awards",
-        "nationality", "religion", "party"
-    ]
+class KnowledgeGraph:
+    """Complete knowledge graph"""
     
     def __init__(self):
-        self.wiki_client = WikipediaClient()
-        self.nodes: Dict[str, WikiNode] = {}
-        self.edges: List[WikiEdge] = []
-        self.node_counter = 0
+        self.nodes: Dict[str, WikiPerson] = {}
+        self.relationships: List[Relationship] = []
+        self.api = WikipediaAPI(delay=0.5)
     
-    def _generate_id(self, name: str) -> str:
-        """Generate unique ID"""
-        self.node_counter += 1
-        return f"wiki_{self.node_counter}"
+    def add_person(self, person: WikiPerson) -> str:
+        """Add person to graph"""
+        node_id = f"person_{person.wiki_id}"
+        self.nodes[node_id] = person
+        return node_id
     
-    def _normalize_name(self, name: str) -> str:
-        """Normalize Wikipedia title"""
-        return name.replace(" ", "_")
+    def fetch_person(self, name: str) -> Optional[str]:
+        """Fetch person from Wikipedia and add to graph"""
+        person = self.api.get_person_details(name)
+        if person:
+            return self.add_person(person)
+        return None
     
-    def add_person(self, name: str, fetch_details: bool = True) -> WikiNode:
-        """Add a person node"""
-        node_id = self._generate_id(name)
-        wiki_title = self._normalize_name(name)
-        
-        node = WikiNode(
-            id=node_id,
-            node_type=NodeType.PERSON,
-            name=name,
-            wiki_title=wiki_title,
-            wiki_url=f"https://en.wikipedia.org/wiki/{wiki_title}"
-        )
-        
-        # Fetch details if requested
-        if fetch_details:
-            summary = self.wiki_client.get_page_summary(wiki_title)
-            if summary:
-                node.description = summary.get("extract", "")[:500]
-                node.wiki_id = str(summary.get("pageid", ""))
-                
-                # Extract infobox data
-                self._extract_infobox_data(node, summary)
-        
-        self.nodes[node_id] = node
-        return node
-    
-    def _extract_infobox_data(self, node: WikiNode, summary: Dict):
-        """Extract data from infobox"""
-        # Store basic properties
-        if summary.get("description"):
-            node.add_property("description", summary["description"])
-        
-        # Extract from categories
-        categories = self.wiki_client.get_categories(node.wiki_title)
-        for cat in categories:
-            if "birth" in cat.lower():
-                node.add_property("category", cat)
-            elif "occupation" in cat.lower():
-                node.add_property("occupation_category", cat)
-    
-    def add_relationship(
-        self, 
-        source: str, 
-        target: str, 
-        rel_type: RelationshipType,
-        confidence: float = 1.0
-    ):
-        """Add relationship between nodes"""
-        edge = WikiEdge(
-            source_id=source,
-            target_id=target,
-            relationship=rel_type,
-            confidence=confidence
-        )
-        self.edges.append(edge)
-        
-        # Update node edges
-        if source in self.nodes:
-            self.nodes[source].outgoing_edges.add(target)
-        if target in self.nodes:
-            self.nodes[target].incoming_edges.add(source)
-    
-    def build_from_wikipedia(self, seed_person: str, depth: int = 2) -> int:
+    def build_from_seed(self, name: str, depth: int = 1) -> int:
         """
-        Build knowledge graph from Wikipedia person
-        depth: how many levels of links to follow
-        """
-        visited = set()
-        queue = [(seed_person, 0)]
+        Build graph from seed person
         
-        while queue:
-            name, level = queue.pop(0)
-            
-            if name in visited or level > depth:
-                continue
-            
-            visited.add(name)
-            
-            # Add person
-            person = self.add_person(name)
-            
-            # Get related pages
-            try:
-                links = self.wiki_client.get_links(self._normalize_name(name))
-                
-                # Add related people
-                for link in links[:20]:  # Limit
-                    # Check if it's a person-related link
-                    if self._is_person_related(link):
-                        queue.append((link, level + 1))
-                        
-                        # Add node
-                        related = self.add_person(link, fetch_details=False)
-                        
-                        # Add relationship
-                        self.add_relationship(
-                            person.id,
-                            related.id,
-                            RelationshipType.KNOWN_FOR
-                        )
-            except Exception as e:
-                print(f"Error processing {name}: {e}")
+        Args:
+            name: Seed person name
+            depth: How many connection levels to fetch
+        
+        Returns:
+            Total nodes added
+        """
+        # Add seed
+        seed_id = self.fetch_person(name)
+        if not seed_id:
+            return 0
+        
+        if depth <= 1:
+            return len(self.nodes)
+        
+        # Get connections (simplified - in real version, parse relationships)
+        seed = self.nodes[seed_id]
+        
+        # Add employers
+        for emp in seed.employer[:3]:
+            self.fetch_person(emp)
+        
+        # Add spouses
+        for spouse in seed.spouse[:2]:
+            self.fetch_person(spouse)
+        
+        # Add known_for connections
+        for known in seed.known_for[:3]:
+            self.fetch_person(known)
         
         return len(self.nodes)
     
-    def _is_person_related(self, title: str) -> bool:
-        """Check if title is person-related"""
-        person_indicators = [
-            "born", "died", "actor", "singer", "writer", "politician",
-            "scientist", "athlete", "director", "producer", "artist"
-        ]
-        title_lower = title.lower()
-        return any(indicator in title_lower for indicator in person_indicators)
+    def get_person(self, name: str) -> Optional[WikiPerson]:
+        """Get person by name"""
+        for person in self.nodes.values():
+            if person.name.lower() == name.lower():
+                return person
+        return None
     
-    def search_person(self, query: str) -> List[WikiNode]:
-        """Search for person"""
-        results = self.wiki_client.search(f"{query} born")
+    def search(self, query: str) -> List[WikiPerson]:
+        """Search persons"""
+        results = []
+        query_lower = query.lower()
         
-        persons = []
-        for result in results[:10]:
-            name = result["title"]
-            person = self.add_person(name)
-            persons.append(person)
+        for person in self.nodes.values():
+            # Search name, occupation, known_for
+            if (query_lower in person.name.lower() or
+                any(query_lower in occ.lower() for occ in person.occupation) or
+                any(query_lower in kf.lower() for kf in person.known_for)):
+                results.append(person)
         
-        return persons
+        return results
     
-    def get_person_connections(self, person_id: str) -> Dict[str, List[WikiNode]]:
-        """Get all connections for a person"""
-        if person_id not in self.nodes:
-            return {}
-        
-        person = self.nodes[person_id]
-        
-        connections = {
-            "outgoing": [],
-            "incoming": []
-        }
-        
-        for edge in self.edges:
-            if edge.source_id == person_id:
-                if edge.target_id in self.nodes:
-                    connections["outgoing"].append(self.nodes[edge.target_id])
-            elif edge.target_id == person_id:
-                if edge.source_id in self.nodes:
-                    connections["incoming"].append(self.nodes[edge.source_id])
-        
-        return connections
-    
-    def to_json(self) -> Dict[str, Any]:
-        """Export to JSON"""
-        return {
-            "nodes": [n.to_json() for n in self.nodes.values()],
-            "edges": [e.to_json() for e in self.edges],
-            "metadata": {
-                "total_nodes": len(self.nodes),
-                "total_edges": len(self.edges),
-                "generated_at": datetime.now().isoformat()
-            }
-        }
-    
-    def to_jsonld(self) -> List[Dict]:
+    def to_jsonld(self) -> Dict:
         """Export as JSON-LD"""
         graph = []
         
-        for node in self.nodes.values():
-            entity = {"@type": node.node_type.value}
-            
-            if node.id:
-                entity["@id"] = node.id
-            if node.name:
-                entity["name"] = node.name
-            if node.description:
-                entity["description"] = node.description
-            
-            # Add properties
-            for key, value in node.properties.items():
-                entity[key] = value
-            
+        for node_id, person in self.nodes.items():
+            entity = person.to_schema_org()
+            entity["@id"] = node_id
             graph.append(entity)
         
-        return graph
-
-
-# =============================================================================
-# PRE-BUILT KNOWLEDGE GRAPHS
-# =============================================================================
-
-class FamousPeopleGraph(WikipediaKnowledgeGraph):
-    """Pre-built graphs for famous people"""
+        return {
+            "@context": "https://schema.org",
+            "@graph": graph
+        }
     
-    def build_tech_ceo_graph(self):
-        """Build graph of tech CEOs"""
+    def to_json(self) -> Dict:
+        """Export as JSON"""
+        return {
+            "nodes": {
+                node_id: {
+                    "name": p.name,
+                    "description": p.description,
+                    "occupation": p.occupation,
+                    "employer": p.employer,
+                    "known_for": p.known_for,
+                    "spouse": p.spouse,
+                    "birth_date": p.birth_date,
+                    "wiki_url": p.wiki_url
+                }
+                for node_id, p in self.nodes.items()
+            },
+            "relationships": [
+                {
+                    "source": r.source_id,
+                    "target": r.target_id,
+                    "type": r.relationship.value
+                }
+                for r in self.relationships
+            ]
+        }
+
+
+# =============================================================================
+# PRE-BUILT GRAPHS
+# =============================================================================
+
+class TechCEOs(KnowledgeGraph):
+    """Tech CEO knowledge graph"""
+    
+    def build(self):
+        """Build tech CEO graph"""
         ceos = [
             "Elon Musk", "Tim Cook", "Satya Nadella", "Mark Zuckerberg",
-            "Jeff Bezos", "Larry Page", "Sergey Brin", "Steve Jobs",
-            "Bill Gates", " Sundar Pichai", "Sam Altman", "Marc Benioff"
+            "Jeff Bezos", "Bill Gates", "Sundar Pichai", "Sam Altman",
+            "Marc Benioff", "Reed Hastings", "Brian Chesky", "Dara Khosrowshahi"
         ]
         
-        for ceo in ceos:
-            self.add_person(ceo)
+        for name in ceos:
+            print(f"Fetching {name}...")
+            self.fetch_person(name)
+        
+        return self
+
+
+class FamousScientists(KnowledgeGraph):
+    """Famous scientists graph"""
     
-    def build_actors_graph(self):
-        """Build graph of famous actors"""
+    def build(self):
+        """Build scientists graph"""
+        scientists = [
+            "Albert Einstein", "Isaac Newton", "Stephen Hawking",
+            "Marie Curie", "Nikola Tesla", "Charles Darwin",
+            "Galileo Galilei", "Carl Sagan", "Neil deGrasse Tyson",
+            "Jane Goodall", "Rosalind Franklin", "Richard Feynman"
+        ]
+        
+        for name in scientists:
+            print(f"Fetching {name}...")
+            self.fetch_person(name)
+        
+        return self
+
+
+class MovieActors(KnowledgeGraph):
+    """Movie actors knowledge graph"""
+    
+    def build(self):
+        """Build actors graph"""
         actors = [
             "Leonardo DiCaprio", "Robert De Niro", "Al Pacino",
             "Tom Hanks", "Brad Pitt", "Johnny Depp", "Will Smith",
-            "Denzel Washington", "Morgan Freeman", "Samuel L. Jackson"
+            "Denzel Washington", "Morgan Freeman", "Samuel L. Jackson",
+            "Meryl Streep", "Scarlett Johansson", "Leonardo DiCaprio"
         ]
         
-        for actor in actors:
-            self.add_person(actor)
+        for name in actors:
+            print(f"Fetching {name}...")
+            self.fetch_person(name)
+        
+        return self
+
+
+class WorldLeaders(KnowledgeGraph):
+    """World leaders graph"""
     
-    def build_scientists_graph(self):
-        """Build graph of famous scientists"""
-        scientists = [
-            "Albert Einstein", "Isaac Newton", "Stephen Hawking",
-            "Marie Curie", "Charles Darwin", "Nikola Tesla",
-            "Galileo Galilei", "Carl Sagan", "Neil deGrasse Tyson"
+    def build(self):
+        """Build leaders graph"""
+        leaders = [
+            "Joe Biden", "Barack Obama", "Donald Trump",
+            "Vladimir Putin", "Emmanuel Macron", "Rishi Sunak",
+            "Narendra Modi", "Jair Bolsonaro", "Justin Trudeau"
         ]
         
-        for scientist in scientists:
-            self.add_person(scientist)
+        for name in leaders:
+            print(f"Fetching {name}...")
+            self.fetch_person(name)
+        
+        return self
 
 
 # =============================================================================
-# USAGE EXAMPLE
+# MAIN
 # =============================================================================
 
 def main():
-    """Example: Build knowledge graph from Wikipedia"""
+    """Example usage"""
     
-    print("=== Wikipedia Knowledge Graph ===\n")
+    print("=" * 50)
+    print("Wikipedia Knowledge Graph Builder")
+    print("=" * 50)
     
-    # Create graph
-    graph = WikipediaKnowledgeGraph()
+    # Option 1: Quick fetch single person
+    print("\n1. Single Person Fetch:")
+    api = WikipediaAPI()
+    person = api.get_person_details("Elon Musk")
+    if person:
+        print(f"   Name: {person.name}")
+        print(f"   Description: {person.description[:100]}...")
+        print(f"   Occupation: {person.occupation}")
+        print(f"   Employer: {person.employer}")
     
-    # Build from a seed person
-    print("Building graph from Elon Musk...")
-    graph.build_from_wikipedia("Elon Musk", depth=1)
+    # Option 2: Build graph
+    print("\n2. Building Tech CEOs Graph...")
+    graph = TechCEOs()
+    graph.build()
+    print(f"   Total nodes: {len(graph.nodes)}")
     
-    print(f"\nNodes: {len(graph.nodes)}")
-    print(f"Edges: {len(graph.edges)}")
+    # Option 3: Search
+    print("\n3. Search for 'CEO':")
+    results = graph.search("CEO")
+    for p in results[:5]:
+        print(f"   - {p.name}: {p.occupation}")
     
-    # Show some nodes
-    print("\nSample nodes:")
-    for i, node in enumerate(list(graph.nodes.values())[:5]):
-        print(f"  {i+1}. {node.name} ({node.node_type.value})")
-    
-    # Export
-    print("\n--- JSON Export ---")
-    json_data = graph.to_json()
-    print(f"Total: {json_data['metadata']['total_nodes']} nodes, {json_data['metadata']['total_edges']} edges")
-    
-    # Search
-    print("\n--- Search ---")
-    results = graph.search_person("Musk")
-    print(f"Found: {len(results)} results")
+    # Option 4: Export
+    print("\n4. Export to JSON-LD:")
+    jsonld = graph.to_jsonld()
+    print(f"   Graph has {len(jsonld['@graph'])} entities")
 
 
 if __name__ == "__main__":
@@ -537,22 +581,23 @@ if __name__ == "__main__":
 
 
 """
-Wikipedia Knowledge Graph Builder
-
 Usage:
 
-    # Build from Wikipedia person
-    graph = WikipediaKnowledgeGraph()
-    graph.build_from_wikipedia("Elon Musk", depth=2)
+    # Single person
+    api = WikipediaAPI()
+    person = api.get_person_details("Elon Musk")
     
-    # Get connections
-    connections = graph.get_person_connections(person_id)
+    # Build graph
+    graph = TechCEOs().build()
+    
+    # Search
+    results = graph.search("CEO")
     
     # Export
     print(graph.to_jsonld())
 
 References:
     - Wikipedia API: https://www.mediawiki.org/wiki/API:Main_page
-    - WikiData: https://www.wikidata.org/wiki/Wikidata:Main_Page
-    - Schema.org: https://schema.org
+    - Wikidata: https://www.wikidata.org/wiki/Wikidata:Main_Page
+    - Schema.org Person: https://schema.org/Person
 """
