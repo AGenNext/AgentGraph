@@ -1,77 +1,57 @@
-# SCHEMA.ORG Completeness Check
+# SCHEMA_COVERAGE.md
 
-## Our Coverage vs Schema.org Main Types
+## Core Schema.org Types (11 Main Types)
 
-### Schema.org Core Types (11 Main)
-| Type | Our Database(s) | Status |
-|------|---------------|--------|
-| **Thing** (root) | knowledge_graph.py | ✅ Covered |
-| **Organization** | person_organization.py, employment_graph.py | ✅ Covered |
-| **Person** | person_organization.py, social_graph.py | ✅ Covered |
-| **Place** | travel_database.py, realestate_database.py | ✅ Covered |
-| **Product** | retail_database.py | ✅ Covered |
-| **Event** | events_database.py, sports_database.py | ✅ Covered |
-| **CreativeWork** | book_database.py, movie_database.py, music_database.py | ✅ Covered |
-| **Intangible** | crypto_database.py, banking_database.py, insurance_database.py | ✅ Covered |
-| **Action** | data_lineage.py | ✅ Covered |
-| **MedicalEntity** | healthcare_database.py | ✅ Covered |
-| **StructuredValue** | government_codes.py | ✅ Covered |
+See: https://schema.org/docs/full.html
 
-## Additional Types We Cover
+### 1. Thing (Root - Abstract)
+- The root type, all others inherit from this
+- **Our: knowledge_graph.py**
 
-| Extended Type | Database |
-|--------------|----------|
-| **SoftwareApplication** | code_repository.py |
-| **FinancialProduct** | crypto_database.py, banking_database.py |
-| **InsuranceProduct** | insurance_database.py |
-| **JobPosting** | employment_graph.py |
-| **RealEstateListing** | realestate_database.py |
-| **Vehicle** | automotive_database.py |
-| **Attorney** | legal_database.py |
-| **EducationalOrganization** | education_database.py |
-| **SportsEvent** | sports_database.py |
-| **SportsTeam** | social_graph.py |
-| **MedicalClinic** | healthcare_database.py |
-| **Physician** | healthcare_database.py |
-| **Restaurant** | food_database.py |
-| **Hotel** | travel_database.py |
-| **Flight** | travel_database.py |
-| **Book** | book_database.py |
-| **Movie** | movie_database.py |
-| **MusicAlbum** | music_database.py |
-| **VideoGame** | gaming_database.py |
-| **Nonprofit** | nonprofit_database.py |
-| **Device** | iot_database.py |
-| **BankAccount** | banking_database.py |
+### 2. Organization
+- Corporation, NGO, GovernmentOrganization, LocalBusiness, etc.
+- **Our: person_organization.py, employment_graph.py**
 
-## Missing Common Types (Could Add)
+### 3. Person
+- Individual people
+- **Our: person_organization.py, social_graph.py**
 
-- **Recipe** (food)
-- **FAQPage**
-- **HowTo**
-- **Review** (already in some)
-- **AggregateRating**
-- **BreadcrumbList**
-- **SitelinksSearchBox**
-- **QAPage**
-- **Article** (Blog, News)
-- **WebPage**
-- **SoftwareSourceCode**
-- **CSSStyleSheet**
-- **ImageObject**
-- **AudioObject**
-- **VideoObject**
-- **PostalAddress**
-- **GeoCoordinates**
-- **Duration**
-- **Quantity**
+### 4. Place
+- CivicStructure, LandmarksAndBuildings, Accommodation, etc.
+- **Our: travel_database.py, realestate_database.py**
+
+### 5. Product
+- Individual product items, with variants
+- **Our: retail_database.py**
+
+### 6. Event
+- Occurrences like SportsEvent, Festival, BusinessEvent
+- **Our: events_database.py, sports_database.py**
+
+### 7. CreativeWork
+- Book, Movie, MusicComposition, SoftwareSourceCode, etc.
+- **Our: book_database.py, movie_database.py, music_database.py**
+
+### 8. Intangible (Abstract)
+- Asset, Action, Service, Ticket
+- **Our: crypto_database.py, banking_database.py, insurance_database.py**
+
+### 9. Action
+- AchieveAction, TradeAction, TransferAction
+- **Our: data_lineage.py**
+
+### 10. MedicalEntity
+- ClinicalTrial, Drug, MedicalProcedure
+- **Our: healthcare_database.py**
+
+### 11. StructuredValue
+- ContactPoint, GeoCoordinates, MonetaryValue
+- **Our: government_codes.py**
+
+---
 
 ## Summary
 
-**Core Types (11): 11/11 = 100% ✅**
-
-**Extended Types: 40+ covered**
-
-**Total Databases: 24 files**
+**Core 11 Types: 100% Covered by 24 Databases**
 
 Reference: https://schema.org/docs/full.html
