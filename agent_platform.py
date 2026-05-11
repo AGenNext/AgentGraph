@@ -207,6 +207,70 @@ class SkillCategory(Enum):
     ALERT_SEND = "alert_send"
 
 
+class SoftwareCategory(Enum):
+    """Software/Agent application categories"""
+    # AI Agents
+    AI_AGENT = "AI Agent"
+    VIRTUAL_ASSISTANT = "Virtual Assistant"
+    CHATBOT = "Chatbot"
+    AUTONOMOUS_AGENT = "Autonomous Agent"
+    
+    # Productivity
+    PRODUCTIVITY = "Productivity"
+    CALENDAR = "Calendar"
+    NOTE_TAKING = "Note Taking"
+    PROJECT_MANAGEMENT = "Project Management"
+    
+    # Development
+    DEVELOPMENT = "Development"
+    IDE = "IDE"
+    CODE_COMPLETION = "Code Completion"
+    DEBUGGING = "Debugging"
+    TESTING = "Testing"
+    
+    # Data & Analytics
+    DATA_ANALYTICS = "Data Analytics"
+    BUSINESS_INTELLIGENCE = "Business Intelligence"
+    VISUALIZATION = "Visualization"
+    REPORTING = "Reporting"
+    
+    # Communication
+    COMMUNICATION = "Communication"
+    VIDEO_CONFERENCING = "Video Conferencing"
+    EMAIL_CLIENT = "Email Client"
+    COLLABORATION = "Collaboration"
+    
+    # Marketing & Sales
+    MARKETING_AUTOMATION = "Marketing Automation"
+    CRM = "CRM"
+    SALES_ENablement = "Sales Enablement"
+    CUSTOMER_SUPPORT = "Customer Support"
+    
+    # Security
+    SECURITY = "Security"
+    IDENTITY_MANAGEMENT = "Identity Management"
+    NETWORK_SECURITY = "Network Security"
+    THREAT_DETECTION = "Threat Detection"
+    
+    # Infrastructure
+    INFRASTRUCTURE = "Infrastructure"
+    CLOUD_MANAGEMENT = "Cloud Management"
+    CONTAINER_ORCHESTRATION = "Container Orchestration"
+    DEVOPS = "DevOps"
+    
+    # Content
+    CONTENT_MANAGEMENT = "Content Management"
+    CMS = "CMS"
+    DOCUMENT_MANAGEMENT = "Document Management"
+    DIGITAL_ASSET_MANAGEMENT = "Digital Asset Management"
+    
+    # E-commerce
+    ECOMMERCE = "E-Commerce"
+    PAYMENT_PROCESSING = "Payment Processing"
+    INVENTORY_MANAGEMENT = "Inventory Management"
+    POINT_OF_SALE = "Point of Sale"
+
+
 # =============================================================================
 # CORE CLASSES
 # =============================================================================
