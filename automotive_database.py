@@ -10,6 +10,8 @@ Reference:
 - NHTSA: https://vpic.nhtsa.gov/
 - Kelley Blue Book: https://www.kbb.com/
 
+Schema.org: AutomotiveBusiness, Car
+
 Data Sources:
 - NHTSA (vehicle recalls)
 - KBB (pricing)

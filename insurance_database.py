@@ -10,6 +10,8 @@ Reference:
 - NAIC: https://www.naic.org/
 - ACORD: https://www.acord.org/
 
+Schema.org: InsuranceProduct, InsurancePolicy
+
 Data Sources:
 - NAIC (National Association of Insurance Commissioners)
 - State insurance databases

@@ -10,6 +10,8 @@ Reference:
 - Justia: https://law.justia.com/
 - Caselaw Access Project: https://case.law/
 
+Schema.org: Attorney, LawFirm, Courthouse, Court
+
 Data Sources:
 - Justia (case law)
 - CourtListener API

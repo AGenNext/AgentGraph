@@ -1,7 +1,7 @@
 """
-Nonprofit Database - Charities & Causes
+nonprofit Database - Charities & Causes
 
-Nonprofit database:
+nonprofit database:
 - Charities, Nonprofits
 - Donors, Volunteers
 - Grants, Donations
@@ -9,6 +9,8 @@ Nonprofit database:
 Reference:
 - IRS Tax Exempt Organization Search
 - Guidestar: https://www.guidestar.org/
+
+Schema.org: Nonprofit,NGO, Charity
 
 Data Sources:
 - IRS EO Database

@@ -12,6 +12,8 @@ Reference:
 - Realtor.com: https://www.realtor.com/
 - Redfin: https://www.redfin.com/
 
+Schema.org: RealEstateListing, Apartment, LodgingBusiness
+
 Data Sources:
 - Realtor.com API
 - Zillow API

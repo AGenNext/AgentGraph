@@ -7,8 +7,10 @@ Education database:
 - Students, Instructors
 
 Reference:
--NCES: https://nces.ed.gov/
+- NCES: https://nces.ed.gov/
 - IPEDS: https://nces.ed.gov/ipeds/
+
+Schema.org: EducationalOrganization, CollegeOrUniversity, Course
 
 Data Sources:
 - NCES (National Center for Education Statistics)
