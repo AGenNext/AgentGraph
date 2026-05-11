@@ -8,8 +8,14 @@ Social graph for:
 - Network analysis
 
 Reference:
-- NetworkX: https://networkx.org/
-- Social Network Analysis
+- Twitter Developer: https://developer.twitter.com/
+- Facebook Graph API: https://developers.facebook.com/
+- LinkedIn API: https://developer.linkedin.com/
+
+Data Sources:
+- Twitter API (social graph, followers)
+- Facebook API (friends)
+- Instagram API (followers)
 """
 
 from __future__ import annotations
