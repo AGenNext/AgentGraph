@@ -12,6 +12,13 @@ This module provides a complete agent platform using Schema.org types:
 - Events = Event
 - Credentials = PropertyValue
 
+References:
+- Schema.org: https://schema.org
+- NAICS (Industry): https://www.census.gov/naics/
+- SOC (Job Roles): https://www.bls.gov/soc/
+- ISO 4217 (Currency): https://www.iso.org/iso-4217-currency-codes.html
+- IETF BCP 47 (Languages): https://tools.ietf.org/html/bcp47
+
 Author: Schema.org Agent Platform
 """
 
@@ -51,12 +58,17 @@ class EventStatusType(Enum):
 
 
 # =============================================================================
-# CATEGORY TYPES - Industry, Service, Job Roles
+# CATEGORY TYPES - Based on Global Standards
+# NAICS: https://www.census.gov/naics/
+# SOC: https://www.bls.gov/soc/
 # =============================================================================
 
 class IndustryCategory(Enum):
-    """Industry categories"""
-    # Technology
+    """
+    Industry categories based on NAICS (North American Industry Classification System)
+    Reference: https://www.census.gov/naics/
+    """
+    # Technology (51-54)
     TECHNOLOGY = "Technology"
     SOFTWARE = "Software"
     AI_MACHINE_LEARNING = "AI/Machine Learning"
@@ -369,13 +381,39 @@ class PropertyValue(Thing):
 
 @dataclass
 class Organization(Thing):
-    """Organization (company/department)"""
+    """
+    Organization (company/department)
+    Includes Schema.org properties + custom platform fields
+    """
+    # Schema.org fields
     legal_name: Optional[str] = None
     email: Optional[str] = None
     telephone: Optional[str] = None
     parent_organization: Optional[Organization] = None
     sub_organization: List[Organization] = field(default_factory=list)
     member: List[Any] = field(default_factory=list)
+    
+    # === CUSTOM FIELDS ===
+    # Business
+    industry: Optional[str] = None  # IndustryCategory
+    employee_count: int = 0
+    founded_year: Optional[int] = None
+    website: Optional[str] = None
+    
+    # Location
+    headquarters: Optional[Place] = None
+    
+    # Tier
+    tier: str = "standard"  # free, standard, enterprise
+    subscription_status: str = "active"
+    
+    # Limits
+    max_agents: int = 10
+    max_api_calls_per_day: int = 1000
+    
+    # Billing
+    billing_email: Optional[str] = None
+    plan: Optional[str] = None
     
     def add_department(self, dept: Organization):
         """Add a sub-department"""
@@ -393,12 +431,33 @@ class Organization(Thing):
 
 @dataclass
 class Person(Thing):
-    """Person (owner, employee)"""
+    """
+    Person (owner, employee)
+    Includes Schema.org properties + custom platform fields
+    """
+    # Schema.org fields
     email: Optional[str] = None
     job_title: Optional[str] = None
     telephone: Optional[str] = None
     works_for: List[Organization] = field(default_factory=list)
     knows_language: List[str] = field(default_factory=list)  # Skills
+    
+    # === CUSTOM FIELDS ===
+    # Account
+    username: Optional[str] = None
+    avatar_url: Optional[str] = None
+    
+    # Role (SOC-based)
+    role: Optional[str] = None  # JobRoleCategory
+    department: Optional[str] = None
+    
+    # Status
+    account_status: str = "active"
+    verified: bool = False
+    
+    # Limits
+    max_agents_owned: int = 5
+    max_api_calls_per_day: int = 100
     
     def add_skill(self, skill: str):
         """Add a skill"""
@@ -414,13 +473,14 @@ class Person(Thing):
 class SoftwareApplication(Thing):
     """
     Agent - The main entity representing an AI agent
+    Includes Schema.org properties + custom platform fields
     """
-    # Identity
+    # Identity (Schema.org)
     application_category: Optional[str] = None
     application_sub_category: Optional[str] = None
     software_version: Optional[str] = None
     
-    # Technical
+    # Technical (Schema.org)
     runtime: Optional[str] = None
     programming_language: Optional[str] = None
     software_requirements: Optional[str] = None
@@ -429,22 +489,47 @@ class SoftwareApplication(Thing):
     knows_language: List[str] = field(default_factory=list)  # Agent skills
     available_language: List[str] = field(default_factory=list)  # Supported languages
     
-    # Ownership
+    # Ownership (Schema.org)
     author: Optional[Person] = None  # Owner/creator
     
-    # Organization
+    # Organization (Schema.org)
     provider: Optional[Organization] = None  # Company providing
     works_for: Optional[Organization] = None  # Works in department
     
-    # Location
+    # Location (Schema.org)
     location: Optional[Place] = None
     
-    # Pricing
+    # Pricing (Schema.org)
     offers: List[Offer] = field(default_factory=list)
     
-    # Validity
+    # Validity (Schema.org)
     valid_from: Optional[datetime] = None
     valid_through: Optional[datetime] = None
+    
+    # === CUSTOM FIELDS (Platform-specific) ===
+    # Status & Config
+    status: str = "active"  # active, paused, deprecated
+    config: Dict[str, Any] = field(default_factory=dict)
+    
+    # Limits
+    max_concurrent_tasks: int = 10
+    rate_limit_per_minute: int = 60
+    max_memory_mb: int = 512
+    
+    # Custom metadata
+    tags: List[str] = field(default_factory=list)
+    category: Optional[str] = None  # IndustryCategory value
+    service_type: Optional[str] = None  # ServiceCategory value
+    job_role: Optional[str] = None  # JobRoleCategory value
+    
+    # Integration
+    webhook_url: Optional[str] = None
+    callback_url: Optional[str] = None
+    
+    # Monitoring
+    is_active: bool = True
+    last_active: Optional[datetime] = None
+    uptime_percent: float = 0.0
     
     # Custom properties
     additional_property: List[PropertyValue] = field(default_factory=list)
@@ -501,27 +586,57 @@ class SoftwareApplication(Thing):
 class Action(Thing):
     """
     Task - An action performed by an agent
+    Includes Schema.org properties + custom platform fields
     """
-    # Action type
+    # Action type (Schema.org)
     action_type: Optional[str] = None
     
-    # Status
+    # Status (Schema.org)
     action_status: Optional[ActionStatusType] = None
     
-    # Agent performing
+    # Agent performing (Schema.org)
     agent: Optional[SoftwareApplication] = None
     
-    # Input/Output
+    # Input/Output (Schema.org)
     object: Optional[Any] = None  # Input
     result: Optional[Any] = None   # Output
     
-    # Timing
+    # Timing (Schema.org)
     start_time: Optional[datetime] = None
     end_time: Optional[datetime] = None
     duration: Optional[timedelta] = None
     
-    # Error
+    # Error (Schema.org)
     error: Optional[str] = None
+    
+    # === CUSTOM FIELDS (Platform-specific) ===
+    # Execution
+    priority: int = 5  # 1-10
+    retry_count: int = 0
+    max_retries: int = 3
+    timeout_seconds: int = 300
+    
+    # Resources
+    cpu_units: float = 1.0
+    memory_mb: int = 256
+    
+    # Progress
+    progress_percent: int = 0
+    current_step: Optional[str] = None
+    
+    # Cost tracking
+    compute_cost: float = 0.0
+    api_calls: int = 0
+    tokens_used: int = 0
+    
+    # Metadata
+    parent_task_id: Optional[str] = None
+    session_id: Optional[str] = None
+    user_id: Optional[str] = None
+    
+    # Results reference
+    result_url: Optional[str] = None
+    logs: List[str] = field(default_factory=list)
     
     def start(self):
         """Start the task"""
