@@ -28,9 +28,9 @@
 | **agent-harness** | Runtime | ✅ |
 | **agent-runner** | Execution | ✅ |
 
-### TO CLEANUP (80 repos - DO NOT DELETE)
+### ORGANIZATION (80 repos - NO DELETION)
 
-**DO NOT DELETE ANYTHING** - Document purpose only:
+**STRICTLY: NO DELETION - Organize only:**
 
 | Potential Role | Candidate Repos |
 |----------------|------------------|
