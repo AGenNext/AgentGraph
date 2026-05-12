@@ -36,7 +36,7 @@
 | **PROTOCOLS** | AGenNext-Protocols | 1 |
 | **SKILLS** | AGenNext-SkillRegistry | 1 |
 | **CODE_REVIEW** | AGenNext-CodeReview | 1 |
-| **MULTI_AGENT** | AgentCrew, AgentSwarm, AgentTeams, crewai, crewai-fork, AutoGen, MetaGPT, AgentGraph, OpenAgent | 9 |
+| **MULTI_AGENT** | AGenNext-Dictionary, AGenNext-DocOcr, AGenNext-WebCrawl, AGenNext-Professional, AgentCrew, AgentSwarm, AgentTeams, crewai, crewai-fork, AutoGen, MetaGPT, AgentGraph, OpenAgent | 13 |
 | **UI** | Agent-Chat-Ui, agentchat, agent-studio | 3 |
 | **DEPLOY** | agent-kube, code-deploy, agent-starter-pack | 3 |
 | **RUNTIME** | agent-harness, agent-runner, Runner, services | 4 |
