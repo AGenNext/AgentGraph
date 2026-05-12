@@ -32,10 +32,10 @@
 
 | Role | Repos | Count |
 |------|------|-------|
-| **CORE** | AGenNext-Enterprise, AGenNext-SkillRegistry, agent-regitsry, mcp-registry, mcp-ghost-server, mcp-logto-server, model-registry, feature-store, Mcp-Agent, AgentID, AgentCode, AgentFactory, AgentNext-Feedback-Loop, Image-Agent, ReasoningBank, code-commit, code-deploy, services, answer, Platform, Platform-by-Claude, sim2, web-agent-protocol, xdm, agent-bluepriints, agentbuilder, agent-company, nocobuilder, tools, Agent-Frameworks, Microsoft-Agent-Framework, firecrawl, firecrawl-1, fire-enrich, apprise-api, stalwart, ultralytics, unomi, agentbook, agentnext-agent-kit, agentspace, agent-lifecycle-management | 42 |
+| **CORE** | AGenNext-Enterprise, AGenNext-SkillRegistry, agent-regitsry, mcp-registry, mcp-ghost-server, mcp-logto-server, model-registry, feature-store, Mcp-Agent, AgentID, AgentCode, AgentFactory, AgentNext-Feedback-Loop, Image-Agent, ReasoningBank, code-commit, code-deploy, services, answer, Platform, Platform-by-Claude, sim2, web-agent-protocol, xdm, agent-bluepriints, agentbuilder, agent-company, nocobuilder, tools, Agent-Frameworks, Microsoft-Agent-Framework, firecrawl, firecrawl-1, fire-enrich, apprise-api, stalwart, ultralytics, unomi, agentbook, agentnext-agent-kit, agent-lifecycle-management | 41 |
 | **PROTOCOLS** | AGenNext-Protocols | 1 |
 | **CODE_REVIEW** | AGenNext-CodeReview | 1 |
-| **MULTI_AGENT** | AGenNext-Dictionary, AGenNext-DocOcr, AGenNext-WebCrawl, AGenNext-Professional, AgentCrew, AgentSwarm, AgentTeams, crewai, crewai-fork, AutoGen, MetaGPT, AgentGraph, OpenAgent | 13 |
+| **MULTI_AGENT** | AGenNext-Dictionary, AGenNext-DocOcr, AGenNext-WebCrawl, AGenNext-Professional, AgentCrew, AgentSwarm, AgentTeams, crewai, crewai-fork, AutoGen, MetaGPT, AgentGraph, OpenAgent, agentspace | 14 |
 | **UI** | Agent-Chat-Ui, agentchat, agent-studio | 3 |
 | **DEPLOY** | agent-kube, code-deploy, agent-starter-pack | 3 |
 | **RUNTIME** | agent-harness, agent-runner, Runner, services | 4 |
