@@ -45,6 +45,8 @@
 | **SEARCH** | enterprise-search | 1 |
 | **TOOLS** | tools, feature-store | 2 |
 | **HELPER** | AGenNext-Helper | 1 |
+| **OPS** | AgentOps | 1 |
+| **SAFE** | AgentSafe | 1 |
 
 *Note: ~20 remaining repos are external forks or unmaintained - marked TODO*
 
