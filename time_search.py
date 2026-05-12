@@ -2,15 +2,76 @@
 Schema.org Time Search
 
 Time-based search and filtering for Schema.org entities.
+Includes metadata for search optimization and analytics.
 
 Reference: https://schema.org/docs/full.html
 """
 
-from dataclasses import dataclass, field
+from dataclasses import dataclass, field, asdict
 from typing import Dict, List, Optional, Any
 from datetime import datetime, date, timedelta
 from enum import Enum
 import re
+import json
+
+
+# Search Metadata
+@dataclass
+class SearchMetadata:
+    """Metadata for search queries"""
+    
+    # Query info
+    query_id: str = ""
+    query_name: str = ""
+    table: str = ""
+    
+    # Time info
+    created_at: datetime = field(default_factory=datetime.now)
+    executed_at: Optional[datetime] = None
+    duration_ms: float = 0.0
+    
+    # Results info
+    results_count: int = 0
+    results_page: int = 1
+    results_per_page: int = 100
+    
+    # Filters
+    time_property: str = ""
+    operator: str = ""
+    value: Any = None
+    
+    # Performance
+    cached: bool = False
+    cache_ttl: int = 0
+    index_used: Optional[str] = None
+    
+    # Context
+    user_id: Optional[str] = None
+    session_id: Optional[str] = None
+    request_id: Optional[str] = None
+    
+    def to_dict(self) -> Dict:
+        """Convert to dictionary"""
+        return {
+            "query_id": self.query_id,
+            "query_name": self.query_name,
+            "table": self.table,
+            "created_at": self.created_at.isoformat(),
+            "executed_at": self.executed_at.isoformat() if self.executed_at else None,
+            "duration_ms": self.duration_ms,
+            "results_count": self.results_count,
+            "results_page": self.results_page,
+            "results_per_page": self.results_per_page,
+            "time_property": self.time_property,
+            "operator": self.operator,
+            "cached": self.cached,
+            "cache_ttl": self.cache_ttl,
+            "index_used": self.index_used,
+        }
+
+
+# Search Metadata Storage
+SEARCH_METADATA: List[SearchMetadata] = []
 
 
 # Time Search Operators
