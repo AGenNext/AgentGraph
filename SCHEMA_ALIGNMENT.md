@@ -28,6 +28,15 @@
 | **agent-harness** | Runtime | ✅ |
 | **agent-runner** | Execution | ✅ |
 
+### TO CLEANUP (80 repos to archive/merge)
+
+These repos have no defined role - can be archived or merged:
+
+```
+AGenNext-Dictionary, AGenNext-DocOcr, AGenNext-Helper,
+Agent-Chat-Ui, AgentGraph, AgentID, AgentOps, AgentSafe...
+```
+
 ## Problem
 
 Current 88 repos don't use consistent data schemas. Each repo has its own models.
