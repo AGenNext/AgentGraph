@@ -32,14 +32,15 @@
 
 | Role | Repos | Count |
 |------|------|-------|
-| **CORE** | AGenNext-Enterprise | 1 |
+| **CORE** | AGenNext-Enterprise, AGenNext-SkillRegistry, agent-regitsry, mcp-registry, mcp-ghost-server, mcp-logto-server, model-registry, feature-store, Mcp-Agent | 9 |
 | **PROTOCOLS** | AGenNext-Protocols | 1 |
-| **SKILLS** | AGenNext-SkillRegistry | 1 |
 | **CODE_REVIEW** | AGenNext-CodeReview | 1 |
 | **MULTI_AGENT** | AGenNext-Dictionary, AGenNext-DocOcr, AGenNext-WebCrawl, AGenNext-Professional, AgentCrew, AgentSwarm, AgentTeams, crewai, crewai-fork, AutoGen, MetaGPT, AgentGraph, OpenAgent | 13 |
 | **UI** | Agent-Chat-Ui, agentchat, agent-studio | 3 |
 | **DEPLOY** | agent-kube, code-deploy, agent-starter-pack | 3 |
 | **RUNTIME** | agent-harness, agent-runner, Runner, services | 4 |
+
+*Note: All registries (SKILLS, MCP, MODEL) included in CORE*
 | **MCP** | mcp-registry | 1 |
 | **MODEL** | model-gateway, model-registry | 2 |
 | **SEARCH** | enterprise-search | 1 |
