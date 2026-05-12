@@ -50,6 +50,13 @@
 
 *Note: ~20 remaining repos are external forks or unmaintained - marked TODO*
 
+### IGNORED (External Forks - Do Not Include)
+- langchain (fork of langchain-ai/langchain)
+- langnext (fork of langflow-ai/langflow)
+- crewai, crewai-fork (forks of crewAIInc/crewAI)
+- Google-ADK, llm-cost-intelligence
+- External forks - reference only, not platform roles
+
 ## Problem
 
 Current 88 repos don't use consistent data schemas. Each repo has its own models.
