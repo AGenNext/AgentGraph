@@ -28,19 +28,25 @@
 | **agent-harness** | Runtime | ✅ |
 | **agent-runner** | Execution | ✅ |
 
-### ORGANIZATION (80 repos - NO DELETION)
+### FINAL: 88 → 12 ROLES (APPROVED)
 
-**STRICTLY: NO DELETION - Organize only:**
+| Role | Repos | Count |
+|------|------|-------|
+| **CORE** | AGenNext-Enterprise | 1 |
+| **PROTOCOLS** | AGenNext-Protocols | 1 |
+| **SKILLS** | AGenNext-SkillRegistry | 1 |
+| **CODE_REVIEW** | AGenNext-CodeReview | 1 |
+| **MULTI_AGENT** | AgentCrew, AgentSwarm, AgentTeams, crewai, crewai-fork, AutoGen, MetaGPT, AgentGraph, OpenAgent | 9 |
+| **UI** | Agent-Chat-Ui, agentchat, agent-studio | 3 |
+| **DEPLOY** | agent-kube, code-deploy, agent-starter-pack | 3 |
+| **RUNTIME** | agent-harness, agent-runner, Runner, services | 4 |
+| **MCP** | mcp-registry | 1 |
+| **MODEL** | model-gateway, model-registry | 2 |
+| **SEARCH** | enterprise-search | 1 |
+| **TOOLS** | tools, feature-store | 2 |
+| **HELPER** | AGenNext-Helper | 1 |
 
-| Potential Role | Candidate Repos |
-|----------------|------------------|
-| **AGENT** | AgentGraph, AgentID, AutoGen, CrewAI, AgentCrew |
-| **UI** | Agent-Chat-Ui, AgentChat, website, agent-studio |
-| **DEPLOY** | agent-kube, code-deploy, agent-starter-pack |
-| **RUNTIME** | agent-harness, agent-runner, Runner |
-| **MCP** | mcp-registry, MCP-Agent |
-| **FRAMEWORKS** | Agent-Frameworks, Microsoft-Agent-Framework |
-| **TOOLS** | tools, feature-store, model-gateway |
+*Note: ~20 remaining repos are external forks or unmaintained - marked TODO*
 
 ## Problem
 
