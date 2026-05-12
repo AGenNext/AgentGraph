@@ -2,6 +2,26 @@
 
 > How all AGenNext repos should follow Schema.org for interoperability
 
+## ⚠️ COMMON BRANCH: `schema-org-implementation`
+
+**ONE DB + ONE SCHEMA** for all 88 AGenNext repos:
+
+| Source | URL |
+|--------|-----|
+| **Branch** | `schema-org-implementation` |
+| **Schema** | https://github.com/AGenNext/AGenNext-Enterprise/tree/schema-org-implementation |
+| **Entity** | base_entity.py (SoftwareApplication) |
+| **Database** | 22 × *_database.py |
+
+### Usage
+
+```python
+# All repos import from common:
+from agennext_enterprise import Entity
+
+# Entity → @type: SoftwareApplication
+```
+
 ## Problem
 
 Current 88 repos don't use consistent data schemas. Each repo has its own models.
@@ -116,10 +136,22 @@ AGENT_SCHEMA = "SoftwareApplication"
 
 ## Reference
 
-- Schema.org: https://schema.org/docs/full.html
-- This Repo: AGenNext/AGenNext-Enterprise
-- Discussion: GitHub Issues
+- **Schema Source**: `schema-org-implementation` branch in AGenNext-Enterprise
+- **Common Types**: base_entity.py (SoftwareApplication, Person, Thing)
+- **Database Types**: 22 × *_database.py
+- **Reference**: https://github.com/AGenNext/AGenNext-Enterprise/blob/schema-org-implementation/base_entity.py
+- **Discussion**: GitHub Issues
 
 ---
+
+## Quick Reference
+
+```python
+# All repos should import from:
+from agennext_enterprise import Entity
+
+# Entity extends Schema.org SoftwareApplication
+entity = Entity()  # → @type: SoftwareApplication
+```
 
 *Last Updated: 2024-05-12*
