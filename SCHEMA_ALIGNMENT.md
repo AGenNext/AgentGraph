@@ -52,11 +52,16 @@
 *Note: ~20 remaining repos are external forks or unmaintained - marked TODO*
 
 ### IGNORED (External Forks - Do Not Include)
+- Google-ADK (fork of Google ADK)
 - langchain (fork of langchain-ai/langchain)
 - langnext (fork of langflow-ai/langflow)
-- crewai, crewai-fork (forks of crewAIInc/crewAI)
-- Google-ADK, llm-cost-intelligence
-- External forks - reference only, not platform roles
+- llm-cost-intelligence (fork external)
+
+### REMAINING (Need Categories)
+- crowd.dev, model-runner, observe-llm → DATA/OBSERVABILITY
+- brand-assets, website, freshrss, stirling-pdf → BRAND/DOCS
+- AGenNext-Helper, Kernel → CORE
+- enterprise-search → SEARCH
 
 ## Problem
 
