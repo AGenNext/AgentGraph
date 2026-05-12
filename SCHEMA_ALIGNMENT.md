@@ -6,29 +6,27 @@
 
 ### ONE PLATFORM (6 COMPONENTS)
 
-| Component | File | Purpose |
-|-----------|------|---------|
-| **ONE DB** | *_database.py | 22 domains |
-| **ONE SCHEMA** | base_entity.py | SoftwareApplication |
-| **ONE IDENTITY** | waltid_endpoints.py | DID + Verified Credentials |
-| **ONE AUTH** | opa_sdk.py | OPA Policy Engine |
-| **ONE FGA** | a2a_sdk.py | Fine-Grained + A2A |
+| Component | File | Purpose | Repo |
+|-----------|------|---------|------|
+| **ONE DB** | *_database.py | 22 domains | THIS REPO |
+| **ONE SCHEMA** | base_entity.py | SoftwareApplication | THIS REPO |
+| **ONE IDENTITY** | waltid_endpoints.py | DID + VC | THIS REPO |
+| **ONE AUTH** | opa_sdk.py | OPA | THIS REPO |
+| **ONE FGA** | a2a_sdk.py | A2A | THIS REPO |
+| **ONE UI** | nextjs-website/ | Website | THIS REPO |
 
-### Usage
+### ONE REPO FOR EACH THING
 
-```python
-# ONE schema
-from base_entity import Entity
-
-# ONE identity
-from waltid_endpoints import WaltIDClient
-
-# ONE auth
-from opa_sdk import OPACient
-
-# ONE FGA
-from a2a_sdk import A2AClient
-```
+| Repo | Role | Keep There |
+|------|------|----------|
+| **AGenNext-Enterprise** | CORE (DB, Schema, ID, Auth, FGA, UI) | ✅ |
+| **AGenNext-Protocols** | Protocols | ✅ |
+| **AGenNext-SkillRegistry** | Skills | ✅ |
+| **AGenNext-CodeReview** | Code Review Agent | ✅ |
+| **agent-studio** | Studio UI | ✅ |
+| **agent-kube** | K8s Deploy | ✅ |
+| **agent-harness** | Runtime | ✅ |
+| **agent-runner** | Execution | ✅ |
 
 ## Problem
 
