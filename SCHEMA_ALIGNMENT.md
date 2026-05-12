@@ -28,14 +28,19 @@
 | **agent-harness** | Runtime | ✅ |
 | **agent-runner** | Execution | ✅ |
 
-### TO CLEANUP (80 repos to archive/merge)
+### TO CLEANUP (80 repos - DO NOT DELETE)
 
-These repos have no defined role - can be archived or merged:
+**DO NOT DELETE ANYTHING** - Document purpose only:
 
-```
-AGenNext-Dictionary, AGenNext-DocOcr, AGenNext-Helper,
-Agent-Chat-Ui, AgentGraph, AgentID, AgentOps, AgentSafe...
-```
+| Potential Role | Candidate Repos |
+|----------------|------------------|
+| **AGENT** | AgentGraph, AgentID, AutoGen, CrewAI, AgentCrew |
+| **UI** | Agent-Chat-Ui, AgentChat, website, agent-studio |
+| **DEPLOY** | agent-kube, code-deploy, agent-starter-pack |
+| **RUNTIME** | agent-harness, agent-runner, Runner |
+| **MCP** | mcp-registry, MCP-Agent |
+| **FRAMEWORKS** | Agent-Frameworks, Microsoft-Agent-Framework |
+| **TOOLS** | tools, feature-store, model-gateway |
 
 ## Problem
 
