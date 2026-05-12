@@ -1,0 +1,343 @@
+{
+  "endpoints": {
+    "AssistantsClient": [
+      "get",
+      "get_graph",
+      "get_schemas",
+      "get_subgraphs",
+      "create",
+      "update",
+      "delete",
+      "search",
+      "search",
+      "search",
+      "capture_pagination",
+      "count",
+      "get_versions",
+      "set_latest"
+    ],
+    "ThreadsClient": [
+      "get",
+      "create",
+      "update",
+      "update",
+      "update",
+      "update",
+      "delete",
+      "search",
+      "count",
+      "copy",
+      "prune",
+      "get_state",
+      "update_state",
+      "get_history",
+      "join_stream"
+    ],
+    "RunsClient": [
+      "_wrap_stream_v2",
+      "stream",
+      "stream",
+      "stream",
+      "stream",
+      "stream",
+      "on_response",
+      "create",
+      "create",
+      "create",
+      "on_response",
+      "create_batch",
+      "filter_payload",
+      "wait",
+      "wait",
+      "wait",
+      "on_response",
+      "list",
+      "get",
+      "cancel",
+      "cancel_many",
+      "join",
+      "join_stream",
+      "delete"
+    ],
+    "StoreClient": [
+      "put_item",
+      "get_item",
+      "delete_item",
+      "search_items",
+      "list_namespaces"
+    ],
+    "CronClient": [
+      "create_for_thread",
+      "create",
+      "delete",
+      "update",
+      "search",
+      "count"
+    ]
+  },
+  "schemas": {
+    "LangSmithTracing": [
+      "project_name",
+      "example_id"
+    ],
+    "Config": [
+      "tags",
+      "recursion_limit",
+      "configurable"
+    ],
+    "Checkpoint": [
+      "thread_id",
+      "checkpoint_ns",
+      "checkpoint_id",
+      "checkpoint_map"
+    ],
+    "GraphSchema": [
+      "graph_id",
+      "input_schema",
+      "output_schema",
+      "state_schema",
+      "config_schema",
+      "context_schema"
+    ],
+    "AssistantBase": [
+      "assistant_id",
+      "graph_id",
+      "config",
+      "context",
+      "created_at",
+      "metadata",
+      "version",
+      "name",
+      "description"
+    ],
+    "AssistantsSearchResponse": [
+      "assistants",
+      "next"
+    ],
+    "Interrupt": [
+      "value",
+      "id"
+    ],
+    "Thread": [
+      "thread_id",
+      "created_at",
+      "updated_at",
+      "metadata",
+      "status",
+      "values",
+      "interrupts",
+      "extracted"
+    ],
+    "ThreadTask": [
+      "id",
+      "name",
+      "error",
+      "interrupts",
+      "checkpoint",
+      "state",
+      "result"
+    ],
+    "ThreadState": [
+      "values",
+      "next",
+      "checkpoint",
+      "metadata",
+      "created_at",
+      "parent_checkpoint",
+      "tasks",
+      "interrupts"
+    ],
+    "ThreadUpdateStateResponse": [
+      "checkpoint"
+    ],
+    "Run": [
+      "run_id",
+      "thread_id",
+      "assistant_id",
+      "created_at",
+      "updated_at",
+      "status",
+      "metadata",
+      "multitask_strategy"
+    ],
+    "Cron": [
+      "cron_id",
+      "assistant_id",
+      "thread_id",
+      "on_run_completed",
+      "end_time",
+      "schedule",
+      "timezone",
+      "created_at",
+      "updated_at",
+      "payload",
+      "user_id",
+      "next_run_date",
+      "metadata",
+      "enabled"
+    ],
+    "CronUpdate": [
+      "schedule",
+      "timezone",
+      "end_time",
+      "input",
+      "metadata",
+      "config",
+      "context",
+      "webhook",
+      "interrupt_before",
+      "interrupt_after",
+      "on_run_completed",
+      "enabled",
+      "stream_mode",
+      "stream_subgraphs",
+      "stream_resumable",
+      "durability"
+    ],
+    "RunCreate": [
+      "thread_id",
+      "assistant_id",
+      "input",
+      "metadata",
+      "config",
+      "context",
+      "checkpoint_id",
+      "interrupt_before",
+      "interrupt_after",
+      "webhook",
+      "multitask_strategy"
+    ],
+    "Item": [
+      "namespace",
+      "key",
+      "value",
+      "created_at",
+      "updated_at"
+    ],
+    "ListNamespaceResponse": [
+      "namespaces"
+    ],
+    "SearchItemsResponse": [
+      "items"
+    ],
+    "TaskPayload": [
+      "id",
+      "name",
+      "input",
+      "triggers"
+    ],
+    "TaskResultPayload": [
+      "id",
+      "name",
+      "error",
+      "interrupts",
+      "result"
+    ],
+    "CheckpointTaskPayload": [
+      "id",
+      "name",
+      "error",
+      "result",
+      "interrupts",
+      "state"
+    ],
+    "CheckpointPayload": [
+      "config",
+      "metadata",
+      "values",
+      "next",
+      "parent_config",
+      "tasks"
+    ],
+    "_DebugCheckpointPayload": [
+      "step",
+      "timestamp",
+      "type",
+      "payload"
+    ],
+    "_DebugTaskPayload": [
+      "step",
+      "timestamp",
+      "type",
+      "payload"
+    ],
+    "_DebugTaskResultPayload": [
+      "step",
+      "timestamp",
+      "type",
+      "payload"
+    ],
+    "RunMetadataPayload": [
+      "run_id"
+    ],
+    "ValuesStreamPart": [
+      "type",
+      "ns",
+      "data",
+      "interrupts"
+    ],
+    "UpdatesStreamPart": [
+      "type",
+      "ns",
+      "data"
+    ],
+    "MessagesPartialStreamPart": [
+      "type",
+      "ns",
+      "data"
+    ],
+    "MessagesCompleteStreamPart": [
+      "type",
+      "ns",
+      "data"
+    ],
+    "MessagesMetadataStreamPart": [
+      "type",
+      "ns",
+      "data"
+    ],
+    "MessagesTupleStreamPart": [
+      "type",
+      "ns",
+      "data"
+    ],
+    "CustomStreamPart": [
+      "type",
+      "ns",
+      "data"
+    ],
+    "CheckpointsStreamPart": [
+      "type",
+      "ns",
+      "data"
+    ],
+    "TasksStreamPart": [
+      "type",
+      "ns",
+      "data"
+    ],
+    "DebugStreamPart": [
+      "type",
+      "ns",
+      "data"
+    ],
+    "MetadataStreamPart": [
+      "type",
+      "ns",
+      "data"
+    ],
+    "Send": [
+      "node",
+      "input"
+    ],
+    "Command": [
+      "goto",
+      "update",
+      "resume"
+    ],
+    "RunCreateMetadata": [
+      "run_id",
+      "thread_id"
+    ]
+  }
+}

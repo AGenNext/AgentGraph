@@ -1,0 +1,63 @@
+{
+  "framework": "langgraph",
+  "version": "1.1.10",
+  "description": "Low-level orchestration framework for building stateful agents",
+  "features": {
+    "graph_api": [
+      "StateGraph",
+      "MessageGraph",
+      "add_node",
+      "add_edge",
+      "add_conditional_edge",
+      "compile",
+      "get_graph",
+      "START",
+      "END"
+    ],
+    "checkpointers": [
+      "MemorySaver",
+      "SqliteSaver",
+      "PostgresSaver"
+    ],
+    "stores": [
+      "InMemoryStore",
+      "PostgresStore"
+    ],
+    "runtime": [
+      "invoke",
+      "stream",
+      "astream",
+      "astream_events"
+    ],
+    "human_in_loop": [
+      "interrupt"
+    ],
+    "state": [
+      "get_state",
+      "update_state",
+      "get_state_history",
+      "StateT"
+    ],
+    "config": [
+      "get_config",
+      "get_store"
+    ],
+    "stream": [
+      "StreamWriter",
+      "StreamMode",
+      "get_stream_writer"
+    ]
+  },
+  "submodules": [
+    "langgraph.graph",
+    "langgraph.checkpoint",
+    "langgraph.store",
+    "langgraph.types",
+    "langgraph.config",
+    "langgraph.stream",
+    "langgraph.func"
+  ],
+  "source": "https://docs.langchain.com/oss/python/reference/langgraph-python.md",
+  "total_symbols": 1274,
+  "crawled_at": "2026-05-09"
+}

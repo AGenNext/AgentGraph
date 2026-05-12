@@ -1,0 +1,73 @@
+{
+  "project": {
+    "name": "AGenNext Registry",
+    "version": "0.1.0",
+    "status": "ALPHA"
+  },
+  "sdks": {
+    "openai": {
+      "client_exists": true,
+      "ui_exists": true
+    },
+    "anthropic": {
+      "client_exists": true,
+      "ui_exists": true
+    },
+    "google": {
+      "client_exists": true,
+      "ui_exists": true
+    },
+    "microsoft": {
+      "client_exists": true,
+      "ui_exists": true
+    },
+    "aws_bedrock": {
+      "client_exists": true,
+      "ui_exists": true
+    },
+    "langchain": {
+      "client_exists": true,
+      "ui_exists": true
+    },
+    "langgraph": {
+      "client_exists": true,
+      "ui_exists": true
+    },
+    "salesforce": {
+      "client_exists": true,
+      "ui_exists": true
+    }
+  },
+  "milestones": {
+    "m1": {
+      "name": "Core Framework",
+      "status": "DONE",
+      "progress": "100%"
+    },
+    "m2": {
+      "name": "UI Toolkits",
+      "status": "DONE",
+      "progress": "100%"
+    },
+    "m3": {
+      "name": "Platform UI",
+      "status": "IN PROGRESS",
+      "progress": "30%"
+    },
+    "m4": {
+      "name": "Agent Teams",
+      "status": "PLANNED",
+      "progress": "0%"
+    },
+    "m5": {
+      "name": "Deployment",
+      "status": "PLANNED",
+      "progress": "0%"
+    }
+  },
+  "memory": {
+    "format": "JSON",
+    "created": "2026-05-08",
+    "updated": "2026-05-08"
+  }
+}

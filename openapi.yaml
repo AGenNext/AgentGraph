@@ -1,0 +1,259 @@
+openapi: 3.0.3
+info:
+  title: Content Writing Multi-Agent Team API
+  description: Multi-agent content writing team with A2A protocol
+  version: 1.0.0
+  contact:
+    name: AGenNext
+    url: https://github.com/AGenNext/AGenNext-Enterprise
+  license:
+    name: MIT
+
+servers:
+  - url: http://localhost:8000
+    description: Local development
+  - url: https://work-1-hynxtypfdhcaoqvf.prod-runtime.all-hands.dev
+    description: Production
+
+paths:
+  /health:
+    get:
+      summary: Health check
+      operationId: healthCheck
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  status:
+                    type: string
+                  timestamp:
+                    type: string
+
+  /agents:
+    get:
+      summary: List all agents
+      operationId: listAgents
+      responses:
+        '200':
+          description: List of agent cards
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AgentCard'
+
+  /agents/{agentId}:
+    get:
+      summary: Get agent by ID
+      operationId: getAgent
+      parameters:
+        - name: agentId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Agent card
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentCard'
+
+  /agents/{agentId}/run:
+    post:
+      summary: Run agent task
+      operationId: runAgent
+      parameters:
+        - name: agentId
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task:
+                  type: string
+                content_type:
+                  type: string
+                  enum: [blog, code, docs, sql, config]
+      responses:
+        '200':
+          description: Agent result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentResult'
+
+  /team/run:
+    post:
+      summary: Run multi-agent team
+      operationId: runTeam
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                task:
+                  type: string
+                strategy:
+                  type: string
+                  enum: [sequential, parallel, hierarchical]
+      responses:
+        '200':
+          description: Team result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamResult'
+
+  /a2a/tasks:
+    post:
+      summary: Create A2A task
+      operationId: createTask
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Task'
+      responses:
+        '200':
+          description: Task result
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Task'
+
+  /a2a/tasks/{taskId}:
+    get:
+      summary: Get task status
+      operationId: getTask
+      parameters:
+        - name: taskId
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Task status
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TaskStatus'
+
+components:
+  schemas:
+    AgentCard:
+      type: object
+      properties:
+        agentId:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+        url:
+          type: string
+          format: uri
+        version:
+          type: string
+        capabilities:
+          type: array
+          items:
+            $ref: '#/components/schemas/Capability'
+        skills:
+          type: array
+          items:
+            $ref: '#/components/schemas/Skill'
+
+    Capability:
+      type: object
+      properties:
+        name:
+          type: string
+        description:
+          type: string
+
+    Skill:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        description:
+          type: string
+
+    AgentResult:
+      type: object
+      properties:
+        agent_id:
+          type: string
+        content:
+          type: string
+        content_type:
+          type: string
+        quality_score:
+          type: number
+        metadata:
+          type: object
+
+    TeamResult:
+      type: object
+      properties:
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/AgentResult'
+        quality_score:
+          type: number
+        duration:
+          type: number
+
+    Task:
+      type: object
+      properties:
+        id:
+          type: string
+        message:
+          $ref: '#/components/schemas/Message'
+
+    Message:
+      type: object
+      properties:
+        role:
+          type: string
+          enum: [user, agent]
+        parts:
+          type: array
+          items:
+            $ref: '#/components/schemas/Part'
+
+    Part:
+      type: object
+      properties:
+        type:
+          type: string
+        text:
+          type: string
+
+    TaskStatus:
+      type: object
+      properties:
+        state:
+          type: string
+          enum: [submitted, working, completed, failed]

@@ -1,0 +1,85 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "a2a": "https://a2aprotocol.io/",
+    "SoftwareApplication": "SoftwareApplication",
+    "APIReference": "APIReference",
+    "WebAPI": "WebAPI",
+    "supportedBy": "supportedBy",
+    "runtimePlatform": "runtimePlatform",
+    "programmingLanguage": "programmingLanguage",
+    "softwareRequirements": "softwareRequirements",
+    "featureList": "featureList",
+    "agentId": "a2a:agentId",
+    "capabilities": "a2a:capabilities",
+    "skills": "a2a:skills"
+  },
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "Content Writing Multi-Agent Team",
+      "alternateName": "AGenNext-Registry",
+      "description": "Multi-agent content writing team with LangGraph orchestration and A2A protocol",
+      "applicationCategory": "DeveloperApplication",
+      "applicationSubCategory": "AI Agent Framework",
+      "operatingSystem": ["Linux", "macOS", "Windows"],
+      "programmingLanguage": ["Python"],
+      "softwareRequirements": [
+        "Python 3.11+",
+        "OpenAI SDK",
+        "LangGraph",
+        "A2A Protocol"
+      ],
+      "featureList": [
+        "15+ SDK Agents",
+        "LangGraph Orchestration",
+        "A2A Protocol",
+        "OpenAPI 3.0",
+        "JSON-LD Metadata"
+      ],
+      "url": "https://github.com/AGenNext/AGenNext-Registry",
+      "author": {
+        "@type": "Organization",
+        "name": "AGenNext",
+        "url": "https://github.com/AGenNext"
+      },
+      "license": "https://opensource.org/licenses/MIT"
+    },
+    {
+      "@type": "APIReference",
+      "name": "Content Writing Team API",
+      "description": "REST API for multi-agent content writing team",
+      "url": "https://api.content-team.example.com",
+      "runtimePlatform": "https://work-1-hynxtypfdhcaoqvf.prod-runtime.all-hands.dev",
+      "provider": {
+        "@type": "Organization",
+        "name": "AGenNext"
+      },
+      "version": "1.0.0",
+      "protocolSupported": "A2A Protocol",
+      "programmingLanguage": "Python"
+    },
+    {
+      "@type": "WebAPI",
+      "name": "Agent Operations",
+      "description": "Create and run agent tasks",
+      "url": "https://api.content-team.example.com/agents/{agentId}/run",
+      "httpMethod": "POST",
+      "supportedBy": {
+        "@type": "SoftwareApplication",
+        "name": "Content Writing Multi-Agent Team"
+      }
+    },
+    {
+      "@type": "WebAPI",
+      "name": "Team Workflow",
+      "description": "Execute multi-agent team workflow",
+      "url": "https://api.content-team.example.com/team/run",
+      "httpMethod": "POST",
+      "supportedBy": {
+        "@type": "SoftwareApplication",
+        "name": "Content Writing Multi-Agent Team"
+      }
+    }
+  ]
+}

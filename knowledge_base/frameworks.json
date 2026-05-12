@@ -1,0 +1,289 @@
+{
+  "langgraph": {
+    "name": "LangGraph",
+    "base_url": "https://python.langchain.com/docs/langgraph/",
+    "features": {
+      "checkpoints": true,
+      "short_term_memory": true,
+      "long_term_memory": true,
+      "semantic_memory": false,
+      "human_interrupt": true,
+      "human_feedback": true,
+      "approval_gates": true,
+      "multi_agent": true,
+      "function_calling": true,
+      "code_interpreter": false,
+      "web_search": true,
+      "streaming": true,
+      "computer_use": false,
+      "mcp": false,
+      "guardrails": true
+    },
+    "pages_found": [
+      "index"
+    ]
+  },
+  "langchain": {
+    "name": "LangChain",
+    "base_url": "https://python.langchain.com/docs/concepts/",
+    "features": {
+      "checkpoints": true,
+      "short_term_memory": true,
+      "long_term_memory": false,
+      "semantic_memory": false,
+      "human_interrupt": true,
+      "human_feedback": false,
+      "approval_gates": true,
+      "multi_agent": true,
+      "function_calling": true,
+      "code_interpreter": false,
+      "web_search": true,
+      "streaming": true,
+      "computer_use": false,
+      "mcp": true,
+      "guardrails": true
+    },
+    "pages_found": [
+      "index"
+    ]
+  },
+  "autogen": {
+    "name": "AutoGen",
+    "base_url": "https://microsoft.github.io/autogen/0.2/",
+    "features": {
+      "checkpoints": false,
+      "short_term_memory": false,
+      "long_term_memory": false,
+      "semantic_memory": false,
+      "human_interrupt": false,
+      "human_feedback": false,
+      "approval_gates": false,
+      "multi_agent": false,
+      "function_calling": false,
+      "code_interpreter": false,
+      "web_search": false,
+      "streaming": false,
+      "computer_use": false,
+      "mcp": false,
+      "guardrails": false
+    },
+    "pages_found": [
+      "index"
+    ]
+  },
+  "crewai": {
+    "name": "CrewAI",
+    "base_url": "https://docs.crewai.com",
+    "features": {
+      "checkpoints": true,
+      "short_term_memory": true,
+      "long_term_memory": false,
+      "semantic_memory": false,
+      "human_interrupt": false,
+      "human_feedback": false,
+      "approval_gates": true,
+      "multi_agent": true,
+      "function_calling": true,
+      "code_interpreter": false,
+      "web_search": true,
+      "streaming": false,
+      "computer_use": false,
+      "mcp": false,
+      "guardrails": true
+    },
+    "pages_found": [
+      "index"
+    ]
+  },
+  "openai": {
+    "name": "OpenAI Agents SDK",
+    "base_url": "https://platform.openai.com/docs/agents",
+    "features": {
+      "checkpoints": false,
+      "short_term_memory": false,
+      "long_term_memory": false,
+      "semantic_memory": false,
+      "human_interrupt": false,
+      "human_feedback": false,
+      "approval_gates": false,
+      "multi_agent": false,
+      "function_calling": false,
+      "code_interpreter": false,
+      "web_search": false,
+      "streaming": false,
+      "computer_use": false,
+      "mcp": false,
+      "guardrails": false
+    },
+    "pages_found": []
+  },
+  "anthropic": {
+    "name": "Anthropic Claude",
+    "base_url": "https://docs.anthropic.com",
+    "features": {
+      "checkpoints": true,
+      "short_term_memory": true,
+      "long_term_memory": true,
+      "semantic_memory": true,
+      "human_interrupt": true,
+      "human_feedback": true,
+      "approval_gates": false,
+      "multi_agent": false,
+      "function_calling": true,
+      "code_interpreter": true,
+      "web_search": true,
+      "streaming": true,
+      "computer_use": true,
+      "mcp": true,
+      "guardrails": true
+    },
+    "pages_found": [
+      "index",
+      "tool-use",
+      "computer-use"
+    ]
+  },
+  "github_copilot": {
+    "name": "GitHub Copilot",
+    "base_url": "https://docs.github.com",
+    "features": {
+      "checkpoints": true,
+      "short_term_memory": true,
+      "long_term_memory": true,
+      "semantic_memory": false,
+      "human_interrupt": false,
+      "human_feedback": true,
+      "approval_gates": true,
+      "multi_agent": true,
+      "function_calling": true,
+      "code_interpreter": false,
+      "web_search": true,
+      "streaming": true,
+      "computer_use": true,
+      "mcp": true,
+      "guardrails": true
+    },
+    "pages_found": [
+      "copilot"
+    ]
+  },
+  "docker": {
+    "name": "Docker AI",
+    "base_url": "https://docs.docker.com",
+    "features": {
+      "checkpoints": false,
+      "short_term_memory": false,
+      "long_term_memory": true,
+      "semantic_memory": false,
+      "human_interrupt": true,
+      "human_feedback": true,
+      "approval_gates": false,
+      "multi_agent": true,
+      "function_calling": true,
+      "code_interpreter": false,
+      "web_search": true,
+      "streaming": false,
+      "computer_use": true,
+      "mcp": true,
+      "guardrails": true
+    },
+    "pages_found": [
+      "index"
+    ]
+  },
+  "salesforce": {
+    "name": "Salesforce Agentforce",
+    "base_url": "https://developer.salesforce.com",
+    "features": {
+      "checkpoints": false,
+      "short_term_memory": false,
+      "long_term_memory": false,
+      "semantic_memory": false,
+      "human_interrupt": false,
+      "human_feedback": false,
+      "approval_gates": false,
+      "multi_agent": false,
+      "function_calling": false,
+      "code_interpreter": false,
+      "web_search": false,
+      "streaming": false,
+      "computer_use": false,
+      "mcp": false,
+      "guardrails": false
+    },
+    "pages_found": []
+  },
+  "google_vertex": {
+    "name": "Google Vertex AI",
+    "base_url": "https://cloud.google.com",
+    "features": {
+      "checkpoints": true,
+      "short_term_memory": true,
+      "long_term_memory": true,
+      "semantic_memory": true,
+      "human_interrupt": false,
+      "human_feedback": true,
+      "approval_gates": true,
+      "multi_agent": true,
+      "function_calling": true,
+      "code_interpreter": false,
+      "web_search": true,
+      "streaming": true,
+      "computer_use": true,
+      "mcp": false,
+      "guardrails": true
+    },
+    "pages_found": [
+      "vertex-ai",
+      "index"
+    ]
+  },
+  "smolagents": {
+    "name": "SmolAgents",
+    "base_url": "https://smolagents.ai",
+    "features": {
+      "checkpoints": false,
+      "short_term_memory": false,
+      "long_term_memory": false,
+      "semantic_memory": false,
+      "human_interrupt": false,
+      "human_feedback": false,
+      "approval_gates": false,
+      "multi_agent": false,
+      "function_calling": false,
+      "code_interpreter": false,
+      "web_search": true,
+      "streaming": false,
+      "computer_use": false,
+      "mcp": false,
+      "guardrails": true
+    },
+    "pages_found": [
+      "index"
+    ]
+  },
+  "mcp": {
+    "name": "Model Context Protocol",
+    "base_url": "https://modelcontextprotocol.io",
+    "features": {
+      "checkpoints": false,
+      "short_term_memory": false,
+      "long_term_memory": true,
+      "semantic_memory": false,
+      "human_interrupt": false,
+      "human_feedback": false,
+      "approval_gates": false,
+      "multi_agent": false,
+      "function_calling": true,
+      "code_interpreter": false,
+      "web_search": true,
+      "streaming": false,
+      "computer_use": false,
+      "mcp": true,
+      "guardrails": false
+    },
+    "pages_found": [
+      "docs"
+    ]
+  }
+}
