@@ -1,33 +1,155 @@
-# AGenNext Agent Registry - Docker Compose
+# AGenNext Enterprise - Full Docker Compose
 
 version: '3.8'
 
 services:
-  agent-registry:
-    build: .
-    image: agennext/agent-registry:latest
-    container_name: agent-registry
+  # =========================================================================
+  # API Gateway
+  # =========================================================================
+  
+  api-gateway:
+    image: agennext/api-gateway:latest
+    container_name: agennext-api-gateway
     ports:
-      - "7860:7860"  # Gradio
-      - "8501:8501"  # Streamlit
+      - "8000:8000"
     environment:
-      - OPENAI_API_KEY=${OPENAI_API_KEY:-}
-      - ANTHROPIC_API_KEY=${ANTHROPIC_API_KEY:-}
-      - GOOGLE_API_KEY=${GOOGLE_API_KEY:-}
-    volumes:
-      - ./data:/app/data
-    restart: unless-stopped
-    healthcheck:
-      test: ["CMD", "curl", "-f", "http://localhost:7860"]
-      interval: 30s
-      timeout: 10s
-      retries: 3
+      - DATABASE_URL=postgresql://agennext:password@db:5432/agennext
+      - REDIS_URL=redis://cache:6379
+      - OPA_URL=http://opa:8181
+      - WALTID_URL=http://waltid:8080
+    depends_on:
+      - db
+      - cache
+    networks:
+      - agennext-network
 
-  # Optional: Redis for caching
-  redis:
+  # =========================================================================
+  # PostgreSQL Database
+  # =========================================================================
+  
+  db:
+    image: postgres:15-alpine
+    container_name: agennext-db
+    environment:
+      - POSTGRES_USER=agennext
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=agennext
+    volumes:
+      - db-data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+    networks:
+      - agennext-network
+
+  # =========================================================================
+  # SurrealDB (Graph)
+  # =========================================================================
+  
+  surrealdb:
+    image: surrealdb/surrealdb:latest
+    container_name: agennext-surrealdb
+    command: start
+    ports:
+      - "8000:8000"
+      - "8001:8001"
+    environment:
+      - SURREAL_USER=root
+      - SURREAL_PASS=root
+    networks:
+      - agennext-network
+
+  # =========================================================================
+  # Redis Cache
+  # =========================================================================
+  
+  cache:
     image: redis:7-alpine
+    container_name: agennext-cache
     ports:
       - "6379:6379"
+    networks:
+      - agennext-network
+
+  # =========================================================================
+  # Open Policy Agent
+  # =========================================================================
+  
+  opa:
+    image: openpolicyagent/opa:latest
+    container_name: agennext-opa
+    command: run --server
+    ports:
+      - "8181:8181"
+    networks:
+      - agennext-network
+
+  # =========================================================================
+  # WaltID Identity
+  # =========================================================================
+  
+  waltid:
+    image: waltid/walletkit:latest
+    container_name: agennext-waltid
+    ports:
+      - "8080:8080"
+    networks:
+      - agennext-network
+
+  # =========================================================================
+  # Next.js Frontend
+  # =========================================================================
+  
+  frontend:
+    build: ./nextjs-website
+    container_name: agennext-frontend
+    ports:
+      - "3000:3000"
+    environment:
+      - API_URL=http://api-gateway:8000
+    depends_on:
+      - api-gateway
+    networks:
+      - agennext-network
+
+  # =========================================================================
+  # RabbitMQ (Message Queue)
+  # =========================================================================
+  
+  rabbitmq:
+    image: rabbitmq:3-management-alpine
+    container_name: agennext-rabbitmq
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    networks:
+      - agennext-network
+
+  # =========================================================================
+  # Prometheus Monitoring
+  # =========================================================================
+  
+  monitoring:
+    image: prom/prometheus:latest
+    container_name: agennext-monitoring
+    ports:
+      - "9090:9090"
+    networks:
+      - agennext-network
+
+# =========================================================================
+# Networks
+# =========================================================================
+
+networks:
+  agennext-network:
+    driver: bridge
+
+# =========================================================================
+# Volumes
+# =========================================================================
+
+volumes:
+  db-data:
     volumes:
       - redis-data:/data
     restart: unless-stopped

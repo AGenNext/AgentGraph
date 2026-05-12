@@ -17,6 +17,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
 from datetime import datetime, date
 from enum import Enum
+from base_entity import Entity
 
 
 # =============================================================================
@@ -70,6 +71,7 @@ class OrderStatus(Enum):
 # =============================================================================
 
 @dataclass
+class Entity(Entity):
 class Restaurant:
     """Restaurant"""
     id: str
@@ -109,6 +111,7 @@ class Restaurant:
 
 
 @dataclass
+class Entity(Entity):
 class MenuItem:
     """Menu item"""
     id: str
@@ -144,6 +147,7 @@ class MenuItem:
 
 
 @dataclass
+class Entity(Entity):
 class Ingredient:
     """Ingredient"""
     id: str
@@ -163,6 +167,7 @@ class Ingredient:
 
 
 @dataclass
+class Entity(Entity):
 class Recipe:
     """Recipe"""
     id: str
@@ -179,6 +184,7 @@ class Recipe:
 
 
 @dataclass
+class Entity(Entity):
 class Order:
     """Order"""
     id: str
@@ -209,6 +215,7 @@ class Order:
 
 
 @dataclass
+class Entity(Entity):
 class Review:
     """Review"""
     id: str
@@ -230,6 +237,7 @@ class Review:
 
 
 @dataclass
+class Entity(Entity):
 class Driver:
     """Delivery driver"""
     id: str

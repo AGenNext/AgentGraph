@@ -17,6 +17,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
 from datetime import datetime, date
 from enum import Enum
+from base_entity import Entity
 
 
 # =============================================================================
@@ -58,6 +59,7 @@ class OrderStatus(Enum):
 # =============================================================================
 
 @dataclass
+class Entity(Entity):
 class Product:
     """Product"""
     id: str
@@ -120,6 +122,7 @@ class Product:
 
 
 @dataclass
+class Entity(Entity):
 class Category:
     """Product category"""
     id: str
@@ -142,6 +145,7 @@ class Category:
 
 
 @dataclass
+class Entity(Entity):
 class Customer:
     """Customer"""
     id: str
@@ -169,6 +173,7 @@ class Customer:
 
 
 @dataclass
+class Entity(Entity):
 class Order:
     """Order"""
     id: str
@@ -208,6 +213,7 @@ class Order:
 
 
 @dataclass
+class Entity(Entity):
 class Supplier:
     """Supplier/Vendor"""
     id: str

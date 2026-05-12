@@ -21,6 +21,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
 from enum import Enum
+from base_entity import Entity
 
 
 class SchoolType(Enum):
@@ -32,6 +33,7 @@ class SchoolType(Enum):
 
 
 @dataclass
+class Entity(Entity):
 class School:
     id: str
     name: str
@@ -47,6 +49,7 @@ class School:
 
 
 @dataclass
+class Entity(Entity):
 class Program:
     id: str
     name: str

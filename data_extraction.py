@@ -10,11 +10,12 @@ This module provides utilities for extracting structured data from various sourc
 Reference: https://schema.org/docs/datamodel.html
 """
 
-from __future__ import annotations
+from __future__ import annotationss
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any, Union
 from datetime import datetime
 from enum import Enum
+from base_entity import Entity
 
 
 # =============================================================================

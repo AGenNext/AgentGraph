@@ -10,6 +10,14 @@ Books database:
 Reference:
 - Amazon/Goodreads style
 - Library systems
+- Open Library: https://openlibrary.org/
+- Google Books: https://books.google.com/
+- Library of Congress: https://www.loc.gov/
+
+Data Sources:
+- Open Library API (open collection data)
+- Google Books API (book metadata)
+- Goodreads (reviews and ratings)
 """
 
 from __future__ import annotations
@@ -17,6 +25,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
 from datetime import datetime, date
 from enum import Enum
+from base_entity import Entity
 
 
 # =============================================================================
@@ -58,6 +67,7 @@ class BookStatus(Enum):
 # =============================================================================
 
 @dataclass
+class Entity(Entity):
 class Book:
     """Book"""
     id: str
@@ -106,6 +116,7 @@ class Book:
 
 
 @dataclass
+class Entity(Entity):
 class Author:
     """Author"""
     id: str
@@ -137,6 +148,7 @@ class Author:
 
 
 @dataclass
+class Entity(Entity):
 class Publisher:
     """Publisher"""
     id: str
@@ -154,6 +166,7 @@ class Publisher:
 
 
 @dataclass
+class Entity(Entity):
 class Review:
     """Book review"""
     id: str
@@ -171,6 +184,7 @@ class Review:
 
 
 @dataclass
+class Entity(Entity):
 class User:
     """Library user"""
     id: str
@@ -188,6 +202,7 @@ class User:
 
 
 @dataclass
+class Entity(Entity):
 class Loan:
     """Book loan"""
     id: str

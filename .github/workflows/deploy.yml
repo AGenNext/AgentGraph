@@ -7,8 +7,21 @@ on:
     types: [published]
   workflow_dispatch:
 
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
 jobs:
-  build:
+  # =========================================================================
+  # Docker Build
+  # =========================================================================
+  
+  build-docker:
     runs-on: ubuntu-latest
     permissions:
       contents: read
@@ -47,6 +60,32 @@ jobs:
           labels: ${{ steps.meta.outputs.labels }}
           cache-from: type=gha
           cache-to: type=gha,mode=max
+
+  # =========================================================================
+  # GitHub Pages (Landing Page)
+  # =========================================================================
+  
+  deploy-pages:
+    needs: build-docker
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: index.html
+          
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
 
   deploy:
     runs-on: ubuntu-latest

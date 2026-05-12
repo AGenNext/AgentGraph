@@ -21,6 +21,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
 from enum import Enum
+from base_entity import Entity
 
 
 class NonprofitType(Enum):
@@ -31,6 +32,7 @@ class NonprofitType(Enum):
 
 
 @dataclass
+class Entity(Entity):
 class Nonprofit:
     id: str
     name: str
@@ -49,6 +51,7 @@ class Nonprofit:
 
 
 @dataclass
+class Entity(Entity):
 class Grant:
     id: str
     

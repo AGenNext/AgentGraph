@@ -17,6 +17,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 from enum import Enum
+from base_entity import Entity
 
 
 # =============================================================================
@@ -53,6 +54,7 @@ class TransactionType(Enum):
 # =============================================================================
 
 @dataclass
+class Entity(Entity):
 class Cryptocurrency:
     """Cryptocurrency"""
     id: str  # coin ID
@@ -95,6 +97,7 @@ class Cryptocurrency:
 
 
 @dataclass
+class Entity(Entity):
 class Exchange:
     """Exchange"""
     id: str
@@ -118,6 +121,7 @@ class Exchange:
 
 
 @dataclass
+class Entity(Entity):
 class Wallet:
     """Wallet"""
     id: str
@@ -138,6 +142,7 @@ class Wallet:
 
 
 @dataclass
+class Entity(Entity):
 class Transaction:
     """Transaction"""
     id: str
@@ -170,6 +175,7 @@ class Transaction:
 
 
 @dataclass
+class Entity(Entity):
 class staking:
     """Staking position"""
     id: str

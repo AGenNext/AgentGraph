@@ -17,6 +17,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 from enum import Enum
+from base_entity import Entity
 
 
 # =============================================================================
@@ -53,6 +54,7 @@ class SFIALevel(Enum):
 # =============================================================================
 
 @dataclass
+class Entity(Entity):
 class Skill:
     """SFIA Skill"""
     code: str  # e.g., "SKTY"
@@ -84,6 +86,7 @@ class Skill:
 
 
 @dataclass
+class Entity(Entity):
 class SkillLevel:
     """Skill proficiency level"""
     skill_code: str

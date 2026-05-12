@@ -22,6 +22,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
 from datetime import datetime, date
 from enum import Enum
+from base_entity import Entity
 
 
 class InsuranceType(Enum):
@@ -33,6 +34,7 @@ class InsuranceType(Enum):
 
 
 @dataclass
+class Entity(Entity):
 class Policy:
     id: str
     type: InsuranceType
@@ -46,6 +48,7 @@ class Policy:
 
 
 @dataclass
+class Entity(Entity):
 class Claim:
     id: str
     policy_id: str

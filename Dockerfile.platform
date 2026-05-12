@@ -1,0 +1,76 @@
+# AGenNext Enterprise Platform - Dockerfile
+
+FROM python:3.11-slim
+
+# =========================================================================
+# Arguments
+# =========================================================================
+
+ARG BUILD_DATE
+ARG VERSION=latest
+
+# =========================================================================
+# Labels
+# =========================================================================
+
+LABEL maintainer="AGenNext"
+LABEL description="Enterprise AI Agent Platform with Schema.org"
+LABEL version=$VERSION
+LABEL build-date=$BUILD_DATE
+
+# =========================================================================
+# Base Setup
+# =========================================================================
+
+WORKDIR /app
+
+# Install system dependencies
+RUN apt-get update && apt-get install -y \
+    curl \
+    git \
+    build-essential \
+    libpq-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+# =========================================================================
+# Python Dependencies
+# =========================================================================
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# =========================================================================
+# Application
+# =========================================================================
+
+COPY . .
+
+# =========================================================================
+# Environment
+# =========================================================================
+
+ENV PYTHONPATH=/app
+ENV PYTHONUNBUFFERED=1
+ENV DATABASE_URL=postgresql://agennext:password@db:5432/agennext
+ENV REDIS_URL=redis://cache:6379
+ENV OPA_URL=http://opa:8181
+ENV WALTID_URL=http://waltid:8080
+
+# =========================================================================
+# Ports
+# =========================================================================
+
+EXPOSE 8000 8181 8080 3000 5432 6379
+
+# =========================================================================
+# Health Check
+# =========================================================================
+
+HEALTHCHECK --interval=30s --timeout=10s --retries=3 \
+    CMD curl -f http://localhost:8000/health || exit 1
+
+# =========================================================================
+# Start
+# =========================================================================
+
+CMD ["python", "agent_platform.py"]

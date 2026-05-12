@@ -17,6 +17,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
 from datetime import datetime, date
 from enum import Enum
+from base_entity import Entity
 
 
 # =============================================================================
@@ -63,6 +64,7 @@ class ClaimStatus(Enum):
 # =============================================================================
 
 @dataclass
+class Entity(Entity):
 class Patient:
     """Patient"""
     id: str
@@ -108,6 +110,7 @@ class Patient:
 
 
 @dataclass
+class Entity(Entity):
 class Provider:
     """Healthcare provider"""
     id: str
@@ -134,6 +137,7 @@ class Provider:
 
 
 @dataclass
+class Entity(Entity):
 class MedicalRecord:
     """Medical record"""
     id: str
@@ -158,6 +162,7 @@ class MedicalRecord:
 
 
 @dataclass
+class Entity(Entity):
 class Appointment:
     """Appointment"""
     id: str
@@ -184,6 +189,7 @@ class Appointment:
 
 
 @dataclass
+class Entity(Entity):
 class Prescription:
     """Prescription"""
     id: str
@@ -209,6 +215,7 @@ class Prescription:
 
 
 @dataclass
+class Entity(Entity):
 class Claim:
     """Insurance claim"""
     id: str
@@ -239,6 +246,7 @@ class Claim:
 
 
 @dataclass
+class Entity(Entity):
 class Facility:
     """Healthcare facility"""
     id: str

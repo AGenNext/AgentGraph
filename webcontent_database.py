@@ -23,6 +23,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 from enum import Enum
+from base_entity import Entity
 
 
 class ContentType(Enum):
@@ -38,6 +39,7 @@ class ContentType(Enum):
 
 
 @dataclass
+class Entity(Entity):
 class WebPage:
     id: str
     url: str
@@ -59,6 +61,7 @@ class WebPage:
 
 
 @dataclass
+class Entity(Entity):
 class FAQ:
     id: str
     question: str
@@ -68,6 +71,7 @@ class FAQ:
 
 
 @dataclass
+class Entity(Entity):
 class HowToStep:
     id: str
     step_number: int
@@ -77,6 +81,7 @@ class HowToStep:
 
 
 @dataclass
+class Entity(Entity):
 class Review:
     id: str
     
@@ -92,6 +97,7 @@ class Review:
 
 
 @dataclass
+class Entity(Entity):
 class BreadcrumbItem:
     id: str
     name: str

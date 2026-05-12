@@ -20,6 +20,10 @@ This is a comprehensive implementation of Schema.org types, mapped to domain dat
 - ✅ **AI Agents** - LangGraph integration
 - ✅ **Vibe Coding** - Bolt.new prompt ready
 - ✅ **Docker Support** - Containerized deployment
+- ✅ **WaltID Integration** - Verified Credentials
+- ✅ **Entity Security** - canonical_id, version, audit_log, crypto_signature
+- ✅ **Immutable Audit** - Chain-based blockchain audit log
+- ✅ **REST API** - Audit log endpoints
 
 ## Quick Start
 

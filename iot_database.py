@@ -21,6 +21,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
 from enum import Enum
+from base_entity import Entity
 
 
 class DeviceType(Enum):
@@ -32,6 +33,7 @@ class DeviceType(Enum):
 
 
 @dataclass
+class Entity(Entity):
 class Device:
     id: str
     name: str
@@ -48,6 +50,7 @@ class Device:
 
 
 @dataclass
+class Entity(Entity):
 class Measurement:
     id: str
     device_id: str

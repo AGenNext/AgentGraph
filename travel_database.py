@@ -17,6 +17,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
 from datetime import datetime, date, time
 from enum import Enum
+from base_entity import Entity
 
 
 # =============================================================================
@@ -56,6 +57,7 @@ class BookingStatus(Enum):
 # =============================================================================
 
 @dataclass
+class Entity(Entity):
 class Airport:
     """Airport"""
     code: str  # IATA code
@@ -71,6 +73,7 @@ class Airport:
 
 
 @dataclass
+class Entity(Entity):
 class Flight:
     """Flight"""
     id: str
@@ -109,6 +112,7 @@ class Flight:
 
 
 @dataclass
+class Entity(Entity):
 class Airline:
     """Airline"""
     code: str  # IATA code
@@ -124,6 +128,7 @@ class Airline:
 
 
 @dataclass
+class Entity(Entity):
 class Hotel:
     """Hotel"""
     id: str
@@ -163,6 +168,7 @@ class Hotel:
 
 
 @dataclass
+class Entity(Entity):
 class Room:
     """Hotel room"""
     id: str
@@ -182,6 +188,7 @@ class Room:
 
 
 @dataclass
+class Entity(Entity):
 class Destination:
     """Travel destination"""
     id: str
@@ -204,6 +211,7 @@ class Destination:
 
 
 @dataclass
+class Entity(Entity):
 class Booking:
     """Travel booking"""
     id: str
@@ -225,6 +233,7 @@ class Booking:
 # =============================================================================
 
 @dataclass
+class Entity(Entity):
 class FlightBooking(Booking):
     """Flight booking"""
     flight_id: str = ""
@@ -243,6 +252,7 @@ class FlightBooking(Booking):
 # =============================================================================
 
 @dataclass
+class Entity(Entity):
 class HotelBooking(Booking):
     """Hotel booking"""
     hotel_id: str = ""

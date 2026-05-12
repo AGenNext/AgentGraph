@@ -1,0 +1,12 @@
+# GitHub Pages Configuration
+
+github_pages:
+  # Branch for GitHub Pages
+  branch: main
+  path: /
+  
+  # Build settings
+  jekyll: false
+  
+  # Enable GitHub Pages
+  enabled: true

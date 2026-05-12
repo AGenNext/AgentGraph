@@ -19,6 +19,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
 from datetime import datetime, date
 from enum import Enum
+from base_entity import Entity
 
 
 # =============================================================================
@@ -90,6 +91,7 @@ class AwardType(Enum):
 # =============================================================================
 
 @dataclass
+class Entity(Entity):
 class Person:
     """Person (Actor, Director, etc.)"""
     id: str
@@ -132,6 +134,7 @@ class Person:
 
 
 @dataclass
+class Entity(Entity):
 class Movie:
     """Movie"""
     id: str
@@ -219,6 +222,7 @@ class Movie:
 
 
 @dataclass
+class Entity(Entity):
 class TVSeries:
     """TV Series"""
     id: str
@@ -262,6 +266,7 @@ class TVSeries:
 
 
 @dataclass
+class Entity(Entity):
 class Season:
     """TV Season"""
     id: str
@@ -277,6 +282,7 @@ class Season:
 
 
 @dataclass
+class Entity(Entity):
 class Episode:
     """TV Episode"""
     id: str
@@ -293,6 +299,7 @@ class Episode:
 
 
 @dataclass
+class Entity(Entity):
 class Studio:
     """Production Studio"""
     id: str
@@ -323,6 +330,7 @@ class Studio:
 
 
 @dataclass
+class Entity(Entity):
 class Review:
     """Movie Review"""
     id: str
@@ -356,6 +364,7 @@ class Review:
 
 
 @dataclass
+class Entity(Entity):
 class Award:
     """Award/Oscar"""
     id: str
@@ -380,6 +389,7 @@ class Award:
 
 
 @dataclass
+class Entity(Entity):
 class Showtime:
     """Theater Showtime"""
     id: str
@@ -408,6 +418,7 @@ class Showtime:
 
 
 @dataclass
+class Entity(Entity):
 class Theater:
     """Movie Theater"""
     id: str

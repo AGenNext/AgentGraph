@@ -19,6 +19,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
 from datetime import datetime, date, time
 from enum import Enum
+from base_entity import Entity
 
 
 # =============================================================================
@@ -124,6 +125,7 @@ class Outcome(Enum):
 # =============================================================================
 
 @dataclass
+class Entity(Entity):
 class Athlete:
     """Athlete/Player"""
     id: str
@@ -176,6 +178,7 @@ class Athlete:
 
 
 @dataclass
+class Entity(Entity):
 class Coach:
     """Coach/Trainer"""
     id: str
@@ -219,6 +222,7 @@ class Coach:
 
 
 @dataclass
+class Entity(Entity):
 class Team:
     """Sports Team"""
     id: str
@@ -292,6 +296,7 @@ class Team:
 
 
 @dataclass
+class Entity(Entity):
 class Venue:
     """Stadium/Arena"""
     id: str
@@ -335,6 +340,7 @@ class Venue:
 
 
 @dataclass
+class Entity(Entity):
 class Game:
     """Game/Match"""
     id: str
@@ -397,6 +403,7 @@ class Game:
 
 
 @dataclass
+class Entity(Entity):
 class Season:
     """Season"""
     id: str
@@ -427,6 +434,7 @@ class Season:
 
 
 @dataclass
+class Entity(Entity):
 class StatLine:
     """Player Stats for a Game"""
     id: str
@@ -460,6 +468,7 @@ class StatLine:
 
 
 @dataclass
+class Entity(Entity):
 class TeamStatLine:
     """Team Stats"""
     id: str
@@ -485,6 +494,7 @@ class TeamStatLine:
 
 
 @dataclass
+class Entity(Entity):
 class Contract:
     """Player Contract"""
     id: str
@@ -515,6 +525,7 @@ class Contract:
 
 
 @dataclass
+class Entity(Entity):
 class Award:
     """Sports Award"""
     id: str
@@ -540,6 +551,7 @@ class Award:
 
 
 @dataclass
+class Entity(Entity):
 class Ranking:
     """Team/Athlete Ranking"""
     id: str

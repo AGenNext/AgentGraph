@@ -17,6 +17,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any, Callable
 from datetime import datetime
 from enum import Enum
+from base_entity import Entity
 import hashlib
 import secrets
 

@@ -24,6 +24,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
 from datetime import datetime, date, time
 from enum import Enum
+from base_entity import Entity
 
 
 # =============================================================================
@@ -54,6 +55,7 @@ class TicketType(Enum):
 # =============================================================================
 
 @dataclass
+class Entity(Entity):
 class Event:
     """Event"""
     id: str
@@ -94,6 +96,7 @@ class Event:
 
 
 @dataclass
+class Entity(Entity):
 class Organizer:
     """Event organizer"""
     id: str
@@ -110,6 +113,7 @@ class Organizer:
 
 
 @dataclass
+class Entity(Entity):
 class Speaker:
     """Speaker"""
     id: str
@@ -129,6 +133,7 @@ class Speaker:
 
 
 @dataclass
+class Entity(Entity):
 class Sponsor:
     """Sponsor"""
     id: str
@@ -144,6 +149,7 @@ class Sponsor:
 
 
 @dataclass
+class Entity(Entity):
 class Session:
     """Event session"""
     id: str

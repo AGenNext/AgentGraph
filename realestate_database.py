@@ -25,6 +25,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
 from datetime import datetime, date
 from enum import Enum
+from base_entity import Entity
 
 
 # =============================================================================
@@ -53,6 +54,7 @@ class ListingType(Enum):
 # =============================================================================
 
 @dataclass
+class Entity(Entity):
 class Property:
     id: str
     address: str
@@ -81,6 +83,7 @@ class Property:
 
 
 @dataclass
+class Entity(Entity):
 class Agent:
     id: str
     name: str
@@ -98,6 +101,7 @@ class Agent:
 
 
 @dataclass
+class Entity(Entity):
 class Agency:
     id: str
     name: str

@@ -25,6 +25,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any, Set, Tuple
 from datetime import datetime
 from enum import Enum
+from base_entity import Entity
 import urllib.request
 import urllib.parse
 import json

@@ -1,0 +1,51 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "config": "tailwind.config.ts",
+    "css": "src/app/globals.css",
+    "baseColor": "neutral",
+    "cssVariables": {
+      "background": "var(--background)",
+      "foreground": "var(--foreground)",
+      "card": {
+        "cssVariable": "--card",
+        "foreground": "var(--card-foreground)"
+      },
+      "popover": {
+        "cssVariable": "--popover",
+        "foreground": "var(--popover-foreground)"
+      },
+      "primary": {
+        "cssVariable": "--primary",
+        "foreground": "var(--primary-foreground)"
+      },
+      "secondary": {
+        "cssVariable": "--secondary",
+        "foreground": "var(--secondary-foreground)"
+      },
+      "muted": {
+        "cssVariable": "--muted",
+        "foreground": "var(--muted-foreground)"
+      },
+      "accent": {
+        "cssVariable": "--accent",
+        "foreground": "var(--accent-foreground)"
+      },
+      "destructive": {
+        "cssVariable": "--destructive",
+        "foreground": "var(--destructive-foreground)"
+      },
+      "border": "var(--border)",
+      "input": "var(--input)",
+      "ring": "var(--ring)"
+    }
+  },
+  "aliases": {
+    "components": "@/components",
+    "lib": "@/lib",
+    "utils": "@/lib/utils"
+  }
+}

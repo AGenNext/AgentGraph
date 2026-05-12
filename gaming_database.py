@@ -21,6 +21,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
 from enum import Enum
+from base_entity import Entity
 
 
 class GamePlatform(Enum):
@@ -32,6 +33,7 @@ class GamePlatform(Enum):
 
 
 @dataclass
+class Entity(Entity):
 class Game:
     id: str
     name: str
@@ -48,6 +50,7 @@ class Game:
 
 
 @dataclass
+class Entity(Entity):
 class Player:
     id: str
     gamertag: str

@@ -25,6 +25,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
 from datetime import datetime, date
 from enum import Enum
+from base_entity import Entity
 
 
 # =============================================================================
@@ -64,6 +65,7 @@ class MediaType(Enum):
 # =============================================================================
 
 @dataclass
+class Entity(Entity):
 class Artist:
     """Artist"""
     id: str
@@ -96,6 +98,7 @@ class Artist:
 
 
 @dataclass
+class Entity(Entity):
 class Album:
     """Album"""
     id: str
@@ -127,6 +130,7 @@ class Album:
 
 
 @dataclass
+class Entity(Entity):
 class Song:
     """Song"""
     id: str
@@ -159,6 +163,7 @@ class Song:
 
 
 @dataclass
+class Entity(Entity):
 class Playlist:
     """Playlist"""
     id: str
@@ -182,6 +187,7 @@ class Playlist:
 
 
 @dataclass
+class Entity(Entity):
 class Concert:
     """Concert"""
     id: str
@@ -209,6 +215,7 @@ class Concert:
 
 
 @dataclass
+class Entity(Entity):
 class Chart:
     """Chart"""
     id: str

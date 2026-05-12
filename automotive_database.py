@@ -21,6 +21,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
 from enum import Enum
+from base_entity import Entity
 
 
 class VehicleType(Enum):
@@ -32,7 +33,7 @@ class VehicleType(Enum):
 
 
 @dataclass
-class Vehicle:
+class Vehicle(Entity):
     id: str
     make: str
     model: str
@@ -50,7 +51,7 @@ class Vehicle:
 
 
 @dataclass
-class Dealership:
+class Dealership(Entity):
     id: str
     name: str
     

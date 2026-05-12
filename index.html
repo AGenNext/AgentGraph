@@ -1,0 +1,424 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AGenNext Enterprise - AI Agent Platform</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+        
+        * { font-family: 'Inter', sans-serif; }
+        
+        .gradient-text {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        .hero-gradient {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f97316 100%);
+        }
+        
+        .card-hover:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.2);
+        }
+        
+        .feature-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .glow {
+            position: relative;
+        }
+        
+        .glow::before {
+            content: '';
+            position: absolute;
+            inset: -2px;
+            border-radius: inherit;
+            background: linear-gradient(135deg, #667eea, #f97316);
+            filter: blur(20px);
+            opacity: 0.5;
+            z-index: -1;
+        }
+        
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .scroll-smooth {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white scroll-smooth">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 bg-gray-900/90 backdrop-blur-lg border-b border-gray-800">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl hero-gradient flex items-center justify-center">
+                    <i class="fas fa-robot text-white"></i>
+                </div>
+                <span class="text-xl font-bold">AGenNext</span>
+            </div>
+            
+            <div class="hidden md:flex items-center gap-8">
+                <a href="#features" class="text-gray-300 hover:text-white transition">Features</a>
+                <a href="#how-it-works" class="text-gray-300 hover:text-white transition">How It Works</a>
+                <a href="#pricing" class="text-gray-300 hover:text-white transition">Pricing</a>
+                <a href="#docs" class="text-gray-300 hover:text-white transition">Docs</a>
+                <a href="#contact" class="text-gray-300 hover:text-white transition">Contact</a>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <a href="https://github.com/AGenNext" class="text-gray-300 hover:text-white transition">
+                    <i class="fab fa-github text-xl"></i>
+                </a>
+                <a href="#get-started" class="bg-white text-gray-900 px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition">
+                    Get Started
+                </a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="min-h-screen flex items-center justify-center pt-20 relative overflow-hidden">
+        <div class="absolute inset-0 hero-gradient opacity-10"></div>
+        <div class="absolute inset-0" style="background-image: radial-gradient(circle at 20% 80%, rgba(102, 126, 234, 0.3), transparent 50%), radial-gradient(circle at 80% 20%, rgba(249, 115, 22, 0.3), transparent 50%);"></div>
+        
+        <div class="max-w-7xl mx-auto px-6 py-20 text-center relative z-10">
+            <div class="inline-flex items-center gap-3 bg-gray-800/50 border border-gray-700 rounded-full px-6 py-2 mb-8">
+                <span class="w-2 h-2 bg-green-500 rounded-full animate-pulse"></span>
+                <span class="text-gray-300 text-sm">Now with WaltID Integration &bull; Verified Credentials</span>
+            </div>
+            
+            <h1 class="text-5xl md:text-7xl font-bold mb-6 leading-tight">
+                Build AI Agents with<br>
+                <span class="gradient-text">Enterprise Grade</span> Security
+            </h1>
+            
+            <p class="text-xl text-gray-400 mb-10 max-w-3xl mx-auto">
+                Comprehensive agent platform using Schema.org framework. 
+                Agents as SoftwareApplication owned by Person in Organization.
+                Immutable audit logs, cryptographic signatures, and verified credentials.
+            </p>
+            
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+                <a href="#get-started" class="hero-gradient px-8 py-4 rounded-full font-semibold text-lg hover:opacity-90 transition inline-flex items-center gap-3">
+                    Start Building Free <i class="fas fa-arrow-right"></i>
+                </a>
+                <a href="#demo" class="border border-gray-700 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-800 transition inline-flex items-center gap-3">
+                    <i class="fas fa-play"></i> Watch Demo
+                </a>
+            </div>
+            
+            <!-- Stats -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-8 mt-20">
+                <div>
+                    <div class="text-4xl font-bold gradient-text">22+</div>
+                    <div class="text-gray-400 mt-2">Domain Databases</div>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold gradient-text">100+</div>
+                    <div class="text-gray-400 mt-2">Schema.org Types</div>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold gradient-text">11</div>
+                    <div class="text-gray-400 mt-2">Core Types</div>
+                </div>
+                <div>
+                    <div class="text-4xl font-bold gradient-text">∞</div>
+                    <div class="text-gray-400 mt-2">Agent Possibilities</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-gray-800/30">
+        <div class="max-w-7xl mx-auto px-6 py-20">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Enterprise Features</h2>
+                <p class="text-xl text-gray-400">Everything you need to build, deploy, and manage AI agents at scale</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="bg-gray-900/50 border border-gray-800 rounded-2xl p-8 card-hover transition-all duration-300">
+                    <div class="feature-icon bg-gradient-to-br from-blue-500 to-purple-600 mb-6">
+                        <i class="fas fa-database text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">22 Domain Databases</h3>
+                    <p class="text-gray-400">Pre-built databases for automotive, banking, healthcare, retail, education, and more. All mapped to Schema.org types.</p>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="bg-gray-900/50 border border-gray-800 rounded-2xl p-8 card-hover transition-all duration-300">
+                    <div class="feature-icon bg-gradient-to-br from-green-500 to-teal-600 mb-6">
+                        <i class="fas fa-shield-alt text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Entity Security</h3>
+                    <p class="text-gray-400">canonical_id, version control, immutable audit logs, and cryptographic SHA-256 signatures on every entity.</p>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="bg-gray-900/50 border border-gray-800 rounded-2xl p-8 card-hover transition-all duration-300">
+                    <div class="feature-icon bg-gradient-to-br from-orange-500 to-red-600 mb-6">
+                        <i class="fas fa-id-card text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Verified Credentials</h3>
+                    <p class="text-gray-400">WaltID integration for issuing and verifiable credentials. Agents as software with identity.</p>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="bg-gray-900/50 border border-gray-800 rounded-2xl p-8 card-hover transition-all duration-300">
+                    <div class="feature-icon bg-gradient-to-br from-purple-500 to-pink-600 mb-6">
+                        <i class="fas fa-balance-scale text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Policy Engine</h3>
+                    <p class="text-gray-400">Open Policy Agent (OPA) integration for fine-grained access control and policy decisions.</p>
+                </div>
+                
+                <!-- Feature 5 -->
+                <div class="bg-gray-900/50 border border-gray-800 rounded-2xl p-8 card-hover transition-all duration-300">
+                    <div class="feature-icon bg-gradient-to-br from-cyan-500 to-blue-600 mb-6">
+                        <i class="fas fa-project-diagram text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">Graph Database</h3>
+                    <p class="text-gray-400">SurrealDB for knowledge graphs. Visualize agent hierarchies with React xyflow.</p>
+                </div>
+                
+                <!-- Feature 6 -->
+                <div class="bg-gray-900/50 border border-gray-800 rounded-2xl p-8 card-hover transition-all duration-300">
+                    <div class="feature-icon bg-gradient-to-br from-yellow-500 to-orange-600 mb-6">
+                        <i class="fas fa-sync text-white"></i>
+                    </div>
+                    <h3 class="text-xl font-bold mb-3">A2A Protocol</h3>
+                    <p class="text-gray-400">Agent-to-agent communication. Task delegation, message passing, and state sync.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section id="how-it-works" class="py-20">
+        <div class="max-w-7xl mx-auto px-6 py-20">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">How It Works</h2>
+                <p class="text-xl text-gray-400">Built on Schema.org for semantic interoperability</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Step 1 -->
+                <div class="relative">
+                    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8">
+                        <div class="text-6xl font-bold text-gray-700 mb-4">01</div>
+                        <h3 class="text-xl font-bold mb-3">Define Agent</h3>
+                        <p class="text-gray-400">Create agents as Schema.org SoftwareApplication with Person owner and Organization membership.</p>
+                    </div>
+                    <div class="hidden md:block absolute -right-4 top-1/2 transform -translate-y-1/2 z-10">
+                        <i class="fas fa-arrow-right text-2xl text-gray-700"></i>
+                    </div>
+                </div>
+                
+                <!-- Step 2 -->
+                <div class="relative">
+                    <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8">
+                        <div class="text-6xl font-bold text-gray-700 mb-4">02</div>
+                        <h3 class="text-xl font-bold mb-3">Add Credentials</h3>
+                        <p class="text-gray-400">Issue verified credentials via WaltID. Agents have identity, skills, and capabilities.</p>
+                    </div>
+                    <div class="hidden md:block absolute -right-4 top-1/2 transform -translate-y-1/2 z-10">
+                        <i class="fas fa-arrow-right text-2xl text-gray-700"></i>
+                    </div>
+                </div>
+                
+                <!-- Step 3 -->
+                <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8">
+                    <div class="text-6xl font-bold text-gray-700 mb-4">03</div>
+                    <h3 class="text-xl font-bold mb-3">Deploy</h3>
+                    <p class="text-gray-400">Run agents with OPA policies. Connect via A2A protocol. Store data in domain databases.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Code Example -->
+    <section class="py-20 bg-gray-800/30">
+        <div class="max-w-7xl mx-auto px-6 py-20">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Simple to Use</h2>
+                <p class="text-xl text-gray-400">Python SDK for building enterprise agents</p>
+            </div>
+            
+            <div class="bg-gray-950 border border-gray-800 rounded-2xl p-8 text-left">
+                <div class="flex gap-2 mb-4">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                </div>
+                <pre class="text-sm text-gray-300 overflow-x-auto"><code>
+<span class="text-purple-400">from</span> base_entity <span class="text-purple-400">import</span> Entity
+<span class="text-purple-400">from</span> waltid_endpoints <span class="text-purple-400">import</span> WaltIDClient
+
+<span class="text-gray-500"># Create agent with security fields</span>
+<span class="text-blue-400">agent</span> = Entity()
+
+<span class="text-gray-500"># Issue verified credential</span>
+<span class="text-blue-400">client</span> = WaltIDClient()
+<span class="text-blue-400">credential</span> = client.issue_agent_credential(
+    issuer_did=<span class="text-green-400">"did:waltid:agennext"</span>,
+    subject_did=<span class="text-green-400">f"did:waltid:agent:{agent.canonical_id}"</span>,
+    skills=[<span class="text-green-400">"coding"</span>, <span class="text-green-400">"data-analysis"</span>],
+    metadata={<span class="text-green-400">"version"</span>: <span class="text-green-400">"1.0"</span>}
+)
+
+<span class="text-gray-500"># Verify</span>
+<span class="text-blue-400">result</span> = client.verify_credential(credential)
+<span class="text-blue-400">print</span>(f<span class="text-green-400">"Verified: {result.allowed}"</span>)
+                </code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing -->
+    <section id="pricing" class="py-20">
+        <div class="max-w-7xl mx-auto px-6 py-20">
+            <div class="text-center mb-16">
+                <h2 class="text-4xl md:text-5xl font-bold mb-4">Simple Pricing</h2>
+                <p class="text-xl text-gray-400">Start free, scale as you grow</p>
+            </div>
+            
+            <div class="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+                <!-- Free -->
+                <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8">
+                    <h3 class="text-xl font-bold mb-2">Developer</h3>
+                    <div class="text-4xl font-bold mb-6">$0<span class="text-lg text-gray-400">/mo</span></div>
+                    <ul class="space-y-3 text-gray-400 mb-8">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> 1 Agent</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> 1,000 messages/mo</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Community Support</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Local Database</li>
+                    </ul>
+                    <a href="#" class="block text-center border border-gray-700 py-3 rounded-full font-semibold hover:bg-gray-800 transition">Get Started</a>
+                </div>
+                
+                <!-- Pro -->
+                <div class="bg-gray-900 border-2 border-purple-500 rounded-2xl p-8 relative">
+                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-purple-500 px-4 py-1 rounded-full text-sm font-semibold">Popular</div>
+                    <h3 class="text-xl font-bold mb-2">Team</h3>
+                    <div class="text-4xl font-bold mb-6">$99<span class="text-lg text-gray-400">/mo</span></div>
+                    <ul class="space-y-3 text-gray-400 mb-8">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> 10 Agents</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> 100,000 messages/mo</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Priority Support</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> All Databases</li>
+                    </ul>
+                    <a href="#" class="block text-center hero-gradient py-3 rounded-full font-semibold">Start Trial</a>
+                </div>
+                
+                <!-- Enterprise -->
+                <div class="bg-gray-900 border border-gray-800 rounded-2xl p-8">
+                    <h3 class="text-xl font-bold mb-2">Enterprise</h3>
+                    <div class="text-4xl font-bold mb-6">Custom</div>
+                    <ul class="space-y-3 text-gray-400 mb-8">
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Unlimited Agents</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Unlimited Messages</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> Dedicated Support</li>
+                        <li><i class="fas fa-check text-green-500 mr-2"></i> On-Premise</li>
+                    </ul>
+                    <a href="#contact" class="block text-center border border-gray-700 py-3 rounded-full font-semibold hover:bg-gray-800 transition">Contact Sales</a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section id="get-started" class="py-20 hero-gradient relative overflow-hidden">
+        <div class="absolute inset-0 bg-gray-900/50"></div>
+        <div class="max-w-7xl mx-auto px-6 py-20 text-center relative z-10">
+            <h2 class="text-4xl md:text-5xl font-bold mb-4">Ready to Build Enterprise Agents?</h2>
+            <p class="text-xl text-gray-300 mb-8">Start building today with Schema.org and verified credentials.</p>
+            <div class="flex flex-col md:flex-row items-center justify-center gap-4">
+                <a href="https://github.com/AGenNext/AGenNext-Enterprise" class="bg-white text-gray-900 px-8 py-4 rounded-full font-semibold text-lg hover:bg-gray-100 transition inline-flex items-center gap-3">
+                    <i class="fab fa-github"></i> Star on GitHub
+                </a>
+                <a href="#docs" class="border border-white px-8 py-4 rounded-full font-semibold text-lg hover:bg-white/10 transition inline-flex items-center gap-3">
+                    Read the Docs <i class="fas fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="grid md:grid-cols-4 gap-8 mb-12">
+                <div>
+                    <div class="flex items-center gap-3 mb-4">
+                        <div class="w-10 h-10 rounded-xl hero-gradient flex items-center justify-center">
+                            <i class="fas fa-robot text-white"></i>
+                        </div>
+                        <span class="text-xl font-bold">AGenNext</span>
+                    </div>
+                    <p class="text-gray-400">Enterprise AI agent platform built on Schema.org.</p>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Product</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition">Features</a></li>
+                        <li><a href="#" class="hover:text-white transition">Pricing</a></li>
+                        <li><a href="#" class="hover:text-white transition">Documentation</a></li>
+                        <li><a href="#" class="hover:text-white transition">API Reference</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Resources</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition">Blog</a></li>
+                        <li><a href="#" class="hover:text-white transition">Tutorials</a></li>
+                        <li><a href="#" class="hover:text-white transition">Examples</a></li>
+                        <li><a href="#" class="hover:text-white transition">Community</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h4 class="font-bold mb-4">Company</h4>
+                    <ul class="space-y-2 text-gray-400">
+                        <li><a href="#" class="hover:text-white transition">About</a></li>
+                        <li><a href="#" class="hover:text-white transition">Contact</a></li>
+                        <li><a href="#" class="hover:text-white transition">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-white transition">Terms of Service</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="flex flex-col md:flex-row items-center justify-between pt-8 border-t border-gray-800">
+                <p class="text-gray-400">&copy; 2024 AGenNext. All rights reserved.</p>
+                <div class="flex items-center gap-4 mt-4 md:mt-0">
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-github"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-twitter"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-discord"></i></a>
+                    <a href="#" class="text-gray-400 hover:text-white transition"><i class="fab fa-linkedin"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+</body>
+</html>

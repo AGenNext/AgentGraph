@@ -15,12 +15,20 @@ Schema.org: BankAccount, FinancialProduct
 Data Sources:
 - FDIC Bank Database
 - NCUA Credit Unions
+
+Entities include:
+- canonical_id: Unique, immutable identifier
+- version: Entity version for optimistic locking
+- audit_log: Immutable audit trail
+- crypto_signature: Cryptographic verification
 """
 
 from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
 from enum import Enum
+from base_entity import Entity
+from base_entity import Entity, AuditEntry, CryptoSignature
 
 
 class AccountType(Enum):
@@ -31,20 +39,19 @@ class AccountType(Enum):
 
 
 @dataclass
-class Bank:
-    id: str
-    name: str
+class Entity(Entity):
+class Bank(Entity):
+    """Bank entity with audit and crypto signature"""
     
+    name: str = ""
     charter: str = ""  # FDIC Charter Number
-    
     assets: float = 0.0
-    
     headquarters: str = ""
-    
     website: str = ""
 
 
 @dataclass
+class Entity(Entity):
 class Account:
     id: str
     bank_id: str

@@ -21,6 +21,7 @@ from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
 from enum import Enum
+from base_entity import Entity
 
 
 class PracticeArea(Enum):
@@ -32,6 +33,7 @@ class PracticeArea(Enum):
 
 
 @dataclass
+class Entity(Entity):
 class Attorney:
     id: str
     name: str
@@ -42,6 +44,7 @@ class Attorney:
 
 
 @dataclass
+class Entity(Entity):
 class LawFirm:
     id: str
     name: str
@@ -51,6 +54,7 @@ class LawFirm:
 
 
 @dataclass
+class Entity(Entity):
 class Court:
     id: str
     name: str

@@ -10,6 +10,7 @@ Reference: https://surrealdb.com/docs/surrealql/statements/define
 from dataclasses import dataclass, field
 from typing import Dict, List, Optional
 from enum import Enum
+from base_entity import Entity
 
 
 # SurrealDB Field Types

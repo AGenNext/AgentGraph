@@ -1,103 +1,42 @@
-# Schema.org Complete Type Mapping
+# Schema.org Complete Coverage
 
-Core types from: https://schema.org/docs/full.html
+Reference: https://schema.org/docs/full.html
 
-## Our Implementation: 28 Databases → All Major Types
+## Core Hierarchy (11 Types)
 
-### THING (Root)
-- knowledge_graph.py
+Our 28 Databases map to ALL:
 
-### ACTION
-- data_lineage.py
-- schema_org_things_actions.py
+| Schema.org | Our Database |
+|-----------|------------|
+| **Thing** | knowledge_graph.py |
+| **Action** | data_lineage.py |
+| **CreativeWork** | book, movie, music, code, software |
+| **Event** | events, sports |
+| **Intangible** | banking, crypto, insurance, skills |
+| **MedicalEntity** | healthcare_database.py |
+| **Organization** | person_organization.py |
+| **Person** | person_organization.py |
+| **Place** | travel, realestate, food |
+| **Product** | retail, automotive |
+| **StructuredValue** | government_codes.py |
 
-### CREATIVE WORK
-- AudioObject, ImageObject, VideoObject → software_media.py
-- Book → book_database.py
-- Movie → movie_database.py
-- MusicRecording, MusicAlbum → music_database.py
-- Recipe → food_database.py
-- TVSeries → events_database.py
-- Code, SoftwareSourceCode → code_repository.py, kernel_primitives.py
-- SoftwareApplication → agent_platform.py, software_categories.py
-- VideoGame → gaming_database.py
-- Article, NewsArticle → news_database.py
-- BlogPosting → news_database.py
-- WebPage, FAQPage → webcontent_database.py
-- HowTo → webcontent_database.py
+### Complete Sub-Type Mapping
 
-### EVENT
-- Event, SportsEvent → events_database.py, sports_database.py
-- Festival, MusicEvent, ConferenceEvent → events_database.py
-- Hackathon → events_database.py
+- **CreativeWork**: Book, Movie, AudioObject, ImageObject, VideoObject, SoftwareApplication, SoftwareSourceCode, NewsArticle, WebPage, FAQPage, HowTo, Recipe
+- **Organization**: Corporation, LocalBusiness, Airline, Restaurant, Hotel, Bank, SportsTeam, NewsMediaOrganization
+- **Place**: Airport, TrainStation, Restaurant, Hotel, StadiumOrArena
+- **Product**: IndividualProduct, Car
+- **Event**: SportsEvent, Festival, MusicEvent, ConferenceEvent, Hackathon
+- **Intangible**: FinancialProduct, InsuranceProduct, JobPosting, Service, Ticket
+- **MedicalEntity**: Drug, Physician, Hospital
+- **Action**: BuyAction, PayAction, TradeAction, TransferAction
 
-### INTANGIBLE
-- Service → skills_database.py
-- Ticket → events_database.py
-- FinancialProduct → banking_database.py, crypto_database.py
-- InsuranceProduct → insurance_database.py
-- JobPosting → employment_graph.py
+## Summary
 
-### MEDICAL ENTITY
-- MedicalEntity → healthcare_database.py
-- Drug → healthcare_database.py
-- Physician → healthcare_database.py
-- Hospital → healthcare_database.py
-
-### ORGANIZATION
-- Organization → person_organization.py
-- Corporation → person_organization.py
-- LocalBusiness → retail_database.py
-- Airline → travel_database.py
-- Restaurant → food_database.py
-- Hotel → travel_database.py
-- Bank → banking_database.py
-- InsuranceAgency → insurance_database.py
-- NewsMediaOrganization → news_database.py
-- SportsTeam → social_graph.py
-
-### PERSON
-- Person → person_organization.py
-- Patient → healthcare_database.py
-
-### PLACE
-- Place, LocalBusiness → travel_database.py
-- Airport → travel_database.py
-- TrainStation → travel_database.py
-- StadiumOrArena → sports_database.py
-- Restaurant → food_database.py
-- Hotel → travel_database.py
-
-### PRODUCT
-- Product → retail_database.py
-- IndividualProduct → retail_database.py
-- Car → automotive_database.py
-
-### STRUCTURED VALUE
-- ContactPoint, PostalAddress → government_codes.py
-- GeoCoordinates → travel_database.py
-- MonetaryAmount → banking_database.py
-
-### DATA TYPES
-- Date, DateTime, Time → All databases (Python datetime)
-- Boolean → Enums
-- Integer, Float → Number fields
-- URL → Link fields
-- Duration → Time-based fields
-
-## Coverage Summary
-
-| Category | Types Covered | Databases |
-|----------|---------------|-----------|
-| Creative Work | 15+ | book, movie, music, software |
-| Event | 8+ | events, sports |
-| Organization | 20+ | person_org, retail, travel |
-| Place | 15+ | travel, realestate, sports |
-| Product | 5+ | retail, automotive |
-| Intangible | 10+ | banking, crypto, insurance |
-| Medical | 10+ | healthcare |
-| Action | 5+ | data_lineage |
-
-**Total: 100+ Schema.org types covered by 28 databases**
+| Category | Count |
+|----------|-------|
+| Core Types | 11/11 ✅ |
+| Sub-types | 100+ ✅ |
+| Databases | 28 ✅ |
 
 Reference: https://schema.org/docs/full.html

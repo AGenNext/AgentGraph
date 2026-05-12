@@ -12,7 +12,7 @@ More components:
 Dependencies: Standard library only
 """
 
-from __future__ import annotation
+from __future__ import annotations
 from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any, Callable
 from datetime import datetime, timedelta

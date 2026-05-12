@@ -26,6 +26,7 @@ from dataclasses import dataclass, field
 from typing import Optional, List, Dict, Any
 from datetime import datetime
 from enum import Enum
+from base_entity import Entity
 
 
 class NewsCategory(Enum):
@@ -40,6 +41,7 @@ class NewsCategory(Enum):
 
 
 @dataclass
+class Entity(Entity):
 class NewsArticle:
     id: str
     headline: str
@@ -61,6 +63,7 @@ class NewsArticle:
 
 
 @dataclass
+class Entity(Entity):
 class Publisher:
     id: str
     name: str
@@ -73,6 +76,7 @@ class Publisher:
 
 
 @dataclass
+class Entity(Entity):
 class Journalist:
     id: str
     name: str
