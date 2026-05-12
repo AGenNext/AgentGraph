@@ -4,22 +4,30 @@
 
 ## ⚠️ COMMON BRANCH: `schema-org-implementation`
 
-**ONE DB + ONE SCHEMA** for all 88 AGenNext repos:
+### ONE PLATFORM (6 COMPONENTS)
 
-| Source | URL |
-|--------|-----|
-| **Branch** | `schema-org-implementation` |
-| **Schema** | https://github.com/AGenNext/AGenNext-Enterprise/tree/schema-org-implementation |
-| **Entity** | base_entity.py (SoftwareApplication) |
-| **Database** | 22 × *_database.py |
+| Component | File | Purpose |
+|-----------|------|---------|
+| **ONE DB** | *_database.py | 22 domains |
+| **ONE SCHEMA** | base_entity.py | SoftwareApplication |
+| **ONE IDENTITY** | waltid_endpoints.py | DID + Verified Credentials |
+| **ONE AUTH** | opa_sdk.py | OPA Policy Engine |
+| **ONE FGA** | a2a_sdk.py | Fine-Grained + A2A |
 
 ### Usage
 
 ```python
-# All repos import from common:
-from agennext_enterprise import Entity
+# ONE schema
+from base_entity import Entity
 
-# Entity → @type: SoftwareApplication
+# ONE identity
+from waltid_endpoints import WaltIDClient
+
+# ONE auth
+from opa_sdk import OPACient
+
+# ONE FGA
+from a2a_sdk import A2AClient
 ```
 
 ## Problem
