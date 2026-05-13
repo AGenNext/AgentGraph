@@ -14,7 +14,27 @@ from typing import Any, Optional
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
-from typing import Optional
+
+# Schema.org master data (for seeding SurrealDB)
+SCHEMA_TYPES = [
+    {"id": "1", "canonical_id": "schema:organization", "name": "Organization", "parent": "Thing", "description": "Corporations, NGOs, governments"},
+    {"id": "2", "canonical_id": "schema:person", "name": "Person", "parent": "Thing", "description": "Individual people"},
+    {"id": "3", "canonical_id": "schema:place", "name": "Place", "parent": "Thing", "description": "Locations, buildings"},
+    {"id": "4", "canonical_id": "schema:product", "name": "Product", "parent": "Thing", "description": "Goods and services"},
+    {"id": "5", "canonical_id": "schema:event", "name": "Event", "parent": "Thing", "description": "Occurrences"},
+    {"id": "6", "canonical_id": "schema:creativework", "name": "CreativeWork", "parent": "Thing", "description": "Books, movies, software"},
+    {"id": "7", "canonical_id": "schema:intangible", "name": "Intangible", "parent": "Thing", "description": "Assets, services"},
+    {"id": "8", "canonical_id": "schema:action", "name": "Action", "parent": "Thing", "description": "Activities"},
+    {"id": "9", "canonical_id": "schema:medicalentity", "name": "MedicalEntity", "parent": "Thing", "description": "Healthcare entities"},
+    {"id": "10", "canonical_id": "schema:structuredvalue", "name": "StructuredValue", "parent": "Thing", "description": "Key-value pairs"},
+    {"id": "11", "canonical_id": "schema:thing", "name": "Thing", "parent": None, "description": "Root type"},
+]
+
+# SurrealDB connection (lazy init)
+_surreal_db = None
+SURREALDB_URL = os.getenv("SURREALDB_URL", "mem://")
+SURREALDB_USER = os.getenv("SURREALDB_USER", "root")
+SURREALDB_PASS = os.getenv("SURREALDB_PASS", "root")
 
 app = FastAPI(
     title="AGenNext API",
@@ -253,31 +273,59 @@ async def restore_agent_version(agent_id: str, version_id: str):
 @app.get("/health")
 async def health_check():
     """Health check endpoint."""
-    return {"status": "ok"}
+    return {"status": "ok", "version": __version__}
 
 
-# Framework Types
+@app.get("/schema-types")
+async def list_schema_types():
+    """List Schema.org types."""
+    return {"types": SCHEMA_TYPES}
+
+
+@app.post("/schema-types/seed")
+async def seed_schema_types():
+    """Seed Schema.org master data to SurrealDB."""
+    global _surreal_db
+    
+    try:
+        # Try to connect to SurrealDB
+        import surrealdb
+        db = surrealdb.connect(SURREALDB_URL, user=SURREALDB_USER, password=SURREALDB_PASS)
+        await db.use("agennext", "schema")
+        
+        # Seed schema types
+        for schema_type in SCHEMA_TYPES:
+            await db.create(f"schema_type:{schema_type['id']}", schema_type)
+        
+        _surreal_db = db
+        return {"status": "seeded", "count": len(SCHEMA_TYPES), "storage": "surrealdb"}
+    except ImportError:
+        return {"status": "seeded", "count": len(SCHEMA_TYPES), "storage": "memory"}
+    except Exception as e:
+        return {"status": "seeded_memory", "count": len(SCHEMA_TYPES), "error": str(e)}
+
+
 FRAMEWORKS = [
-    {"id": "1", "canonical_id": "agent:framework:langgraph:v1", "name": "LangGraph", "version": "v1", "description": "State-based agent workflows"},
-    {"id": "2", "canonical_id": "agent:framework:langchain:v1", "name": "LangChain", "version": "v1", "description": "LLM chain composition"},
-    {"id": "3", "canonical_id": "agent:framework:autogen:v1", "name": "AutoGen", "version": "v1", "description": "Multi-agent systems"},
-    {"id": "4", "canonical_id": "agent:framework:crewai:v1", "name": "CrewAI", "version": "v1", "description": "Agent crew orchestration"},
-    {"id": "5", "canonical_id": "agent:framework:llamaindex:v1", "name": "LlamaIndex", "version": "v1", "description": "RAG and knowledge agents"},
-    {"id": "6", "canonical_id": "agent:framework:vertex-ai:v1", "name": "Vertex AI", "version": "v1", "description": "Google Cloud agent platform"},
-    {"id": "7", "canonical_id": "agent:framework:openai-agents:v1", "name": "OpenAI Agents", "version": "v1", "description": "OpenAI agent SDK"},
-    {"id": "8", "canonical_id": "agent:framework:swarmease:v1", "name": "SwarmEase", "version": "v1", "description": "Multi-agent orchestration"},
-    {"id": "9", "canonical_id": "agent:framework:agentmesh:v1", "name": "AgentMesh", "version": "v1", "description": "Unified agent framework"},
-    {"id": "10", "canonical_id": "agent:framework:claude-agent:v1", "name": "Claude Agent", "version": "v1", "description": "Anthropic Claude agents"},
+    {"id": "1", "canonical_id": "agent:framework:langgraph", "name": "LangGraph", "version": "v1", "description": "State-based agent workflows"},
+    {"id": "2", "canonical_id": "agent:framework:langchain", "name": "LangChain", "version": "v1", "description": "LLM chain composition"},
+    {"id": "3", "canonical_id": "agent:framework:autogen", "name": "AutoGen", "version": "v1", "description": "Multi-agent systems"},
+    {"id": "4", "canonical_id": "agent:framework:crewai", "name": "CrewAI", "version": "v1", "description": "Agent crew orchestration"},
+    {"id": "5", "canonical_id": "agent:framework:llamaindex", "name": "LlamaIndex", "version": "v1", "description": "RAG and knowledge agents"},
+    {"id": "6", "canonical_id": "agent:framework:vertex-ai", "name": "Vertex AI", "version": "v1", "description": "Google Cloud agent platform"},
+    {"id": "7", "canonical_id": "agent:framework:openai-agents", "name": "OpenAI Agents", "version": "v1", "description": "OpenAI agent SDK"},
+    {"id": "8", "canonical_id": "agent:framework:swarmease", "name": "SwarmEase", "version": "v1", "description": "Multi-agent orchestration"},
+    {"id": "9", "canonical_id": "agent:framework:agentmesh", "name": "AgentMesh", "version": "v1", "description": "Unified agent framework"},
+    {"id": "10", "canonical_id": "agent:framework:claude-agent", "name": "Claude Agent", "version": "v1", "description": "Anthropic Claude agents"},
 ]
 
 # Tool Registry Data
 TOOLS = [
-    {"id": "1", "canonical_id": "tool:langgraph:stategraph:v1", "name": "StateGraph", "framework": "langgraph", "version": "v1", "description": "State-based graph for agent workflows"},
-    {"id": "2", "canonical_id": "tool:langchain:agentexecutor:v1", "name": "AgentExecutor", "framework": "langchain", "version": "v1", "description": "Execute agent chains"},
-    {"id": "3", "canonical_id": "tool:autogen:codeexecutor:v1", "name": "CodeExecutor", "framework": "autogen", "version": "v1", "description": "Execute code in containers"},
-    {"id": "4", "canonical_id": "tool:crewai:crew:v1", "name": "Crew", "framework": "crewai", "version": "v1", "description": "Crew of agents"},
-    {"id": "5", "canonical_id": "tool:langchain:chatmodel:v1", "name": "ChatModel", "framework": "langchain", "version": "v1", "description": "Chat model wrapper"},
-    {"id": "6", "canonical_id": "tool:langgraph:statemanager:v1", "name": "StateManager", "framework": "langgraph", "version": "v1", "description": "Manage agent state"},
+    {"id": "1", "canonical_id": "tool:langgraph:stategraph", "name": "StateGraph", "framework": "langgraph", "version": "v1", "description": "State-based graph for agent workflows"},
+    {"id": "2", "canonical_id": "tool:langchain:agentexecutor", "name": "AgentExecutor", "framework": "langchain", "version": "v1", "description": "Execute agent chains"},
+    {"id": "3", "canonical_id": "tool:autogen:codeexecutor", "name": "CodeExecutor", "framework": "autogen", "version": "v1", "description": "Execute code in containers"},
+    {"id": "4", "canonical_id": "tool:crewai:crew", "name": "Crew", "framework": "crewai", "version": "v1", "description": "Crew of agents"},
+    {"id": "5", "canonical_id": "tool:langchain:chatmodel", "name": "ChatModel", "framework": "langchain", "version": "v1", "description": "Chat model wrapper"},
+    {"id": "6", "canonical_id": "tool:langgraph:statemanager", "name": "StateManager", "framework": "langgraph", "version": "v1", "description": "Manage agent state"},
 ]
 
 @app.get("/frameworks")
@@ -364,12 +412,12 @@ async def list_guard_rules(status: str = None):
 
 # Model Gateway - canonical_id: model:provider:name:version
 MODEL_ENDPOINTS = [
-    {"id": "1", "canonical_id": "model:openai:gpt-4o:v1", "provider": "OpenAI", "model": "gpt-4o", "version": "v1", "endpoint": "api.openai.com/v1", "status": "available", "latency": 450, "rpm": 500},
-    {"id": "2", "canonical_id": "model:openai:gpt-4o-mini:v1", "provider": "OpenAI", "model": "gpt-4o-mini", "version": "v1", "endpoint": "api.openai.com/v1", "status": "available", "latency": 200, "rpm": 1500},
-    {"id": "3", "canonical_id": "model:anthropic:claude-3-opus:v1", "provider": "Anthropic", "model": "claude-3-opus", "version": "v1", "endpoint": "api.anthropic.com", "status": "busy", "latency": 800, "rpm": 50},
-    {"id": "4", "canonical_id": "model:anthropic:claude-3-sonnet:v1", "provider": "Anthropic", "model": "claude-3-sonnet", "version": "v1", "endpoint": "api.anthropic.com", "status": "available", "latency": 350, "rpm": 100},
-    {"id": "5", "canonical_id": "model:google:gemini-2.0-flash:v1", "provider": "Google", "model": "gemini-2.0-flash", "version": "v1", "endpoint": "generativelanguage.googleapis.com", "status": "available", "latency": 180, "rpm": 1000},
-    {"id": "6", "canonical_id": "model:azure:gpt-4:v1", "provider": "Azure", "model": "gpt-4", "version": "v1", "endpoint": "openai.azure.com", "status": "available", "latency": 400, "rpm": 200},
+    {"id": "1", "canonical_id": "model:openai:gpt-4o", "provider": "OpenAI", "model": "gpt-4o", "version": "v1", "endpoint": "api.openai.com/v1", "status": "available", "latency": 450, "rpm": 500},
+    {"id": "2", "canonical_id": "model:openai:gpt-4o-mini", "provider": "OpenAI", "model": "gpt-4o-mini", "version": "v1", "endpoint": "api.openai.com/v1", "status": "available", "latency": 200, "rpm": 1500},
+    {"id": "3", "canonical_id": "model:anthropic:claude-3-opus", "provider": "Anthropic", "model": "claude-3-opus", "version": "v1", "endpoint": "api.anthropic.com", "status": "busy", "latency": 800, "rpm": 50},
+    {"id": "4", "canonical_id": "model:anthropic:claude-3-sonnet", "provider": "Anthropic", "model": "claude-3-sonnet", "version": "v1", "endpoint": "api.anthropic.com", "status": "available", "latency": 350, "rpm": 100},
+    {"id": "5", "canonical_id": "model:google:gemini-2.0-flash", "provider": "Google", "model": "gemini-2.0-flash", "version": "v1", "endpoint": "generativelanguage.googleapis.com", "status": "available", "latency": 180, "rpm": 1000},
+    {"id": "6", "canonical_id": "model:azure:gpt-4", "provider": "Azure", "model": "gpt-4", "version": "v1", "endpoint": "openai.azure.com", "status": "available", "latency": 400, "rpm": 200},
 ]
 
 @app.get("/models")
