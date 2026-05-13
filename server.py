@@ -17,13 +17,13 @@ from pydantic import BaseModel
 
 # Schema.org master data (for seeding SurrealDB)
 SCHEMA_TYPES = [
-    {"id": "1", "canonical_id": "schema:organization", "name": "Organization", "parent": "Thing", "description": "Corporations, NGOs, governments"},
+    {"id": "1", "canonical_id": "schema:organization", "name": "Organization", "parent": "Thing", "description": "Corporations, NGOs, governments", "subtypes": ["Corporation", "NGO", "GovernmentOrganization", "LocalBusiness"]},
     {"id": "2", "canonical_id": "schema:person", "name": "Person", "parent": "Thing", "description": "Individual people"},
-    {"id": "3", "canonical_id": "schema:place", "name": "Place", "parent": "Thing", "description": "Locations, buildings"},
+    {"id": "3", "canonical_id": "schema:place", "name": "Place", "parent": "Thing", "description": "Locations, buildings", "subtypes": ["CivicStructure", "LandmarksAndBuildings", "Accommodation"]},
     {"id": "4", "canonical_id": "schema:product", "name": "Product", "parent": "Thing", "description": "Goods and services"},
     {"id": "5", "canonical_id": "schema:event", "name": "Event", "parent": "Thing", "description": "Occurrences"},
     {"id": "6", "canonical_id": "schema:creativework", "name": "CreativeWork", "parent": "Thing", "description": "Books, movies, software"},
-    {"id": "7", "canonical_id": "schema:intangible", "name": "Intangible", "parent": "Thing", "description": "Assets, services"},
+    {"id": "7", "canonical_id": "schema:intangible", "name": "Intangible", "parent": "Thing", "description": "Assets, services", "subtypes": ["Service", "Asset"]},
     {"id": "8", "canonical_id": "schema:action", "name": "Action", "parent": "Thing", "description": "Activities"},
     {"id": "9", "canonical_id": "schema:medicalentity", "name": "MedicalEntity", "parent": "Thing", "description": "Healthcare entities"},
     {"id": "10", "canonical_id": "schema:structuredvalue", "name": "StructuredValue", "parent": "Thing", "description": "Key-value pairs"},
@@ -325,8 +325,12 @@ SAMPLE_ENTITIES = [
     {"id": "e2", "type": "schema:person", "name": "Alice Chen", "canonical_id": "person:alice", "jobTitle": "CEO", "employee": "org:agennext"},
     {"id": "e3", "type": "schema:person", "name": "Bob Smith", "canonical_id": "person:bob", "jobTitle": "CTO", "employee": "org:agennext"},
     {"id": "e4", "type": "schema:product", "name": "Agent Platform", "canonical_id": "product:agent-platform", "brand": "org:agennext", "category": "SaaS"},
-    {"id": "e5", "type": "schema:creativework", "name": "API Documentation", "canonical_id": "doc:api", "author": "person:bob"},
+    {"id": "e5", "type": "schema:creativework", "name": "API Documentation", "canonical_id": "doc:api", "author": "person:bob", "datePublished": "2026-01-15"},
     {"id": "e6", "type": "schema:person", "name": "Carol Davis", "canonical_id": "person:carol", "jobTitle": "Lead Engineer", "employee": "org:agennext"},
+    {"id": "e7", "type": "schema:place", "name": "AGenNext HQ", "canonical_id": "place:hq", "address": "100 Main St, San Francisco, CA", "geo": "37.7749,-122.4194"},
+    {"id": "e8", "type": "schema:event", "name": "AI Summit 2026", "canonical_id": "event:ai-summit", "startDate": "2026-06-15", "location": "place:hq", "organizer": "org:agennext"},
+    {"id": "e9", "type": "schema:intangible", "name": "Agent API", "canonical_id": "service:agent-api", "description": "REST API for agent management"},
+    {"id": "e10", "type": "schema:action", "name": "Deploy Agent", "canonical_id": "action:deploy", "description": "Deploy agent to production"},
 ]
 
 @app.get("/entities")
