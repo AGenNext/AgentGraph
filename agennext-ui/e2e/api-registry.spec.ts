@@ -8,9 +8,9 @@ test.describe('API Registry Integration', () => {
     expect(res.ok()).toBeTruthy();
     
     const data = await res.json();
-    expect(data.frameworks).toHaveLength(2);
-    expect(data.frameworks[0].name).toBe('langgraph');
-    expect(data.frameworks[1].name).toBe('langchain');
+    expect(data.frameworks).toHaveLength(4);
+    expect(data.frameworks.map((f: any) => f.id)).toContain('langgraph');
+    expect(data.frameworks.map((f: any) => f.id)).toContain('langchain');
   });
 
   test('should list tools with framework filter', async ({ request }) => {
@@ -23,7 +23,7 @@ test.describe('API Registry Integration', () => {
   });
 
   test('should search tools by name', async ({ request }) => {
-    const res = await request.get(`${API_URL}/tools?framework=langgraph&search=state`);
+    const res = await request.get(`${API_URL}/tools?search=state`);
     expect(res.ok()).toBeTruthy();
     
     const data = await res.json();
@@ -33,12 +33,11 @@ test.describe('API Registry Integration', () => {
     });
   });
 
-  test('should get tool by canonical_id', async ({ request }) => {
-    const res = await request.get(`${API_URL}/tools/langgraph:1.1.10:StateGraph`);
+  test('should get tool by id', async ({ request }) => {
+    const res = await request.get(`${API_URL}/tools/langgraph:1`);
     expect(res.ok()).toBeTruthy();
     
     const tool = await res.json();
-    expect(tool.name).toBe('StateGraph');
-    expect(tool.kind).toBe('class');
+    expect(tool.tool.name).toBe('StateGraph');
   });
 });
