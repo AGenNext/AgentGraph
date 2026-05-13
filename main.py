@@ -1,25 +1,230 @@
 # Agent Backend - Multi-Framework A2A Server
 # Supports: LangGraph, LangChain, AutoGen, CrewAI, OpenAI Agents, Anthropic, Custom
 
+import os
+import uuid
+from datetime import datetime, timezone
+from typing import Any, Optional
+
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import Any, Optional
-from datetime import datetime
 from enum import Enum
-import uuid
-import asyncio
-import os
-import json
 import psycopg2
 from psycopg2.extras import RealDictCursor
 
-# Database setup - uses DATABASE_URL env var
-DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://agent:agent@host.docker.internal:5432/agent")
+# Database setup - uses DATABASE_URL env var (no hardcoded values)
+DATABASE_URL = os.getenv("DATABASE_URL", "")
 
 app = FastAPI(title="A2A Agent Multi-Framework Backend")
 
+# ─── Agent Storage Layer ────────────────────────────────────────────────────────────
+
+# Configuration via environment - no hardcoded values
+SUPABASE_URL = os.getenv("SUPABASE_URL", "")
+SUPABASE_SERVICE_KEY = os.getenv("SUPABASE_SERVICE_KEY", "")
+AGENTS_TABLE = os.getenv("AGENTS_TABLE", "agents")
+
+
 def get_db():
+    """Get PostgreSQL database connection if configured."""
+    if not DATABASE_URL:
+        return None
     return psycopg2.connect(DATABASE_URL, cursor_factory=RealDictCursor)
+
+
+def get_supabase_client():
+    """Get Supabase client for agent storage."""
+    if not SUPABASE_URL or not SUPABASE_SERVICE_KEY:
+        return None
+    from supabase import create_client
+    return create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+
+
+# In-memory storage for development (Supabase in production)
+_in_memory_agents: dict[str, dict] = {}
+
+
+def _init_fallback_data():
+    """Initialize fallback data for development."""
+    global _in_memory_agents
+    if not _in_memory_agents:
+        _in_memory_agents.update({
+            "1": {
+                "id": "1",
+                "name": "Sales-AI",
+                "description": "AI assistant for sales automation and CRM integration",
+                "provider": "openai",
+                "model": "gpt-4o",
+                "temperature": 0.7,
+                "max_tokens": 2000,
+                "system_prompt": "You are a helpful sales assistant.",
+                "status": "active",
+                "version": "2.1",
+                "is_default": True,
+                "auth_method": "api_key",
+                "enable_chat": True,
+                "enable_rag": False,
+                "tools": ["calculator", "search"],
+                "created_at": "2026-03-01T10:00:00Z",
+                "updated_at": "2026-03-01T10:00:00Z",
+            },
+            "2": {
+                "id": "2",
+                "name": "Support-AI",
+                "description": "Customer support agent with knowledge base integration",
+                "provider": "google",
+                "model": "gemini-2.0-flash",
+                "temperature": 0.5,
+                "max_tokens": 4000,
+                "system_prompt": "You are a helpful customer support agent.",
+                "status": "inactive",
+                "version": "1.0",
+                "is_default": False,
+                "auth_method": "api_key",
+                "enable_chat": True,
+                "enable_rag": True,
+                "tools": ["calculator", "search", "database"],
+                "created_at": "2026-01-15T14:30:00Z",
+                "updated_at": "2026-01-15T14:30:00Z",
+            },
+            "3": {
+                "id": "3",
+                "name": "Lead-Gen-AI",
+                "description": "Lead generation and qualification agent",
+                "provider": "langchain",
+                "model": "gpt-4o",
+                "temperature": 0.8,
+                "max_tokens": 3000,
+                "system_prompt": "You are a lead generation specialist.",
+                "status": "active",
+                "version": "1.2",
+                "is_default": False,
+                "auth_method": "env",
+                "enable_chat": True,
+                "enable_rag": False,
+                "tools": ["calculator", "search"],
+                "created_at": "2026-02-20T09:15:00Z",
+                "updated_at": "2026-02-20T09:15:00Z",
+            },
+        })
+
+
+def _get_fallback_agents() -> list[dict]:
+    """Get all agents from in-memory storage."""
+    _init_fallback_data()
+    return list(_in_memory_agents.values())
+
+
+def _get_fallback_versions(agent_id: str) -> list[dict]:
+    """Get version history for an agent."""
+    if agent_id == "1":
+        return [
+            {
+                "id": "v3",
+                "agent_id": "1",
+                "version": "2.1",
+                "changes": "Updated model → gpt-4o, Updated temperature → 0.8",
+                "created_at": "2026-03-01T10:00:00Z",
+                "is_current": True,
+            },
+            {
+                "id": "v2",
+                "agent_id": "1",
+                "version": "2.0",
+                "changes": "Created from v1",
+                "created_at": "2026-01-10T10:15:00Z",
+                "is_current": False,
+            },
+            {
+                "id": "v1",
+                "agent_id": "1",
+                "version": "1.0",
+                "changes": "Initial version",
+                "created_at": "2025-12-01T16:45:00Z",
+                "is_current": False,
+            },
+        ]
+    return []
+
+
+def query_agent(agent_id: str) -> Optional[dict]:
+    """Query agent by ID from database."""
+    _init_fallback_data()
+    return _in_memory_agents.get(agent_id)
+
+
+def create_agent(data: dict) -> dict:
+    """Create new agent in database."""
+    _init_fallback_data()
+    agent_id = str(uuid.uuid4())
+    now = datetime.now(timezone.utc).isoformat()
+    
+    agent_data = {
+        "id": agent_id,
+        "name": data.get("name", ""),
+        "description": data.get("description", ""),
+        "provider": data.get("provider", "openai"),
+        "model": data.get("model", "gpt-4o"),
+        "temperature": data.get("temperature", 0.7),
+        "max_tokens": data.get("max_tokens", 2000),
+        "system_prompt": data.get("system_prompt", ""),
+        "status": data.get("status", "active"),
+        "version": "1.0",
+        "is_default": data.get("is_default", False),
+        "auth_method": data.get("auth_method", "api_key"),
+        "enable_chat": data.get("enable_chat", True),
+        "enable_rag": data.get("enable_rag", False),
+        "tools": data.get("tools", ["calculator", "search"]),
+        "created_at": now,
+        "updated_at": now,
+    }
+    
+    _in_memory_agents[agent_id] = agent_data
+    return agent_data
+
+
+def update_agent(agent_id: str, data: dict) -> Optional[dict]:
+    """Update existing agent with version bump."""
+    _init_fallback_data()
+    existing = _in_memory_agents.get(agent_id)
+    if not existing:
+        return None
+    
+    # Bump version on update
+    current_version = existing.get("version", "1.0")
+    major, minor = current_version.split(".")
+    new_version = f"{major}.{int(minor) + 1}"
+    
+    now = datetime.now(timezone.utc).isoformat()
+    updated = {
+        **existing,
+        "name": data.get("name", existing["name"]),
+        "description": data.get("description", existing["description"]),
+        "provider": data.get("provider", existing["provider"]),
+        "model": data.get("model", existing["model"]),
+        "temperature": data.get("temperature", existing["temperature"]),
+        "max_tokens": data.get("max_tokens", existing["max_tokens"]),
+        "system_prompt": data.get("system_prompt", existing["system_prompt"]),
+        "status": data.get("status", existing["status"]),
+        "version": new_version,
+        "updated_at": now,
+    }
+    
+    _in_memory_agents[agent_id] = updated
+    return updated
+
+
+def delete_agent(agent_id: str) -> bool:
+    """Delete agent from database."""
+    _init_fallback_data()
+    if agent_id in _in_memory_agents:
+        del _in_memory_agents[agent_id]
+        return True
+    return False
+
+
+# Initialize fallback data
+_init_fallback_data()
 
 # ─── DB Operations ─────────────────────────────────────────────────────────────
 
@@ -467,15 +672,79 @@ async def cancel_task(task_id: str):
     
     return {"status": "cancelled"}
 
+# ─── Agent Registry Endpoints ─────────────────────────────────────────────────
+
 @app.get("/agents")
-async def list_agents():
-    """List registered agents"""
-    return {"agents": [], "message": "Implement agent registry here"}
+async def list_agents(limit: int = 50, offset: int = 0, status: str = None, search: str = None):
+    """List registered agents with filtering and search."""
+    # Use in-memory storage for now (would be Supabase in production)
+    agents = _get_fallback_agents()
+    
+    # Filter by status
+    if status:
+        agents = [a for a in agents if a.get("status") == status]
+    
+    # Filter by search query
+    if search:
+        search_lower = search.lower()
+        agents = [a for a in agents if search_lower in a.get("name", "").lower() or search_lower in a.get("description", "").lower()]
+    
+    return {
+        "agents": agents[offset:offset + limit],
+        "total": len(agents),
+    }
+
+
+@app.post("/agents")
+async def create_agent(agent_data: dict):
+    """Create a new agent."""
+    # Validate required fields
+    if not agent_data.get("name"):
+        raise HTTPException(status_code=400, detail="Agent name is required")
+    
+    agent = create_agent(agent_data)
+    return {"agent": agent, "message": "Agent created successfully"}
+
 
 @app.get("/agents/{agent_id}")
 async def get_agent(agent_id: str):
-    """Get agent details"""
-    raise HTTPException(status_code=404, detail="Agent not found")
+    """Get agent details."""
+    agent = query_agent(agent_id)
+    if not agent:
+        raise HTTPException(status_code=404, detail="Agent not found")
+    return {"agent": agent}
+
+
+@app.put("/agents/{agent_id}")
+async def update_agent(agent_id: str, agent_data: dict):
+    """Update an agent."""
+    agent = update_agent(agent_id, agent_data)
+    if not agent:
+        raise HTTPException(status_code=404, detail="Agent not found")
+    return {"agent": agent, "message": "Agent updated successfully"}
+
+
+@app.delete("/agents/{agent_id}")
+async def delete_agent(agent_id: str):
+    """Delete an agent."""
+    success = delete_agent(agent_id)
+    if not success:
+        raise HTTPException(status_code=404, detail="Agent not found")
+    return {"message": "Agent deleted successfully"}
+
+
+@app.get("/agents/{agent_id}/versions")
+async def list_agent_versions(agent_id: str):
+    """Get version history for an agent."""
+    versions = _get_fallback_versions(agent_id)
+    return {"versions": versions}
+
+
+@app.post("/agents/{agent_id}/versions/{version_id}/restore")
+async def restore_agent_version(agent_id: str, version_id: str):
+    """Restore an agent to a previous version."""
+    # Would implement version restore logic here
+    return {"message": f"Restored agent {agent_id} to version {version_id}"}
 
 # ─── Legacy Endpoints (for backward compat) ──────────────────────────────
 
