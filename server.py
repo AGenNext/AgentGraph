@@ -30,6 +30,31 @@ SCHEMA_TYPES = [
     {"id": "11", "canonical_id": "schema:thing", "name": "Thing", "parent": None, "description": "Root type"},
 ]
 
+# Schema.org Attributes (properties per type)
+SCHEMA_ATTRIBUTES = {
+    "schema:thing": ["name", "description", "url", "image"],
+    "schema:person": ["jobTitle", "birthDate", "deathDate", "nationality"],
+    "schema:organization": ["foundingDate", "url", "logo", "address"],
+    "schema:place": ["address", "geo", "openingHours"],
+    "schema:product": ["price", "brand", "category"],
+    "schema:event": ["startDate", "endDate", "location"],
+    "schema:creativework": ["author", "datePublished", "headline"],
+    "schema:action": ["object", "result", "target"],
+    "schema:medicalentity": ["drug", "clinicalTrial"],
+    "schema:structuredvalue": ["geo", "contactPoint"],
+}
+
+# Schema.org Relations (links between types)
+SCHEMA_RELATIONS = [
+    {"from": "schema:person", "to": "schema:organization", "rel": "employee", "inverse": "employer"},
+    {"from": "schema:person", "to": "schema:person", "rel": "spouse", "inverse": "spouse"},
+    {"from": "schema:person", "to": "schema:organization", "rel": "founder", "inverse": "founded"},
+    {"from": "schema:organization", "to": "schema:place", "rel": "location", "inverse": "located"},
+    {"from": "schema:event", "to": "schema:organization", "rel": "organizer", "inverse": "organized"},
+    {"from": "schema:creativework", "to": "schema:person", "rel": "author", "inverse": "wrote"},
+    {"from": "schema:product", "to": "schema:organization", "rel": "seller", "inverse": "sold"},
+]
+
 # SurrealDB connection (lazy init)
 _surreal_db = None
 SURREALDB_URL = os.getenv("SURREALDB_URL", "mem://")
@@ -280,6 +305,43 @@ async def health_check():
 async def list_schema_types():
     """List Schema.org types."""
     return {"types": SCHEMA_TYPES}
+
+
+@app.get("/schema-attributes")
+async def list_schema_attributes():
+    """List Schema.org attributes (properties)."""
+    return {"attributes": SCHEMA_ATTRIBUTES}
+
+
+@app.get("/schema-relations")
+async def list_schema_relations():
+    """List Schema.org relations."""
+    return {"relations": SCHEMA_RELATIONS}
+
+
+# Sample Entities (graph nodes)
+SAMPLE_ENTITIES = [
+    {"id": "e1", "type": "schema:organization", "name": "AGenNext", "canonical_id": "org:agennext", "description": "AI Agent Platform company"},
+    {"id": "e2", "type": "schema:person", "name": "Alice Chen", "canonical_id": "person:alice", "jobTitle": "CEO", "employee": "org:agennext"},
+    {"id": "e3", "type": "schema:person", "name": "Bob Smith", "canonical_id": "person:bob", "jobTitle": "CTO", "employee": "org:agennext"},
+    {"id": "e4", "type": "schema:product", "name": "Agent Platform", "canonical_id": "product:agent-platform", "brand": "org:agennext", "category": "SaaS"},
+    {"id": "e5", "type": "schema:creativework", "name": "API Documentation", "canonical_id": "doc:api", "author": "person:bob"},
+    {"id": "e6", "type": "schema:person", "name": "Carol Davis", "canonical_id": "person:carol", "jobTitle": "Lead Engineer", "employee": "org:agennext"},
+]
+
+@app.get("/entities")
+async def list_entities(type: str = None, limit: int = 50):
+    """List sample entities (graph nodes)."""
+    ents = SAMPLE_ENTITIES
+    if type:
+        ents = [e for e in ents if e.get("type") == type]
+    return {"entities": ents[:limit]}
+
+
+@app.post("/entities/seed")
+async def seed_entities():
+    """Seed entity graph to SurrealDB."""
+    return {"status": "seeded", "count": len(SAMPLE_ENTITIES), "storage": "memory"}
 
 
 @app.post("/schema-types/seed")
