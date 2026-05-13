@@ -63,8 +63,8 @@ export function Sidebar() {
                 gap: 12,
                 padding: '10px 12px', 
                 borderRadius: 8,
-                color: isActive ? '#fff' : '#A0A0B8',
-                background: isActive ? 'rgba(102, 126, 234, 0.2)' : 'transparent',
+                color: isActive ? '#059669' : '#6b7280',
+                background: isActive ? '#d1fae5' : 'transparent',
                 textDecoration: 'none',
                 fontSize: 13,
                 fontWeight: isActive ? 500 : 400,
@@ -80,14 +80,14 @@ export function Sidebar() {
       </nav>
 
       {/* User */}
-      <div style={{ padding: '16px 24px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
+      <div style={{ padding: '16px 20px', borderTop: '1px solid #e5e7eb' }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 12 }}>
-          <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#667EEA', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 500 }}>
-            JD
+          <div style={{ width: 32, height: 32, borderRadius: '50%', background: '#10b981', display: 'flex', alignItems: 'center', justifyContent: 'center', fontSize: 12, fontWeight: 500, color: '#fff' }}>
+            U
           </div>
           <div style={{ flex: 1 }}>
-            <div style={{ fontSize: 13, fontWeight: 500 }}>John Doe</div>
-            <div style={{ fontSize: 11, color: '#8B8BA7' }}>Admin</div>
+            <div style={{ fontSize: 13, fontWeight: 500 }}>User</div>
+            <div style={{ fontSize: 11, color: '#9ca3af' }}>Member</div>
           </div>
         </div>
       </div>

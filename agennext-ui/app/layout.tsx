@@ -1,13 +1,13 @@
 // app/layout.tsx
-// Root layout - Enterprise Grade AI Agent Platform
+// Root layout - Friendly AI Agent Platform
 
 import './globals.css';
 import type { Metadata } from "next";
 import { Sidebar } from '@/components/Sidebar';
 
 export const metadata: Metadata = {
-  title: "AGenNext Enterprise - AI Agent Platform",
-  description: "Enterprise-grade multi-agent orchestration and management platform",
+  title: "AGenNext - AI Agent Platform",
+  description: "Multi-agent orchestration and management platform",
 };
 
 export default function RootLayout({
@@ -20,9 +20,16 @@ export default function RootLayout({
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
       </head>
-      <body style={{ margin: 0, fontFamily: "'IBM Plex Sans', -apple-system, sans-serif", display: 'flex', minHeight: '100vh', background: '#F8F9FA' }}>
+      <body style={{ 
+        margin: 0, 
+        fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif", 
+        display: 'flex', 
+        minHeight: '100vh', 
+        background: 'linear-gradient(135deg, #f5f7fa 0%, #e4e8ec 100%)',
+        color: '#1a1a2e'
+      }}>
         <Sidebar />
         <main style={{ flex: 1, display: 'flex', flexDirection: 'column', overflow: 'hidden' }}>
           {children}
