@@ -1,138 +1,105 @@
-'use client';
-
-import { useState } from 'react';
-import { Header } from '@/components/Header';
-
-interface Metric {
-  label: string;
-  value: string;
-  change: string;
-  trend: 'up' | 'down';
-}
-
-const metrics: Metric[] = [
-  { label: 'Active Agents', value: '24', change: '+12%', trend: 'up' },
-  { label: 'Tasks Today', value: '156', change: '+8%', trend: 'up' },
-  { label: 'API Calls', value: '12.4K', change: '+23%', trend: 'up' },
-  { label: 'Avg Response', value: '1.2s', change: '-5%', trend: 'down' },
+const protocols = [
+  'A2A agent-to-agent runtime',
+  'Registry-backed discovery',
+  'Agent identity and authorization',
+  'DID-ready governance layer',
 ];
 
-const recentActivity = [
-  { type: 'agent', name: 'Research Agent', action: 'completed', time: '2 min ago' },
-  { type: 'task', name: 'Data Sync #1234', action: 'completed', time: '5 min ago' },
-  { type: 'team', name: 'Analysis Team', action: 'started', time: '10 min ago' },
-  { type: 'approval', name: 'New Agent Request', action: 'pending', time: '15 min ago' },
+const features = [
+  {
+    title: 'Protocol-native agents',
+    description: 'Build agent systems around A2A, registry discovery, identity, authorization, and governance primitives.',
+  },
+  {
+    title: 'Multi-agent orchestration',
+    description: 'Coordinate specialized agents for research, writing, DevOps, sales, support, and enterprise workflows.',
+  },
+  {
+    title: 'Enterprise control plane',
+    description: 'Track tasks, approvals, memory, decisions, integrations, and runtime activity from one platform.',
+  },
 ];
 
-const quickActions = [
-  { icon: '🤖', label: 'New Agent', href: '/agents' },
-  { icon: '📋', label: 'New Task', href: '/tasks' },
-  { icon: '🔗', label: 'Integrations', href: '/integrations' },
-  { icon: '📊', label: 'Reports', href: '/finance' },
+const stats = [
+  { value: '13+', label: 'Protocol modules planned' },
+  { value: 'A2A', label: 'Runtime implementation underway' },
+  { value: 'OSS', label: 'Open protocol foundation' },
 ];
 
-export default function DashboardPage() {
-  const [activity] = useState(recentActivity);
-
+export default function LandingPage() {
   return (
-    <div style={{ display: 'flex', flexDirection: 'column', height: '100vh' }}>
-      <Header />
-      
-      <div style={{ flex: 1, overflow: 'auto', padding: 24, background: '#F8F9FA' }}>
-        {/* Welcome */}
-        <div style={{ marginBottom: 24 }}>
-          <h1 style={{ fontSize: 24, fontWeight: 600, margin: '0 0 4px 0' }}>Good morning, John</h1>
-          <p style={{ color: '#6B7280', margin: 0, fontSize: 14 }}>Here's what's happening with your agents today.</p>
-        </div>
-
-        {/* Quick Actions */}
-        <div style={{ display: 'flex', gap: 12, marginBottom: 24 }}>
-          {quickActions.map(action => (
-            <a
-              key={action.label}
-              href={action.href}
-              style={{
-                background: '#fff',
-                border: '1px solid #E5E5E5',
-                borderRadius: 8,
-                padding: '12px 16px',
-                display: 'flex',
-                alignItems: 'center',
-                gap: 8,
-                textDecoration: 'none',
-                color: '#161616',
-                fontSize: 13,
-                fontWeight: 500,
-                cursor: 'pointer',
-                transition: 'all 0.15s ease',
-              }}
-            >
-              <span style={{ fontSize: 18 }}>{action.icon}</span>
-              {action.label}
+    <main style={{ minHeight: '100vh', background: '#070B14', color: '#F8FAFC', fontFamily: 'Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, Segoe UI, sans-serif' }}>
+      <section style={{ position: 'relative', overflow: 'hidden', padding: '32px 24px 80px' }}>
+        <div style={{ position: 'absolute', inset: 0, background: 'radial-gradient(circle at 20% 10%, rgba(59,130,246,0.28), transparent 34%), radial-gradient(circle at 80% 20%, rgba(168,85,247,0.22), transparent 30%), radial-gradient(circle at 50% 90%, rgba(16,185,129,0.12), transparent 32%)' }} />
+        <div style={{ position: 'relative', maxWidth: 1180, margin: '0 auto' }}>
+          <nav style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 96 }}>
+            <a href="/" style={{ display: 'flex', alignItems: 'center', gap: 10, color: '#fff', textDecoration: 'none', fontWeight: 800, letterSpacing: -0.4 }}>
+              <span style={{ width: 34, height: 34, borderRadius: 10, display: 'grid', placeItems: 'center', background: 'linear-gradient(135deg, #3B82F6, #8B5CF6)' }}>A</span>
+              AGenNext AgentGraph
             </a>
-          ))}
-        </div>
+            <div style={{ display: 'flex', gap: 16, alignItems: 'center', fontSize: 14 }}>
+              <a href="https://github.com/AGenNext/AgentGraph" style={{ color: '#CBD5E1', textDecoration: 'none' }}>GitHub</a>
+              <a href="https://github.com/AGenNext/AGenNext-Protocols" style={{ color: '#CBD5E1', textDecoration: 'none' }}>Protocols</a>
+              <a href="#protocols" style={{ color: '#070B14', textDecoration: 'none', background: '#F8FAFC', padding: '10px 14px', borderRadius: 999, fontWeight: 700 }}>Explore</a>
+            </div>
+          </nav>
 
-        {/* Metrics */}
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: 16, marginBottom: 24 }}>
-          {metrics.map(metric => (
-            <div key={metric.label} style={{ background: '#fff', borderRadius: 8, padding: 20, border: '1px solid #E5E5E5' }}>
-              <div style={{ fontSize: 12, color: '#6B7280', marginBottom: 8 }}>{metric.label}</div>
-              <div style={{ fontSize: 28, fontWeight: 600, marginBottom: 4 }}>{metric.value}</div>
-              <div style={{ fontSize: 12, color: metric.trend === 'up' ? '#10B981' : '#DA1E28' }}>
-                {metric.change} vs last week
+          <div style={{ display: 'grid', gridTemplateColumns: 'minmax(0, 1.1fr) minmax(320px, 0.9fr)', gap: 48, alignItems: 'center' }}>
+            <div>
+              <div style={{ display: 'inline-flex', alignItems: 'center', gap: 8, padding: '8px 12px', border: '1px solid rgba(148,163,184,0.28)', borderRadius: 999, background: 'rgba(15,23,42,0.65)', color: '#BFDBFE', fontSize: 13, marginBottom: 22 }}>
+                Protocol runtime for enterprise AI agents
+              </div>
+              <h1 style={{ fontSize: 'clamp(42px, 7vw, 78px)', lineHeight: 0.95, letterSpacing: -3, margin: '0 0 24px', maxWidth: 780 }}>
+                Build, govern, and connect agent networks.
+              </h1>
+              <p style={{ color: '#CBD5E1', fontSize: 20, lineHeight: 1.65, maxWidth: 690, margin: '0 0 34px' }}>
+                AgentGraph is the AGenNext control plane for protocol-native multi-agent systems: A2A messaging, registry discovery, identity, authorization, and governance-ready orchestration.
+              </p>
+              <div style={{ display: 'flex', flexWrap: 'wrap', gap: 14 }}>
+                <a href="https://github.com/AGenNext/AgentGraph" style={{ background: '#3B82F6', color: '#fff', padding: '14px 18px', borderRadius: 12, textDecoration: 'none', fontWeight: 800 }}>View repository</a>
+                <a href="https://github.com/AGenNext/AGenNext-Protocols" style={{ background: 'rgba(255,255,255,0.08)', color: '#fff', padding: '14px 18px', borderRadius: 12, textDecoration: 'none', fontWeight: 800, border: '1px solid rgba(148,163,184,0.25)' }}>Protocol specs</a>
               </div>
             </div>
-          ))}
-        </div>
 
-        {/* Two Column */}
-        <div style={{ display: 'grid', gridTemplateColumns: '2fr 1fr', gap: 24 }}>
-          {/* Recent Activity */}
-          <div style={{ background: '#fff', borderRadius: 8, border: '1px solid #E5E5E5', overflow: 'hidden' }}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid #E5E5E5', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-              <h3 style={{ fontSize: 14, fontWeight: 600, margin: 0 }}>Recent Activity</h3>
-              <button style={{ fontSize: 12, color: '#0F62FE', background: 'none', border: 'none', cursor: 'pointer' }}>View all</button>
-            </div>
-            <div>
-              {activity.map((item, i) => (
-                <div key={i} style={{ padding: '12px 20px', borderBottom: i < activity.length - 1 ? '1px solid #F4F4F4' : 'none', display: 'flex', alignItems: 'center', gap: 12 }}>
-                  <div style={{ width: 32, height: 32, borderRadius: 8, background: '#F4F4F4', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    {item.type === 'agent' ? '🤖' : item.type === 'task' ? '📋' : item.type === 'team' ? '👥' : '✅'}
+            <div style={{ border: '1px solid rgba(148,163,184,0.25)', borderRadius: 28, padding: 24, background: 'linear-gradient(180deg, rgba(15,23,42,0.9), rgba(15,23,42,0.56))', boxShadow: '0 28px 80px rgba(0,0,0,0.35)' }}>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: 22 }}>
+                <strong>Runtime snapshot</strong>
+                <span style={{ color: '#34D399', fontSize: 13 }}>online</span>
+              </div>
+              <div style={{ display: 'grid', gap: 12 }}>
+                {protocols.map((item, index) => (
+                  <div key={item} style={{ display: 'flex', gap: 12, alignItems: 'center', padding: 14, borderRadius: 16, background: 'rgba(255,255,255,0.055)', border: '1px solid rgba(148,163,184,0.14)' }}>
+                    <span style={{ width: 28, height: 28, borderRadius: 9, display: 'grid', placeItems: 'center', background: index === 0 ? '#2563EB' : 'rgba(148,163,184,0.18)', fontSize: 13 }}>{index + 1}</span>
+                    <span style={{ color: '#E2E8F0' }}>{item}</span>
                   </div>
-                  <div style={{ flex: 1 }}>
-                    <div style={{ fontSize: 13, fontWeight: 500 }}>{item.name}</div>
-                    <div style={{ fontSize: 12, color: '#6B7280' }}>{item.action}</div>
-                  </div>
-                  <div style={{ fontSize: 12, color: '#9CA3AF' }}>{item.time}</div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          {/* Agent Status */}
-          <div style={{ background: '#fff', borderRadius: 8, border: '1px solid #E5E5E5', overflow: 'hidden' }}>
-            <div style={{ padding: '16px 20px', borderBottom: '1px solid #E5E5E5' }}>
-              <h3 style={{ fontSize: 14, fontWeight: 600, margin: 0 }}>Agent Status</h3>
-            </div>
-            <div style={{ padding: 16 }}>
-              {[
-                { label: 'Active', count: 18, color: '#10B981' },
-                { label: 'Idle', count: 4, color: '#6B7280' },
-                { label: 'Error', count: 2, color: '#DA1E28' },
-              ].map(item => (
-                <div key={item.label} style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
-                  <div style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
-                    <span style={{ width: 8, height: 8, borderRadius: '50%', background: item.color }} />
-                    <span style={{ fontSize: 13 }}>{item.label}</span>
-                  </div>
-                  <span style={{ fontSize: 13, fontWeight: 600 }}>{item.count}</span>
-                </div>
-              ))}
+                ))}
+              </div>
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </section>
+
+      <section id="protocols" style={{ padding: '0 24px 72px' }}>
+        <div style={{ maxWidth: 1180, margin: '0 auto' }}>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16, marginBottom: 18 }}>
+            {stats.map((stat) => (
+              <div key={stat.label} style={{ padding: 24, borderRadius: 22, background: '#0F172A', border: '1px solid rgba(148,163,184,0.18)' }}>
+                <div style={{ fontSize: 34, fontWeight: 900, marginBottom: 6 }}>{stat.value}</div>
+                <div style={{ color: '#94A3B8', fontSize: 14 }}>{stat.label}</div>
+              </div>
+            ))}
+          </div>
+
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(3, 1fr)', gap: 16 }}>
+            {features.map((feature) => (
+              <article key={feature.title} style={{ padding: 26, borderRadius: 22, background: '#F8FAFC', color: '#0F172A' }}>
+                <h2 style={{ margin: '0 0 10px', fontSize: 20 }}>{feature.title}</h2>
+                <p style={{ margin: 0, color: '#475569', lineHeight: 1.65 }}>{feature.description}</p>
+              </article>
+            ))}
+          </div>
+        </div>
+      </section>
+    </main>
   );
 }
