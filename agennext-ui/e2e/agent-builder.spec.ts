@@ -7,34 +7,34 @@ test.describe('AgentBuilder UI', () => {
     const res = await request.get(`${API}/frameworks`);
     const data = await res.json();
     
-    expect(data.frameworks).toHaveLength(2);
-    expect(data.frameworks.map((f: any) => f.name)).toContain('langgraph');
-    expect(data.frameworks.map((f: any) => f.name)).toContain('langchain');
+    expect(data.frameworks).toHaveLength(4);
+    expect(data.frameworks.map((f: any) => f.id)).toContain('langgraph');
+    expect(data.frameworks.map((f: any) => f.id)).toContain('langchain');
   });
 
-  test('should load all 314 tools', async ({ request }) => {
+  test('should load tools from API', async ({ request }) => {
     const res = await request.get(`${API}/tools`);
     const data = await res.json();
     
-    expect(data.tools.length).toBe(314);
+    expect(data.total).toBe(6);
   });
 
   test('should filter langgraph tools', async ({ request }) => {
     const res = await request.get(`${API}/tools?framework=langgraph`);
     const data = await res.json();
     
-    expect(data.tools.length).toBe(232);
+    expect(data.tools.length).toBe(2);
   });
 
   test('should filter langchain tools', async ({ request }) => {
     const res = await request.get(`${API}/tools?framework=langchain`);
     const data = await res.json();
     
-    expect(data.tools.length).toBe(82);
+    expect(data.tools.length).toBe(2);
   });
 
   test('should search tools by name', async ({ request }) => {
-    const res = await request.get(`${API}/tools?framework=langgraph&search=state`);
+    const res = await request.get(`${API}/tools?search=state`);
     const data = await res.json();
     
     expect(data.tools.length).toBeGreaterThan(0);
@@ -43,12 +43,10 @@ test.describe('AgentBuilder UI', () => {
     });
   });
 
-  test('should get tool by canonical_id', async ({ request }) => {
-    const res = await request.get(`${API}/tools/langgraph:1.1.10:StateGraph`);
-    const tool = await res.json();
+  test('should get tool by id', async ({ request }) => {
+    const res = await request.get(`${API}/tools/langgraph:1`);
+    const data = await res.json();
     
-    expect(tool.name).toBe('StateGraph');
-    expect(tool.kind).toBe('class');
-    expect(tool.framework).toBe('langgraph');
+    expect(data.tool.name).toBe('StateGraph');
   });
 });

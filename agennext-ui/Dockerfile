@@ -1,16 +1,17 @@
-# AGenNext-Enterprise UI - Production Dockerfile
-# Multi-stage build for optimized production image
+# AGenNext Enterprise - Production-Grade Dockerfile
+# Multi-stage build with security hardening
 
 # Stage 1: Build
 FROM node:20-alpine AS builder
 
 WORKDIR /app
 
-# Copy package files
+# Copy package files first for dependency caching
 COPY package.json package-lock.json* ./
 
-# Install dependencies
-RUN npm ci --legacy-peer-deps
+# Install dependencies with strict audit
+RUN npm ci --legacy-peer-deps --audit --fund && \
+    npm cache clean --force
 
 # Copy source code
 COPY . .
@@ -18,38 +19,65 @@ COPY . .
 # Build the application
 RUN npm run build
 
-# Stage 2: Production
+# Remove dev dependencies from production
+RUN npm prune --production
+
+# Stage 2: Production - Hardened
 FROM node:20-alpine AS runner
 
 WORKDIR /app
 
-# Production user (non-root)
+# === SECURITY: Create non-root user ===
 RUN addgroup --system --gid 1001 nodejs && \
     adduser --system --uid 1001 nextjs
 
-# Set environment
-ENV NODE_ENV=production
-ENV PORT=3000
+# === SECURITY: Install security tools ===
+RUN apk add --no-cache \
+    dumb-init \
+    curl \
+    tzdata \
+    && chown -R nextjs:nodejs /app
 
-# Copy only necessary files from builder
-COPY --from=builder /app/package.json ./package.json
-COPY --from=builder /app/package-lock.json* ./
-COPY --from=builder /app/.next ./.next
-COPY --from=builder /app/lib ./lib
-COPY --from=builder /app/app ./app
+# === ENVIRONMENT ===
+ENV NODE_ENV=production \
+    PORT=3000 \
+    HELKHEALTHINTERVAL=30s \
+    HELKHEALTHTIMEOUT=3s \
+    HELKHEALTHSTARTPERIOD=5s \
+    HELKHEALTHRETRIES=3
 
-# Create security directories
-RUN mkdir -p /app/.next/cache && chown -R nextjs:nodejs /app
+# Copy built artifacts from builder
+COPY --chown=nextjs:nodejs --from=builder /app/package.json ./package.json
+COPY --chown=nextjs:nodejs --from=builder /app/package-lock.json* ./
+COPY --chown=nextjs:nodejs --from=builder /app/.next ./.next
+COPY --chown=nextjs:nodejs --from=builder /app/public ./public
+COPY --chown=nextjs:nodejs --from=builder /app/.env.production.template ./.env.production
 
-# Switch to non-root user
+# === SECURITY: Set proper permissions ===
+RUN mkdir -p /app/.next/cache /app/tmp && \
+    chown -R nextjs:nodejs /app && \
+    chmod 755 /app/public
+
+# === SECURITY: Switch to non-root user ===
 USER nextjs
 
 # Expose port
 EXPOSE 3000
 
-# Health check
+# === HEALTH CHECK ===
 HEALTHCHECK --interval=30s --timeout=3s --start-period=5s --retries=3 \
-    CMD wget --no-verbose --tries=1 --spider http://localhost:3000/api/health || exit 1
+    CMD curl -f http://localhost:3000/health || exit 1
 
-# Start the application
+# === STARTUP ===
+# Use dumb-init to handle signals properly
+ENTRYPOINT ["dumb-init", "--"]
+
+# Run as non-root user
 CMD ["node", "server.js"]
+
+# === SECURITY NOTES ===
+# - Runs as non-root user (nextjs:1001)
+# - No secrets in image (use env vars or secrets manager)
+# - Health endpoint for container orchestration
+# - Production dependencies only
+# - Immutable starting point
