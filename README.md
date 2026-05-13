@@ -1,33 +1,76 @@
-# Schema.org Implementation Platform
+# AGenNext Enterprise Agent Platform
 
-> Comprehensive Schema.org V30.0 implementation with databases, graphs, AI agents, and visualization.
+> Comprehensive enterprise AI agent management with multiple specialized agent types, chat UI, channel integrations, and multimodal support.
 
-[![Schema.org](https://img.shields.io/badge/Schema.org-V30.0-blue)](https://schema.org/docs/full.html)
+[![Platform](https://img.shields.io/badge/AGenNext-1.0.0-blue)](https://github.com/AGenNext/AgentGraph)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.11+-yellow)](https://python.org)
+[![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org)
 
 ## Overview
 
-This is a comprehensive implementation of Schema.org types, mapped to domain databases, with AI agent capabilities, graph visualization, and CRUD operations.
-
-## Features
-
-- ✅ **11 Core Schema.org Types** - Complete implementation
-- ✅ **100+ Sub-types** - Full type hierarchy
-- ✅ **22 Domain Databases** - Mapped to Schema.org
-- ✅ **Graph Visualization** - React xyflow + SurrealDB
-- ✅ **Time Search** - Date-based filtering
-- ✅ **AI Agents** - LangGraph integration
-- ✅ **Vibe Coding** - Bolt.new prompt ready
-- ✅ **Docker Support** - Containerized deployment
+AGenNext is an enterprise-grade agent management platform featuring:
+- Multiple specialized agent types (Sales, DevOps, Research, Code, etc.)
+- Chat UI with multimodal support
+- Channel integrations (WhatsApp, Slack, Teams)
+- Memory bank & decision logging
+- Deep research capabilities
+- Docker-ready production deployment
 
 ## Quick Start
 
 ```bash
-# Install dependencies
-pip install -r requirements.txt
+# Frontend (Next.js)
+cd agennext-ui
+npm install
+npm run dev
 
-# Run the platform
+# Backend (FastAPI)
+pip install fastapi uvicorn
+python server.py
+```
+
+## Platform Services
+
+| Service | Port | Framework |
+|---------|------|-----------|
+| Frontend | 3000 | Next.js 14 |
+| Backend | 8000 | FastAPI |
+
+## Key Features
+
+- **Agent Types**: Sales, DevOps, Research, Code, Security, Multimodal
+- **Tools**: Web Search, Image Gen, TTS, STT, Code Executor
+- **Memory Bank**: Persistent knowledge with table view
+- **Decision Log**: Agent reasoning trail
+- **Deep Research**: Multi-stage research
+- **Channel Integrations**: WhatsApp, Slack, Teams
+
+## Deployment
+
+```bash
+# Docker Compose
+docker compose up -d
+
+# Or from GitHub
+git clone -b feature/complete-platform https://github.com/AGenNext/AgentGraph.git
+cd AgentGraph
+docker compose up -d
+```
+
+## API Endpoints
+
+- `/frameworks` - Agent frameworks
+- `/tools` - Available tools
+- `/models` - Model gateway
+- `/memory` - Agent memory
+- `/channels` - Integrations
+- `/research` - Deep research
+- `/notebook/cells` - Code notebooks
+
+## Documentation
+
+See [VPS-DEPLOY.md](./VPS-DEPLOY.md) for production deployment to VPS.
 python schema_org.py
 ```
 

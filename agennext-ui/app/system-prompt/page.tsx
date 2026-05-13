@@ -13,11 +13,11 @@ interface SystemPrompt {
 }
 
 const prompts: SystemPrompt[] = [
-  { id: '1', name: 'Default Assistant', role: 'assistant', version: 'v2.3', lastModified: '2024-03-15T10:00:00Z', tokens: 450 },
-  { id: '2', name: 'Research Agent', role: 'research', version: 'v1.8', lastModified: '2024-03-14T16:30:00Z', tokens: 680 },
-  { id: '3', name: 'Code Reviewer', role: 'code', version: 'v3.1', lastModified: '2024-03-14T14:00:00Z', tokens: 520 },
-  { id: '4', name: 'Customer Support', role: 'support', version: 'v2.0', lastModified: '2024-03-13T09:00:00Z', tokens: 380 },
-  { id: '5', name: '数据分析员', role: 'analytics', version: 'v1.5', lastModified: '2024-03-12T11:00:00Z', tokens: 290 },
+  { id: '1', name: 'Default Assistant', role: 'assistant', version: 'v2.3', lastModified: '2024-03-15T10:00:00Z', tokens: 450, content: 'You are a helpful assistant.' },
+  { id: '2', name: 'Research Agent', role: 'research', version: 'v1.8', lastModified: '2024-03-14T16:30:00Z', tokens: 680, content: 'You are a research agent.' },
+  { id: '3', name: 'Code Reviewer', role: 'code', version: 'v3.1', lastModified: '2024-03-14T14:00:00Z', tokens: 520, content: 'You are a code reviewer.' },
+  { id: '4', name: 'Customer Support', role: 'support', version: 'v2.0', lastModified: '2024-03-13T09:00:00Z', tokens: 380, content: 'You are a customer support agent.' },
+  { id: '5', name: '数据分析员', role: 'analytics', version: 'v1.5', lastModified: '2024-03-12T11:00:00Z', tokens: 290, content: 'You are a data analyst.' },
 ];
 
 const defaultPrompt = `You are Agent Zero, an enterprise AI agent orchestration platform.

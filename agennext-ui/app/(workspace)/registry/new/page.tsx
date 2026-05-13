@@ -34,7 +34,7 @@ export default function NewAgentPage() {
   const [errors, setErrors] = useState<Record<string, string>>({});
   const [showApiKey, setShowApiKey] = useState(false);
 
-  const handleChange = (field: keyof AgentFormData, value: string | number | boolean) => setFormData(prev => ({ ...prev, [field]: value }));
+  const handleChange = (field: keyof AgentFormData, value: string | number | boolean | string[]) => setFormData(prev => ({ ...prev, [field]: value }));
   const handleProviderChange = (provider: string) => setFormData(prev => ({ ...prev, provider, model: providerModels[provider]?.[0] || '' }));
 
   const validate = (): boolean => {
@@ -145,7 +145,7 @@ export default function NewAgentPage() {
               <label style={{ display: 'block', fontSize: tokens.font.size.small, fontWeight: 500, marginBottom: tokens.spacing.xs }}>Tools</label>
               <div style={{ display: 'flex', flexWrap: 'wrap', gap: tokens.spacing.md }}>
                 {['Calculator', 'Search', 'Database', 'Code Interpreter'].map(tool => (
-                  <label key={tool} style={{ display: 'flex', alignItems: 'center', gap: tokens.spacing.xs }}><input type="checkbox" checked={formData.tools.includes(tool.toLowerCase())} onChange={(e) => handleChange('tools', e.target.checked ? [...formData.tools, tool.toLowerCase()] : formData.tools.filter(t => t !== tool.toLowerCase()))} /><span>{tool}</span></label>
+                  <label key={tool} style={{ display: 'flex', alignItems: 'center', gap: tokens.spacing.xs }}><input type="checkbox" checked={formData.tools.includes(tool.toLowerCase())} onChange={(e) => handleChange('tools', e.target.checked ? [...formData.tools, tool.toLowerCase()] : formData.tools.filter(t => t !== tool.toLowerCase())[0] || '')} /><span>{tool}</span></label>
                 ))}
               </div>
             </div>

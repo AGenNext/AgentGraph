@@ -141,13 +141,15 @@ export default function DeepResearchPage() {
           </table>
         </div>
       ) : (
-
-      <div style={{ marginBottom: 32 }}>
-        <textarea value={query} onChange={e => setQuery(e.target.value)} placeholder="What would you like to research? e.g., Compare multimodal AI models for enterprise use cases..." style={{ width: '100%', minHeight: 100, padding: 14, background: '#161b22', border: '1px solid #30363d', borderRadius: 8, color: '#e6edf3', fontSize: 15, fontFamily: 'inherit', resize: 'vertical', marginBottom: 12 }} />
-        <button onClick={startResearch} disabled={!query.trim() || researching} style={{ padding: '12px 24px', background: !query.trim() || researching ? '#21262d' : 'linear-gradient(135deg, #238636, #2ea043)', border: 'none', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 600, cursor: query.trim() && !researching ? 'pointer' : 'default' }}>
-          {researching ? '⟳ Researching...' : 'Start Deep Research →'}
-        </button>
-      </div>
+        <>
+          <div style={{ marginBottom: 32 }}>
+            <textarea value={query} onChange={e => setQuery(e.target.value)} placeholder="What would you like to research? e.g., Compare multimodal AI models for enterprise use cases..." style={{ width: '100%', minHeight: 100, padding: 14, background: '#161b22', border: '1px solid #30363d', borderRadius: 8, color: '#e6edf3', fontSize: 15, fontFamily: 'inherit', resize: 'vertical', marginBottom: 12 }} />
+            <button onClick={startResearch} disabled={!query.trim() || researching} style={{ padding: '12px 24px', background: !query.trim() || researching ? '#21262d' : 'linear-gradient(135deg, #238636, #2ea043)', border: 'none', borderRadius: 8, color: '#fff', fontSize: 14, fontWeight: 600, cursor: query.trim() && !researching ? 'pointer' : 'default' }}>
+              {researching ? '⟳ Researching...' : 'Start Deep Research →'}
+            </button>
+          </div>
+        </>
+      )}
 
       <div style={{ display: 'grid', gridTemplateColumns: '1fr 320px', gap: 24, marginBottom: 32 }}>
         <div>
