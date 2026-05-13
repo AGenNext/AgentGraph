@@ -1,221 +1,148 @@
-# AGenNext Enterprise Agent Platform
+# AGenNext AgentGraph
 
-> Comprehensive enterprise AI agent management with multiple specialized agent types, chat UI, channel integrations, and multimodal support.
+> Protocol-native control plane for enterprise AI agents: A2A messaging, registry discovery, trust scoring, governance, identity, authorization, and a public GitHub Pages landing site.
 
-[![Platform](https://img.shields.io/badge/AGenNext-1.0.0-blue)](https://github.com/AGenNext/AgentGraph)
+[![Platform](https://img.shields.io/badge/AGenNext-AgentGraph-blue)](https://github.com/AGenNext/AgentGraph)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.11+-yellow)](https://python.org)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org)
 
 ## Overview
 
-AGenNext is an enterprise-grade agent management platform featuring:
-- Multiple specialized agent types (Sales, DevOps, Research, Code, etc.)
-- Chat UI with multimodal support
-- Channel integrations (WhatsApp, Slack, Teams)
-- Memory bank & decision logging
-- Deep research capabilities
-- Docker-ready production deployment
+AgentGraph is the AGenNext platform for building, discovering, coordinating, and governing AI agents. It combines a FastAPI backend, a Next.js frontend, and a protocol runtime inspired by [AGenNext Protocols](https://github.com/AGenNext/AGenNext-Protocols).
 
-## Quick Start
+## Implemented Protocol Runtime
+
+| Module | Path | Purpose |
+|---|---|---|
+| A2A Runtime | `agennext.a2a` | JSON-RPC task submission, messaging, task lookup, and agent card lookup |
+| Registry | `agennext.registry` | Register and discover agents by capability or skill |
+| Trust | `agennext.trust` | Track trust scores, successes, failures, endorsements, and delegation decisions |
+| Governance | `agennext.governance` | Evaluate agent actions against review/deny policies and risk levels |
+| Agent ID | `agennext.agentid` | Lightweight agent identity and token issuance primitives |
+| Agent DID | `agennext.agentdid` | DID-style identity document creation and resolution |
+| AuthZen | `agennext.authzen` | Authorization decision primitives for sensitive actions |
+
+## Runtime API
+
+The protocol routes are installed through `agennext.runtime_api`.
+
+```python
+from agennext.runtime_api import install_protocol_routes
+
+install_protocol_routes(app)
+```
+
+This exposes:
+
+| Endpoint | Description |
+|---|---|
+| `POST /rpc` | JSON-RPC endpoint for A2A runtime methods |
+| `GET /agents/cards` | List available agent cards |
+| `GET /agents/cards/{agent_id}` | Fetch a single agent card |
+
+### Example JSON-RPC request
 
 ```bash
-# Frontend (Next.js)
+curl -X POST http://localhost:8000/rpc \
+  -H "Content-Type: application/json" \
+  -d '{
+    "jsonrpc": "2.0",
+    "id": "1",
+    "method": "tasks/submit",
+    "params": {
+      "message": {"role": "user", "content": "Write a launch brief"}
+    }
+  }'
+```
+
+Supported runtime methods:
+
+- `agents/list`
+- `agents/get`
+- `tasks/submit`
+- `tasks/sendMessage`
+- `tasks/get`
+- `tasks/list`
+
+## Landing Page
+
+The frontend now includes a public landing page at `agennext-ui/app/page.tsx`.
+
+Run locally:
+
+```bash
 cd agennext-ui
 npm install
 npm run dev
-
-# Backend (FastAPI)
-pip install fastapi uvicorn
-python server.py
 ```
 
-## Platform Services
+## GitHub Pages
 
-| Service | Port | Framework |
-|---------|------|-----------|
-| Frontend | 3000 | Next.js 14 |
-| Backend | 8000 | FastAPI |
+A GitHub Pages deployment workflow is included at `.github/workflows/deploy-pages.yml`.
 
-## Key Features
+After merging to `main`:
 
-- **Agent Types**: Sales, DevOps, Research, Code, Security, Multimodal
-- **Tools**: Web Search, Image Gen, TTS, STT, Code Executor
-- **Memory Bank**: Persistent knowledge with table view
-- **Decision Log**: Agent reasoning trail
-- **Deep Research**: Multi-stage research
-- **Channel Integrations**: WhatsApp, Slack, Teams
+1. Open repository Settings.
+2. Go to Pages.
+3. Set Source to GitHub Actions.
+4. Push to `main` or run the workflow manually.
 
-## Deployment
+Expected site URL:
+
+```text
+https://agennext.github.io/AgentGraph/
+```
+
+## Backend Quick Start
 
 ```bash
-# Docker Compose
-docker compose up -d
-
-# Or from GitHub
-git clone -b feature/complete-platform https://github.com/AGenNext/AgentGraph.git
-cd AgentGraph
-docker compose up -d
+pip install fastapi uvicorn pydantic aiohttp psycopg2-binary
+uvicorn main:app --reload --host 0.0.0.0 --port 8000
 ```
 
-## API Endpoints
-
-- `/frameworks` - Agent frameworks
-- `/tools` - Available tools
-- `/models` - Model gateway
-- `/memory` - Agent memory
-- `/channels` - Integrations
-- `/research` - Deep research
-- `/notebook/cells` - Code notebooks
-
-## Documentation
-
-See [VPS-DEPLOY.md](./VPS-DEPLOY.md) for production deployment to VPS.
-python schema_org.py
-```
-
-## Documentation
-
-### Core Schema.org Types
-
-| Type | Description | Databases |
-|------|-------------|-----------|
-| Thing | Root type | All |
-| Person | People | 6 (person_organization, skills, etc.) |
-| Organization | Companies | 5 (banking, healthcare, etc.) |
-| Place | Locations | 4 (realestate, travel, etc.) |
-| Product | Products | 3 (retail, automotive, etc.) |
-| Event | Events | 2 (events_database, sports) |
-| CreativeWork | Content | 5 (book, music, movie, etc.) |
-| Action | Actions | action_mapper, skill_action_tool |
-| Intangible | Services | job_postings, offers |
-| MedicalEntity | Medical | healthcare_database |
-| StructuredValue | Values | kernel_primitives |
-
-### Key Files
-
-```
-schema_org.py              # Core Schema.org implementation
-schema_org_orm.py         # ORM layer
-schema_org_graph.py        # Graph relationships
-surrealdb_schema.py       # SurrealDB schema
-time_search.py           # Time-based search
-schema_org_utils.py      # Utilities
-action_mapper.py         # Action mappings
-skill_action_tool_map.py # Skill → Action → Tool mapping
-```
-
-### Database Mappings
-
-```python
-# Example: Person → Domain databases
-Person:
-  - skills_database.py
-  - employment_graph.py
-  - person_organization.py
-  - social_graph.py
-  - healthcare_database.py
-  - education_database.py
-
-# Example: Product → Domain databases
-Product:
-  - retail_database.py
-  - automotive_database.py
-  - realestate_database.py
-```
-
-## Frontend
-
-### React xyflow Visualization
+## Frontend Quick Start
 
 ```bash
-# Install
-npm install @xyflow/react
-
-# Use component
-import SchemaOrgHierarchy from './SchemaOrgHierarchy'
-<SchemaOrgHierarchy />
+cd agennext-ui
+npm install
+npm run dev
 ```
 
-Reference: `SchemaOrgHierarchy.tsx`
+## Tests
 
-### Bolt.new Vibe Coding
+Protocol tests live in `tests/test_protocol_runtime.py`.
 
-1. Go to https://stackblitz.com/bolt.new
-2. Paste prompt from `BOLT_NEW_PROMPT.md`
-3. Get your Schema.org UI!
-
-## API Endpoints
-
-```python
-# SurrealDB schema - 10 tables
-- things, persons, organizations
-- places, products, events
-- creative_works, actions
-- intangibles, medical_entities
-
-# Graph relationships
-- type_hierarchy (extends)
-- property_edges (properties)
-
-# Time search
-- Query by: startDate, endDate, dateCreated
-- Operators: =, !=, <, >, <=, >=
+```bash
+pip install pytest
+pytest tests/test_protocol_runtime.py
 ```
 
-## Transformed Frameworks
+## Current Status
 
-All frameworks mapped to Schema.org primitives:
+Implemented:
 
-| Framework | Schema.org Type |
-|-----------|----------------|
-| GDPR | Legislation |
-| HIPAA | MedicalGuideline |
-| SOC2 | Credential |
-| ISO27001 | Credential |
-| OAuth2 | Action |
-| SAML | Action |
-| AWS | WebAPI |
-| Azure | WebAPI |
-| Node.js | RuntimePlatform |
-| SurrealDB | Database |
+- A2A protocol runtime foundation
+- Registry, trust, governance, identity, DID, and AuthZen primitives
+- FastAPI protocol route installer
+- Landing page
+- GitHub Pages deployment workflow
+- Initial protocol unit tests
 
-## Graph
+Still recommended before production use:
 
-```
-Thing (root)
-├── Action ────→ 16 sub-types
-├── CreativeWork ────→ Book, Movie, Software, WebPage
-├── Event ────→ 8 sub-types
-├── Intangible ────→ Service, Ticket, Offer
-├── MedicalEntity ────→ Anatomy, MedTech
-├── Organization ────→ Corp, Business, Government
-├── Person ────→ Patient, Athlete, Author
-├── Place ────→ Civic, Residence, Landform
-├── Product ────→ IndividualProduct
-└── StructuredValue ────→ Geo, ContactPoint
-```
+- Install the protocol routes directly in `main.py`
+- Add CI to run Python and frontend tests
+- Replace in-memory protocol stores with persistent storage
+- Add real cryptographic token signing and verification
+- Add authentication middleware for write endpoints
+- Add more integration tests around FastAPI `/rpc`
 
-## Contributing
+## Related Repositories
 
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Submit a pull request
+- [AGenNext Protocols](https://github.com/AGenNext/AGenNext-Protocols)
+- [openagx](https://github.com/openagx)
 
 ## License
 
-MIT License - See LICENSE file
-
-## References
-
-- [Schema.org](https://schema.org/docs/full.html) - Official documentation
-- [SurrealDB](https://surrealdb.com) - In-memory graph database
-- [React Flow](https://reactflow.dev) - Graph visualization
-- [LangGraph](https://github.com/langchain-ai/langgraph) - AI agent framework
-
----
-
-**Version**: 30.0  
-**Last Updated**: 2026-05-11  
-**Branch**: schema-org-implementation
+MIT License - See [LICENSE](LICENSE).
