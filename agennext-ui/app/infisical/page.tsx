@@ -22,7 +22,7 @@ const secrets: Secret[] = [
   { id: 's1', key: 'AWS_ACCESS_KEY_ID', value: '•••••••••••••••', environment: 'production', project: 'agent-platform', lastRotated: '2024-02-01' },
   { id: 's2', key: 'AWS_SECRET_ACCESS_KEY', value: '•••••••••••••••', environment: 'production', project: 'agent-platform', lastRotated: '2024-02-01' },
   { id: 's3', key: 'AZURE_OPENAI_KEY', value: '•••••••••••••••', environment: 'production', project: 'agent-platform', lastRotated: '2024-01-28' },
-  { id: 's4', key: 'DATABASE_URL', value: 'postgresql://••••••••', environment: 'production', project: 'agent-platform', lastRotated: '2024-01-25' },
+  { id: 's4', key: 'SURREALDB_URL', value: 'surrealdb://••••••••', environment: 'production', project: 'agent-platform', lastRotated: '2024-01-25' },
   { id: 's5', key: 'STRIPE_API_KEY', value: '•••••••••••••••', environment: 'production', project: 'payments', lastRotated: '2024-01-20' },
   { id: 's6', key: 'JWT_SECRET', value: '•••••••••••••••', environment: 'production', project: 'auth', lastRotated: '2024-01-15' },
 ];

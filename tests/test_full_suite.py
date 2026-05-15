@@ -4,9 +4,12 @@ import pytest
 import os
 import json
 import asyncio
+from pathlib import Path
 from unittest.mock import Mock, patch, AsyncMock
 from fastapi.testclient import TestClient
-from schema_org_orm import get_schema_path, load_schema_text
+
+
+SCHEMA_PATH = Path(__file__).resolve().parents[1] / "surreal" / "schema" / "schemaorg-vocabulary.surql"
 
 # Test fixtures
 @pytest.fixture
@@ -137,16 +140,16 @@ class TestDatabaseConnection:
         assert isinstance(os.getenv("SURREALDB_URL", ""), str)
 
     def test_surreal_schema_path(self):
-        assert get_schema_path().exists()
+        assert SCHEMA_PATH.exists()
 
 
 class TestCRUDOperations:
     """Test schema availability."""
 
     def test_schema_contains_core_tables(self):
-        schema = load_schema_text()
-        assert "DEFINE TABLE person" in schema
-        assert "DEFINE TABLE organization" in schema
+        schema = SCHEMA_PATH.read_text(encoding="utf-8")
+        assert "DEFINE TABLE schema_term" in schema
+        assert "RELATE schema_term:" in schema
 
 
 # ================== INTEGRATION TESTS ==================

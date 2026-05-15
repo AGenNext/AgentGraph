@@ -69,6 +69,77 @@ streamlit run ui/streamlit_examples.py
 - Use planning mode before building
 - Mark all tasks with status (DONE/TODO/IN PROGRESS)
 
+## Mandatory Runtime Preread
+
+Before starting work on this repository, any agent working on the runtime,
+database, schema, identity, governance, or protocol layers must first load the
+following guidance into memory and follow it during the session:
+
+- `surreal/README.md`
+- `surreal/AGENT.md`
+
+This preread is mandatory before making changes related to:
+
+- SurrealDB runtime structure
+- schema design
+- functions and events
+- Entra Agent Identity and Lifecycle Management
+- Governance Tool Kit
+- A2A and protocol-layer behavior
+
+## Builder Constraint
+
+Build the world the agent itself must live in.
+
+The agent implementing this runtime is not exempt from the security,
+governance, identity, protocol, or database constraints of the runtime it is
+helping create. Any agent working in this repository must follow the same
+rules, assumptions, and enforcement model that the platform is intended to
+apply to other agents and users.
+
+## World Model
+
+Humans are not outside the system.
+
+Humans and agents are first-class participants in the same runtime world, with
+identity, state, governance, and interaction modeled inside the system rather
+than around it.
+
+Time and location are primitives.
+
+They must be treated as native parts of the runtime model, not as optional
+metadata added after the fact. By default, time and location should be modeled
+on every object unless there is a concrete reason not to do so.
+
+Time moves forward only.
+
+The runtime should model time the way real-world events progress. Temporal
+reversal or world-order overrides are not allowed unless explicitly authorized
+by the user.
+
+The world does not stop because one node has gone down.
+
+The system must assume partial failure and continuity. Data continuity relies
+on the database and distributed layer, and service recovery relies on
+Kubernetes self-healing rather than global pause semantics. Kubernetes
+self-healing is mandatory for the production world model. Production failure is
+not an acceptable stopping condition; the world must keep moving.
+
+If changes are reverted, they are reverted at a later time.
+
+Reversion does not erase time. Any rollback, compensation, or corrective action
+must be modeled as a new event in forward time, not as deletion of what
+happened before.
+
+Immutable audit logs are mandatory.
+
+Audit history must be append-only and generated at input, processing, and
+output levels at every stage, including LLM streaming. Material events are not
+silently rewritten or erased. Corrections, reversions, compensations, and
+policy actions must appear as new audit events in forward time. This audit
+layer exists not only for governance and security, but also to debug and
+improve LLM behavior over time.
+
 ---
 
 ## Documentation URLs (VERIFIED)
@@ -90,7 +161,7 @@ streamlit run ui/streamlit_examples.py
 |---------|-------------|
 | checkpoints | Save and resume state |
 | short_term_memory | In-process memory |
-| long_term_memory | Persistent storage (PostgreSQL, Redis) |
+| long_term_memory | Persistent storage (SurrealDB, Redis) |
 | semantic_memory | Embedding-based memory |
 | human_interrupt | Pause agent execution |
 | human_feedback | Request human input |

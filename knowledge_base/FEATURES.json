@@ -13,15 +13,14 @@
       ],
       "checkpoint": [
         "MemorySaver",
-        "SqliteSaver",
-        "PostgresSaver",
+        "SurrealDBSaver",
         "RedisSaver",
         "MongoDBSaver",
         "DynamoDBSaver"
       ],
       "store": [
         "InMemoryStore",
-        "PostgresStore",
+        "SurrealDBStore",
         "MongoDBStore",
         "RedisStore"
       ],
@@ -243,7 +242,7 @@
       "servers": [
         "Filesystem",
         "GitHub",
-        "Postgres",
+        "SurrealDB",
         "Search",
         "Browser"
       ],

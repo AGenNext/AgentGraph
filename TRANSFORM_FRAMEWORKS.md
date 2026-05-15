@@ -193,7 +193,7 @@ class ProgrammingRuntime:
 | Database | Schema.org Type | Properties |
 |----------|------------------|------------|
 | SurrealDB | Database | graph, in-memory |
-| PostgreSQL | Database | relational |
+| SurrealDB | Database | graph, document |
 | MySQL | Database | relational |
 | Redis | Database | key-value |
 | MongoDB | Database | document |

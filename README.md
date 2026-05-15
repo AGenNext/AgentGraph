@@ -74,9 +74,9 @@ See [VPS-DEPLOY.md](./VPS-DEPLOY.md) for production deployment to VPS.
  
 ### SurrealDB Schema
 
-- Canonical schema: [surreal/schema/schema-org-surrealdb.surql](/Users/apple/Agent-Graph/surreal/schema/schema-org-surrealdb.surql:1)
-- Schema helper: [schema_org_orm.py](/Users/apple/Agent-Graph/schema_org_orm.py:1)
-- Database notes: [docs/database.md](/Users/apple/Agent-Graph/docs/database.md:1)
+- Metamodel: [surreal/schema/schema-meta.surql](/Users/apple/Agent-Graph/surreal/schema/schema-meta.surql:1)
+- Canonical vocabulary import: [surreal/schema/schemaorg-vocabulary.surql](/Users/apple/Agent-Graph/surreal/schema/schemaorg-vocabulary.surql:1)
+- Source dump and generator notes: [surreal/README.md](/Users/apple/Agent-Graph/surreal/README.md:1)
 
 ```bash
 # Apply schema changes with SurrealKit
@@ -106,9 +106,8 @@ surrealkit sync
 
 ```
 schema_org.py              # Core Schema.org implementation
-schema_org_orm.py         # SurrealDB schema helper
 schema_org_graph.py        # Graph relationships
-surrealdb_schema.py       # SurrealDB schema
+surreal/schema/           # Native SurrealDB schema assets
 time_search.py           # Time-based search
 schema_org_utils.py      # Utilities
 action_mapper.py         # Action mappings

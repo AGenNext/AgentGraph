@@ -72,7 +72,7 @@ Build a comprehensive Schema.org visualization and management platform using Rea
 - Recent entities
 - Quick actions
 
-## Data Model (SurrealDB/SQLite Schema)
+## Data Model (SurrealDB Schema)
 
 ```
 // Core Types

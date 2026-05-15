@@ -33,11 +33,11 @@ ORG_SKILL_MAP: Dict[str, Dict] = {
     },
     "saas_company": {
         "required_skills": [
-            "python_code", "javascript_code", "postgresql_admin",
+            "python_code", "javascript_code", "surrealdb_admin",
             "docker_build", "cicd_pipeline", "api_call",
             "terminal_execute", "file_editor"
         ],
-        "tools": ["python", "postgresql", "docker", "github_actions"],
+        "tools": ["python", "surrealdb", "docker", "github_actions"],
         "description": "SaaS business"
     },
     "consulting_firm": {
@@ -52,11 +52,11 @@ ORG_SKILL_MAP: Dict[str, Dict] = {
     # ===== FINANCIAL SERVICES =====
     "fintech": {
         "required_skills": [
-            "python_code", "java_code", "postgresql_admin",
+            "python_code", "java_code", "surrealdb_admin",
             "security_code", "api_call", "terminal_execute",
             "code_review"
         ],
-        "tools": ["java", "python", "postgres", "vault"],
+        "tools": ["java", "python", "surrealdb", "vault"],
         "description": "Financial technology"
     },
     "bank": {
@@ -96,11 +96,11 @@ ORG_SKILL_MAP: Dict[str, Dict] = {
     },
     "marketplace": {
         "required_skills": [
-            "python_code", "javascript_code", "postgresql_admin",
+            "python_code", "javascript_code", "surrealdb_admin",
             "payment_process", "search_functionality",
             "terminal_execute"
         ],
-        "tools": ["python", "postgres", "stripe"],
+        "tools": ["python", "surrealdb", "stripe"],
         "description": "Online marketplace"
     },
     
@@ -194,7 +194,7 @@ ORG_SKILL_MAP: Dict[str, Dict] = {
     # ===== LOGISTICS =====
     "logistics": {
         "required_skills": [
-            "python_code", "mapping_api", "postgresql_admin",
+            "python_code", "mapping_api", "surrealdb_admin",
             "api_call", "terminal_execute"
         ],
         "tools": ["python", "postgis", "aws"],
@@ -404,7 +404,7 @@ ORG_SKILL_MAP: Dict[str, Dict] = {
     },
     "series_a_startup": {
         "required_skills": [
-            "product_dev", "python_code", "postgresql_admin",
+            "product_dev", "python_code", "surrealdb_admin",
             "docker_ops", "cicd_pipeline"
         ],
         "tools": ["python", "docker", "k8s"],

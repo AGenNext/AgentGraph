@@ -489,7 +489,7 @@ def main():
     print("\n3. Configuration")
     config = ConfigManager()
     
-    config.set("database", "postgresql")
+    config.set("database", "surrealdb")
     config.set_secret("db_password", "secret123")
     config.override("debug", True)
     

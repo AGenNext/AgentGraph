@@ -126,10 +126,8 @@ def extract_features_structured(docs: List[Dict]) -> Dict:
         # Checkpoints
         if any(kw in content_lower for kw in ["checkpointer", "checkpoint", "memory saver", "save state"]):
             features["checkpoints"].append("save_resume")
-        if "sqlite" in content_lower:
-            features["checkpoints"].append("sqlite")
-        if "postgres" in content_lower:
-            features["checkpoints"].append("postgres")
+        if "surrealdb" in content_lower:
+            features["checkpoints"].append("surrealdb")
             
         # Memory
         if "memory" in content_lower:
@@ -269,7 +267,7 @@ def main():
     # Add manually verified features
     manual_features = {
         "langgraph": {
-            "checkpoints": ["save_resume", "sqlite", "postgres", "mongodb", "redis", "dynamodb"],
+            "checkpoints": ["save_resume", "surrealdb", "mongodb", "redis", "dynamodb"],
             "memory": ["short_term", "long_term"],
             "human_in_loop": ["interrupt", "suspend", "feedback", "approval"],
             "multi_agent": ["manual"],

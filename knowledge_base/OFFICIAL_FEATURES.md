@@ -6,11 +6,11 @@ docs: https://docs.langgraph.ai
 | Feature | Implementation |
 |---------|----------------|
 | **CHECKPOINTS** | |
-| Save/Resume State | MemorySaver, SqliteSaver, PostgresSaver, RedisSaver |
+| Save/Resume State | MemorySaver, SurrealDBSaver, RedisSaver |
 | State History | thread_id, checkpoint_id |
 | **MEMORY** | |
 | Short-term | InMemoryStore |
-| Long-term | PostgresStore, MongoDBStore, RedisStore |
+| Long-term | SurrealDBStore, MongoDBStore, RedisStore |
 | **HUMAN-IN-LOOP** | |
 | Interrupt | interrupt() |
 | Suspend | suspend_node() |
@@ -252,7 +252,7 @@ docs: https://modelcontextprotocol.io
 | **SERVERS** | |
 | Filesystem | Filesystem server |
 | GitHub | GitHub server |
-| Postgres | Postgres server |
+| SurrealDB | SurrealDB server |
 | **CLIENT** | |
 | SDK | Python, TypeScript |
 

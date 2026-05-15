@@ -138,12 +138,12 @@ COURSE_SKILL_MAP: Dict[str, Dict] = {
         "tool": "sql_client",
         "description": "SQL fundamentals"
     },
-    "postgresql_course": {
-        "skill": "postgresql_admin",
+    "surrealdb_course": {
+        "skill": "surrealdb_admin",
         "level": "intermediate",
         "actions": ["QueryAction", "ManageAction"],
         "tool": "psql",
-        "description": "PostgreSQL database"
+        "description": "SurrealDB database"
     },
     "mongodb_course": {
         "skill": "mongodb_admin",

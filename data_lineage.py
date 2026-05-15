@@ -392,7 +392,7 @@ def main():
     
     # Add sources
     database = graph.add_source(
-        "src1", "Sales Database", "postgresql",
+        "src1", "Sales Database", "surrealdb",
         connection={"host": "db.example.com", "port": "5432"},
         description="Main sales database"
     )
@@ -473,7 +473,7 @@ Lineage Graph Usage
     graph = LineageGraph()
     
     # Add sources
-    graph.add_source("src1", "Database", "postgres")
+    graph.add_source("src1", "Database", "surrealdb")
     graph.add_source("src2", "API", "rest")
     
     # Add transforms

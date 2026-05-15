@@ -28,7 +28,7 @@ Build this in Bolt.new
 ```
 Build a full-stack Schema.org implementation platform with:
 - Next.js frontend
-- SurrealDB (or SQLite) database
+- SurrealDB database
 - REST API for CRUD on Schema.org entities
 - React xyflow visualization of type hierarchy
 - Time-based search with date filters
@@ -96,7 +96,7 @@ Component: SchemaCRUDTable
 
 | Feature | Bolt.new Support | Our Implementation |
 |---------|-----------------|-----------------|
-| **Database** | SQLite, Postgres, Mongo | SurrealDB |
+| **Database** | Document/graph database | SurrealDB |
 | **Auth** | NextAuth, Clerk | NextAuth |
 | **API** | API Routes | Route Handlers |
 | **Hosting** | Auto-deploy | Vercel |

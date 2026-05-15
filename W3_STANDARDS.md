@@ -42,7 +42,7 @@ Schema.org (V30.0, 2026)
 | File | W3 Standard Used |
 |------|-----------------|
 | schema_org.py | JSON-LD |
-| schema_org_orm.py | RDF triples |
+| surreal/schema/schemaorg-vocabulary.surql | RDF-derived vocabulary graph |
 | CONNECTION_MAP.md | RDF relationships |
 | SCHEMA_WIRING.md | Full wiring |
 

@@ -192,7 +192,7 @@ def analyze_features(crawled_data: Dict) -> Dict:
         },
         "long_term_memory": {
             "description": "Persistent storage",
-            "keywords": ["store", "postgres", "mongodb", "redis", "database"],
+            "keywords": ["store", "surrealdb", "mongodb", "redis", "database"],
         },
         "semantic_memory": {
             "description": "Semantic/embedding-based memory",

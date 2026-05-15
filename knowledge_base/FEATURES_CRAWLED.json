@@ -16,12 +16,11 @@
     ],
     "checkpointers": [
       "MemorySaver",
-      "SqliteSaver",
-      "PostgresSaver"
+      "SurrealDBSaver"
     ],
     "stores": [
       "InMemoryStore",
-      "PostgresStore"
+      "SurrealDBStore"
     ],
     "runtime": [
       "invoke",

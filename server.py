@@ -8,7 +8,9 @@ __version__ = "1.0.0"
 
 import os
 import uuid
+import inspect
 from datetime import datetime, timezone
+from pathlib import Path
 from typing import Any, Optional
 
 from fastapi import FastAPI, HTTPException
@@ -77,109 +79,104 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# In-memory storage (Supabase in production)
-_in_memory_agents: dict[str, dict] = {}
+AGENT_TABLE = "agent"
+AGENT_VERSION_TABLE = "agent_version"
+ENTITY_TABLE = "entity"
+SURREAL_DIR = Path(__file__).resolve().parent / "surreal"
+RUNTIME_SCHEMA_PATH = SURREAL_DIR / "runtime-schema.surql"
+RUNTIME_FUNCTIONS_PATH = SURREAL_DIR / "runtime-functions.surql"
+RUNTIME_EVENTS_PATH = SURREAL_DIR / "runtime-events.surql"
+_runtime_schema_initialized = False
 
+DEFAULT_AGENTS = [
+    {
+        "id": "1",
+        "name": "Sales-AI",
+        "description": "AI assistant for sales automation and CRM integration",
+        "provider": "openai",
+        "model": "gpt-4o",
+        "temperature": 0.7,
+        "max_tokens": 2000,
+        "system_prompt": "You are a helpful sales assistant.",
+        "status": "active",
+        "version": "2.1",
+        "is_default": True,
+        "auth_method": "api_key",
+        "enable_chat": True,
+        "enable_rag": False,
+        "tools": ["calculator", "search"],
+        "created_at": "2026-03-01T10:00:00Z",
+        "updated_at": "2026-03-01T10:00:00Z",
+    },
+    {
+        "id": "2",
+        "name": "Support-AI",
+        "description": "Customer support agent with knowledge base integration",
+        "provider": "google",
+        "model": "gemini-2.0-flash",
+        "temperature": 0.5,
+        "max_tokens": 4000,
+        "system_prompt": "You are a helpful customer support agent.",
+        "status": "inactive",
+        "version": "1.0",
+        "is_default": False,
+        "auth_method": "api_key",
+        "enable_chat": True,
+        "enable_rag": True,
+        "tools": ["calculator", "search", "database"],
+        "created_at": "2026-01-15T14:30:00Z",
+        "updated_at": "2026-01-15T14:30:00Z",
+    },
+    {
+        "id": "3",
+        "name": "Lead-Gen-AI",
+        "description": "Lead generation and qualification agent",
+        "provider": "langchain",
+        "model": "gpt-4o",
+        "temperature": 0.8,
+        "max_tokens": 3000,
+        "system_prompt": "You are a lead generation specialist.",
+        "status": "active",
+        "version": "1.2",
+        "is_default": False,
+        "auth_method": "env",
+        "enable_chat": True,
+        "enable_rag": False,
+        "tools": ["calculator", "search"],
+        "created_at": "2026-02-20T09:15:00Z",
+        "updated_at": "2026-02-20T09:15:00Z",
+    },
+]
 
-def _init_fallback_data():
-    """Initialize fallback data for development."""
-    global _in_memory_agents
-    if not _in_memory_agents:
-        _in_memory_agents.update({
-            "1": {
-                "id": "1",
-                "name": "Sales-AI",
-                "description": "AI assistant for sales automation and CRM integration",
-                "provider": "openai",
-                "model": "gpt-4o",
-                "temperature": 0.7,
-                "max_tokens": 2000,
-                "system_prompt": "You are a helpful sales assistant.",
-                "status": "active",
-                "version": "2.1",
-                "is_default": True,
-                "auth_method": "api_key",
-                "enable_chat": True,
-                "enable_rag": False,
-                "tools": ["calculator", "search"],
-                "created_at": "2026-03-01T10:00:00Z",
-                "updated_at": "2026-03-01T10:00:00Z",
-            },
-            "2": {
-                "id": "2",
-                "name": "Support-AI",
-                "description": "Customer support agent with knowledge base integration",
-                "provider": "google",
-                "model": "gemini-2.0-flash",
-                "temperature": 0.5,
-                "max_tokens": 4000,
-                "system_prompt": "You are a helpful customer support agent.",
-                "status": "inactive",
-                "version": "1.0",
-                "is_default": False,
-                "auth_method": "api_key",
-                "enable_chat": True,
-                "enable_rag": True,
-                "tools": ["calculator", "search", "database"],
-                "created_at": "2026-01-15T14:30:00Z",
-                "updated_at": "2026-01-15T14:30:00Z",
-            },
-            "3": {
-                "id": "3",
-                "name": "Lead-Gen-AI",
-                "description": "Lead generation and qualification agent",
-                "provider": "langchain",
-                "model": "gpt-4o",
-                "temperature": 0.8,
-                "max_tokens": 3000,
-                "system_prompt": "You are a lead generation specialist.",
-                "status": "active",
-                "version": "1.2",
-                "is_default": False,
-                "auth_method": "env",
-                "enable_chat": True,
-                "enable_rag": False,
-                "tools": ["calculator", "search"],
-                "created_at": "2026-02-20T09:15:00Z",
-                "updated_at": "2026-02-20T09:15:00Z",
-            },
-        })
-
-
-def _get_fallback_versions(agent_id: str):
-    """Get version history for an agent."""
-    if agent_id == "1":
-        return [
-            {
-                "id": "v3",
-                "agent_id": "1",
-                "version": "2.1",
-                "changes": "Updated model → gpt-4o, Updated temperature → 0.8",
-                "created_at": "2026-03-01T10:00:00Z",
-                "is_current": True,
-            },
-            {
-                "id": "v2",
-                "agent_id": "1",
-                "version": "2.0",
-                "changes": "Created from v1",
-                "created_at": "2026-01-10T10:15:00Z",
-                "is_current": False,
-            },
-            {
-                "id": "v1",
-                "agent_id": "1",
-                "version": "1.0",
-                "changes": "Initial version",
-                "created_at": "2025-12-01T16:45:00Z",
-                "is_current": False,
-            },
-        ]
-    return []
-
-
-# Initialize data
-_init_fallback_data()
+DEFAULT_AGENT_VERSIONS = [
+    {
+        "id": "v3",
+        "agent_id": "1",
+        "version": "2.1",
+        "changes": "Updated model -> gpt-4o, Updated temperature -> 0.8",
+        "created_at": "2026-03-01T10:00:00Z",
+        "is_current": True,
+        "agent_snapshot": DEFAULT_AGENTS[0],
+    },
+    {
+        "id": "v2",
+        "agent_id": "1",
+        "version": "2.0",
+        "changes": "Created from v1",
+        "created_at": "2026-01-10T10:15:00Z",
+        "is_current": False,
+        "agent_snapshot": {**DEFAULT_AGENTS[0], "version": "2.0", "updated_at": "2026-01-10T10:15:00Z"},
+    },
+    {
+        "id": "v1",
+        "agent_id": "1",
+        "version": "1.0",
+        "changes": "Initial version",
+        "created_at": "2025-12-01T16:45:00Z",
+        "is_current": False,
+        "agent_snapshot": {**DEFAULT_AGENTS[0], "version": "1.0", "updated_at": "2025-12-01T16:45:00Z"},
+    },
+]
 
 
 # ─── Agent API Endpoints ─────────────────────────────────────────────────────
@@ -187,7 +184,7 @@ _init_fallback_data()
 @app.get("/agents")
 async def list_agents(limit: int = 50, offset: int = 0, status: str = None, search: str = None):
     """List registered agents with filtering and search."""
-    agents = list(_in_memory_agents.values())
+    agents = await _list_agents_from_db()
     
     if status:
         agents = [a for a in agents if a.get("status") == status]
@@ -231,14 +228,14 @@ async def create_agent(agent_data: dict):
         "updated_at": now,
     }
     
-    _in_memory_agents[agent_id] = agent
-    return {"agent": agent, "message": "Agent created successfully"}
+    stored_agent = _normalize_record(await _surreal_call("fn::runtime::agent::create", agent_id, agent))
+    return {"agent": stored_agent, "message": "Agent created successfully"}
 
 
 @app.get("/agents/{agent_id}")
 async def get_agent(agent_id: str):
     """Get agent details."""
-    agent = _in_memory_agents.get(agent_id)
+    agent = await _get_agent_from_db(agent_id)
     if not agent:
         raise HTTPException(status_code=404, detail="Agent not found")
     return {"agent": agent}
@@ -247,7 +244,7 @@ async def get_agent(agent_id: str):
 @app.put("/agents/{agent_id}")
 async def update_agent(agent_id: str, agent_data: dict):
     """Update an agent."""
-    existing = _in_memory_agents.get(agent_id)
+    existing = await _get_agent_from_db(agent_id)
     if not existing:
         raise HTTPException(status_code=404, detail="Agent not found")
     
@@ -271,30 +268,39 @@ async def update_agent(agent_id: str, agent_data: dict):
         "updated_at": now,
     }
     
-    _in_memory_agents[agent_id] = updated
-    return {"agent": updated, "message": "Agent updated successfully"}
+    stored_agent = _normalize_record(
+        await _surreal_call("fn::runtime::agent::update", agent_id, updated, "Updated agent configuration")
+    )
+    return {"agent": stored_agent, "message": "Agent updated successfully"}
 
 
 @app.delete("/agents/{agent_id}")
 async def delete_agent(agent_id: str):
     """Delete an agent."""
-    if agent_id not in _in_memory_agents:
+    existing = await _get_agent_from_db(agent_id)
+    if not existing:
         raise HTTPException(status_code=404, detail="Agent not found")
-    del _in_memory_agents[agent_id]
+    deleted = await _surreal_call("fn::runtime::agent::delete", agent_id)
+    if not deleted:
+        raise HTTPException(status_code=404, detail="Agent not found")
     return {"message": "Agent deleted successfully"}
 
 
 @app.get("/agents/{agent_id}/versions")
 async def list_agent_versions(agent_id: str):
     """Get version history for an agent."""
-    versions = _get_fallback_versions(agent_id)
+    versions = await _list_agent_versions_from_db(agent_id)
     return {"versions": versions}
 
 
 @app.post("/agents/{agent_id}/versions/{version_id}/restore")
 async def restore_agent_version(agent_id: str, version_id: str):
     """Restore an agent to a previous version."""
-    return {"message": f"Restored agent {agent_id} to version {version_id}"}
+    restored = await _surreal_call("fn::runtime::agent::restore", agent_id, version_id)
+    rows = _extract_query_rows(restored)
+    if not rows:
+        raise HTTPException(status_code=404, detail="Version not found")
+    return {"message": f"Restored agent {agent_id} to version {version_id}", "agent": rows[0]}
 
 
 @app.get("/health")
@@ -321,8 +327,7 @@ async def list_schema_relations():
     return {"relations": SCHEMA_RELATIONS}
 
 
-# Sample Entities (graph nodes)
-SAMPLE_ENTITIES = [
+DEFAULT_ENTITIES = [
     {"id": "e1", "type": "schema:organization", "name": "AGenNext", "canonical_id": "org:agennext", "description": "AI Agent Platform company"},
     {"id": "e2", "type": "schema:person", "name": "Alice Chen", "canonical_id": "person:alice", "jobTitle": "CEO", "employee": "org:agennext"},
     {"id": "e3", "type": "schema:person", "name": "Bob Smith", "canonical_id": "person:bob", "jobTitle": "CTO", "employee": "org:agennext"},
@@ -338,10 +343,184 @@ SAMPLE_ENTITIES = [
     {"id": "e10", "type": "schema:action", "name": "Deploy Agent", "canonical_id": "action:deploy", "description": "Deploy agent to production"},
 ]
 
+
+async def _await_if_needed(value: Any) -> Any:
+    if inspect.isawaitable(value):
+        return await value
+    return value
+
+
+def _surreal_record_id(table: str, record_id: str) -> str:
+    return f"{table}:{record_id}"
+
+
+def _normalize_surreal_id(value: Any) -> Optional[str]:
+    if isinstance(value, str):
+        return value.split(":", 1)[1] if ":" in value else value
+    if isinstance(value, dict):
+        raw = value.get("id")
+        if isinstance(raw, str):
+            return raw.split(":", 1)[1] if ":" in raw else raw
+    return None
+
+
+def _normalize_record(record: Any) -> dict[str, Any]:
+    if not isinstance(record, dict):
+        return {}
+    normalized = dict(record)
+    normalized["id"] = _normalize_surreal_id(record.get("id", record)) or normalized.get("id")
+    return normalized
+
+
+def _extract_query_rows(result: Any) -> list[dict[str, Any]]:
+    if result is None:
+        return []
+    if isinstance(result, dict):
+        if isinstance(result.get("result"), list):
+            return [_normalize_record(row) for row in result["result"] if isinstance(row, dict)]
+        return [_normalize_record(result)]
+    if isinstance(result, list):
+        rows: list[dict[str, Any]] = []
+        for item in result:
+            if isinstance(item, dict) and isinstance(item.get("result"), list):
+                rows.extend(_normalize_record(row) for row in item["result"] if isinstance(row, dict))
+            elif isinstance(item, dict):
+                rows.append(_normalize_record(item))
+        return rows
+    return []
+
+
+async def _surreal_query(query: str, variables: Optional[dict[str, Any]] = None) -> Any:
+    db = await _get_surreal_db()
+    query_raw = getattr(db, "query_raw", None)
+    if query_raw is not None:
+        return await _await_if_needed(query_raw(query, variables or {}))
+    return await _await_if_needed(db.query(query, variables or {}))
+
+
+def _extract_first_result_value(result: Any) -> Any:
+    if isinstance(result, list):
+        for item in result:
+            if isinstance(item, dict) and "result" in item:
+                return item["result"]
+    if isinstance(result, dict) and "result" in result:
+        return result["result"]
+    return result
+
+
+async def _apply_runtime_schema() -> None:
+    global _runtime_schema_initialized
+    if _runtime_schema_initialized:
+        return
+
+    for path in (RUNTIME_SCHEMA_PATH, RUNTIME_FUNCTIONS_PATH, RUNTIME_EVENTS_PATH):
+        query = path.read_text(encoding="utf-8")
+        await _surreal_query(query)
+
+    _runtime_schema_initialized = True
+
+
+async def _get_surreal_db() -> Any:
+    global _surreal_db
+    if _surreal_db is not None:
+        return _surreal_db
+
+    try:
+        import surrealdb
+    except ModuleNotFoundError as exc:
+        raise HTTPException(status_code=503, detail="SurrealDB driver is not installed") from exc
+
+    connect = getattr(surrealdb, "connect", None)
+    if connect is None:
+        raise HTTPException(status_code=503, detail="SurrealDB driver does not expose connect()")
+
+    try:
+        db = await _await_if_needed(connect(SURREALDB_URL, user=SURREALDB_USER, password=SURREALDB_PASS))
+        await _await_if_needed(db.use(SURREALDB_NAMESPACE, SURREALDB_DATABASE))
+    except Exception as exc:
+        raise HTTPException(status_code=503, detail=f"SurrealDB connection failed: {exc}") from exc
+    _surreal_db = db
+    return db
+
+
+async def _surreal_select(table_or_id: str) -> list[dict[str, Any]]:
+    db = await _get_surreal_db()
+    result = await _await_if_needed(db.select(table_or_id))
+    return _extract_query_rows(result)
+
+
+async def _surreal_create(table: str, record_id: str, payload: dict[str, Any]) -> dict[str, Any]:
+    db = await _get_surreal_db()
+    result = await _await_if_needed(db.create(_surreal_record_id(table, record_id), payload))
+    rows = _extract_query_rows(result)
+    return rows[0] if rows else {"id": record_id, **payload}
+
+
+async def _surreal_update(table: str, record_id: str, payload: dict[str, Any]) -> dict[str, Any]:
+    db = await _get_surreal_db()
+    result = await _await_if_needed(db.update(_surreal_record_id(table, record_id), payload))
+    rows = _extract_query_rows(result)
+    return rows[0] if rows else {"id": record_id, **payload}
+
+
+async def _surreal_delete(table: str, record_id: str) -> None:
+    db = await _get_surreal_db()
+    await _await_if_needed(db.delete(_surreal_record_id(table, record_id)))
+
+
+async def _ensure_runtime_seeded() -> None:
+    await _apply_runtime_schema()
+    agents = await _surreal_select(AGENT_TABLE)
+    if not agents:
+        for agent in DEFAULT_AGENTS:
+            await _surreal_call("fn::runtime::agent::create", agent["id"], agent)
+
+    versions = await _surreal_select(AGENT_VERSION_TABLE)
+    if not versions:
+        for version in DEFAULT_AGENT_VERSIONS:
+            await _surreal_create(AGENT_VERSION_TABLE, version["id"], version)
+
+    entities = await _surreal_select(ENTITY_TABLE)
+    if not entities:
+        for entity in DEFAULT_ENTITIES:
+            await _surreal_call("fn::runtime::entity::upsert", entity)
+
+
+async def _surreal_call(function_name: str, *args: Any) -> Any:
+    placeholders = ", ".join(f"$arg{i}" for i in range(len(args)))
+    query = f"RETURN {function_name}({placeholders});"
+    result = await _surreal_query(query, {f"arg{i}": value for i, value in enumerate(args)})
+    return _extract_first_result_value(result)
+
+
+async def _list_agents_from_db() -> list[dict[str, Any]]:
+    await _ensure_runtime_seeded()
+    result = await _surreal_call("fn::runtime::agent::list")
+    return _extract_query_rows(result)
+
+
+async def _get_agent_from_db(agent_id: str) -> Optional[dict[str, Any]]:
+    await _ensure_runtime_seeded()
+    result = await _surreal_call("fn::runtime::agent::get", agent_id)
+    rows = _extract_query_rows(result)
+    return rows[0] if rows else None
+
+
+async def _list_agent_versions_from_db(agent_id: str) -> list[dict[str, Any]]:
+    await _ensure_runtime_seeded()
+    result = await _surreal_call("fn::runtime::agent::versions", agent_id)
+    return _extract_query_rows(result)
+
+
+async def _list_entities_from_db() -> list[dict[str, Any]]:
+    await _ensure_runtime_seeded()
+    result = await _surreal_call("fn::runtime::entity::list")
+    return _extract_query_rows(result)
+
 @app.get("/entities")
 async def list_entities(type: str = None, limit: int = 50):
-    """List sample entities (graph nodes)."""
-    ents = SAMPLE_ENTITIES
+    """List entities (graph nodes)."""
+    ents = await _list_entities_from_db()
     if type:
         ents = [e for e in ents if e.get("type") == type]
     return {"entities": ents[:limit]}
@@ -350,7 +529,9 @@ async def list_entities(type: str = None, limit: int = 50):
 @app.post("/entities/seed")
 async def seed_entities():
     """Seed entity graph to SurrealDB."""
-    return {"status": "seeded", "count": len(SAMPLE_ENTITIES), "storage": "memory"}
+    for entity in DEFAULT_ENTITIES:
+        await _surreal_call("fn::runtime::entity::upsert", entity)
+    return {"status": "seeded", "count": len(DEFAULT_ENTITIES), "storage": "surrealdb"}
 
 
 @app.post("/schema-types/seed")

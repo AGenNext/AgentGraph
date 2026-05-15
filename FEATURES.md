@@ -26,7 +26,7 @@
 | Human-in-Loop | ✅ Native | [Concepts: Memory](https://docs.langchain.com/oss/python/concepts/memory) |
 
 **Key Features:**
-- `MemorySaver` / `SqliteSaver` for checkpointing
+- `MemorySaver` for checkpointing
 - `InMemoryStore` for persistence
 - `interrupt()` for human-in-the-loop
 - StateGraph for complex workflows
