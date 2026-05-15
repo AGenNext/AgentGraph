@@ -60,6 +60,8 @@ _surreal_db = None
 SURREALDB_URL = os.getenv("SURREALDB_URL", "mem://")
 SURREALDB_USER = os.getenv("SURREALDB_USER", "root")
 SURREALDB_PASS = os.getenv("SURREALDB_PASS", "root")
+SURREALDB_NAMESPACE = os.getenv("SURREALDB_NAMESPACE", "agennext")
+SURREALDB_DATABASE = os.getenv("SURREALDB_DATABASE", "schema")
 
 app = FastAPI(
     title="AGenNext API",
@@ -359,8 +361,12 @@ async def seed_schema_types():
     try:
         # Try to connect to SurrealDB
         import surrealdb
-        db = surrealdb.connect(SURREALDB_URL, user=SURREALDB_USER, password=SURREALDB_PASS)
-        await db.use("agennext", "schema")
+        db = surrealdb.connect(
+            SURREALDB_URL,
+            user=SURREALDB_USER,
+            password=SURREALDB_PASS,
+        )
+        await db.use(SURREALDB_NAMESPACE, SURREALDB_DATABASE)
         
         # Seed schema types
         for schema_type in SCHEMA_TYPES:

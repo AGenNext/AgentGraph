@@ -26,7 +26,7 @@ npm install
 npm run dev
 
 # Backend (FastAPI)
-pip install fastapi uvicorn
+pip install fastapi uvicorn surrealdb
 python server.py
 ```
 
@@ -71,7 +71,17 @@ docker compose up -d
 ## Documentation
 
 See [VPS-DEPLOY.md](./VPS-DEPLOY.md) for production deployment to VPS.
-python schema_org.py
+ 
+### SurrealDB Schema
+
+- Canonical schema: [surreal/schema/schema-org-surrealdb.surql](/Users/apple/Agent-Graph/surreal/schema/schema-org-surrealdb.surql:1)
+- Schema helper: [schema_org_orm.py](/Users/apple/Agent-Graph/schema_org_orm.py:1)
+- Database notes: [docs/database.md](/Users/apple/Agent-Graph/docs/database.md:1)
+
+```bash
+# Apply schema changes with SurrealKit
+cargo install surrealkit
+surrealkit sync
 ```
 
 ## Documentation
@@ -96,7 +106,7 @@ python schema_org.py
 
 ```
 schema_org.py              # Core Schema.org implementation
-schema_org_orm.py         # ORM layer
+schema_org_orm.py         # SurrealDB schema helper
 schema_org_graph.py        # Graph relationships
 surrealdb_schema.py       # SurrealDB schema
 time_search.py           # Time-based search
@@ -210,7 +220,7 @@ MIT License - See LICENSE file
 ## References
 
 - [Schema.org](https://schema.org/docs/full.html) - Official documentation
-- [SurrealDB](https://surrealdb.com) - In-memory graph database
+- [SurrealDB](https://surrealdb.com) - Multi-model database
 - [React Flow](https://reactflow.dev) - Graph visualization
 - [LangGraph](https://github.com/langchain-ai/langgraph) - AI agent framework
 

@@ -1,0 +1,21 @@
+{
+  "edge_counts": {
+    "domain_includes": 2309,
+    "equivalent_to": 200,
+    "exact_match": 19,
+    "inverse_of": 58,
+    "range_includes": 1368,
+    "subclass_of": 1506,
+    "subproperty_of": 210,
+    "superseded_by": 82
+  },
+  "source": "https://schema.org/version/latest/schemaorg-current-https.jsonld",
+  "term_counts": {
+    "class": 907,
+    "datatype": 1,
+    "enumeration": 95,
+    "enumeration_value": 530,
+    "property": 1676,
+    "total": 3209
+  }
+}

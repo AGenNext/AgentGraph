@@ -6,6 +6,7 @@ import json
 import asyncio
 from unittest.mock import Mock, patch, AsyncMock
 from fastapi.testclient import TestClient
+from schema_org_orm import get_schema_path, load_schema_text
 
 # Test fixtures
 @pytest.fixture
@@ -22,19 +23,6 @@ def test_task():
         "framework": "langgraph",
         "submission": {"query": "test query"}
     }
-
-@pytest.fixture
-def mock_db():
-    """Mock database connection."""
-    with patch('psycopg2.connect') as mock:
-        mock_conn = Mock()
-        mock_cursor = Mock()
-        mock_conn.cursor.return_value = mock_cursor
-        mock_conn.__enter__ = Mock(return_value=mock_conn)
-        mock_conn.__exit__ = Mock(return_value=False)
-        mock.return_value = mock_conn
-        yield mock_conn
-
 
 # ================== CORE TESTS ==================
 
@@ -143,38 +131,22 @@ class TestA2AEndpoints:
 # ================== DATABASE TESTS ==================
 
 class TestDatabaseConnection:
-    """Test database connection."""
+    """Test SurrealDB configuration."""
     
-    def test_db_env(self):
-        """Test DATABASE_URL is set."""
-        # In test environment, should have a URL
-        url = os.getenv("DATABASE_URL", "")
-        assert isinstance(url, str)
-    
-    @patch('psycopg2.connect')
-    def test_db_connect(self, mock_connect):
-        """Test database connection."""
-        from main import get_db_connection
-        conn = get_db_connection()
-        # Should at least attempt connection
-        mock_connect.assert_called_once()
+    def test_surreal_env_defaults(self):
+        assert isinstance(os.getenv("SURREALDB_URL", ""), str)
+
+    def test_surreal_schema_path(self):
+        assert get_schema_path().exists()
 
 
 class TestCRUDOperations:
-    """Test CRUD operations."""
-    
-    @patch('psycopg2.connect')
-    def test_save_task(self, mock_db, test_task):
-        from main import save_task
-        result = save_task(test_task["id"], test_task["framework"], test_task["submission"])
-        # Should handle gracefully
-        assert result is not None or result is None
-    
-    @patch('psycopg2.connect')
-    def test_get_task_db(self, mock_db):
-        from main import get_task_db
-        result = get_task_db("test-1")
-        assert result is not None or result is None
+    """Test schema availability."""
+
+    def test_schema_contains_core_tables(self):
+        schema = load_schema_text()
+        assert "DEFINE TABLE person" in schema
+        assert "DEFINE TABLE organization" in schema
 
 
 # ================== INTEGRATION TESTS ==================
