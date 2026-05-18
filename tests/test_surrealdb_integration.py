@@ -275,7 +275,15 @@ def _call_validation(
     function_name: str,
     payload,
 ) -> None:
-    _sql_request(client, base_url, f"RETURN {function_name}({_surql_literal(payload)});")
+    if function_name == "fn::validation::knowledge_graph":
+        statement = f"RETURN {function_name}();"
+    elif function_name == "fn::validation::relation_summary":
+        statement = f"RETURN {function_name}({_surql_literal(payload['table'])}, {_surql_literal(payload['expected_count'])}, {_surql_literal(payload['edges'])});"
+    elif function_name == "fn::validation::schema_paths":
+        statement = f"RETURN {function_name}({_surql_literal(payload['expected_count'])}, {_surql_literal(payload['paths'])});"
+    else:
+        statement = f"RETURN {function_name}({_surql_literal(payload)});"
+    _sql_request(client, base_url, statement)
 
 
 def _chunked(items: list, size: int) -> list[list]:
