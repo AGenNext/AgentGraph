@@ -59,8 +59,8 @@ social_graph.py        person_organization.py
 
 ### 3. Graph Visualization
 - SchemaOrgHierarchy.tsx (React xyflow)
-- schema_org_graph.py (SurrealDB)
-- knowledge_graph.py
+- SurrealDB-native runtime schema in `surreal/runtime-schema.surql`
+- `surreal/runtime-functions.surql`
 
 ### 4. Time Search
 - time_search.py with operators
@@ -68,10 +68,9 @@ social_graph.py        person_organization.py
 - Metadata tracking
 
 ### 5. API & Server
-- api_gateway.py
-- a2a_protocol.py  
-- message_queue.py
-- data_store.py
+- `server.py`
+- `main.py` compatibility entrypoint
+- FastAPI + SurrealDB runtime layer
 
 ### 6. Agent Integration
 - agent_platform.py
@@ -80,8 +79,8 @@ social_graph.py        person_organization.py
 - action_mapper.py
 
 ### 7. Container & Deployment
-- DOCKERIZE.md
-- vite_coding_platform.py
+- `Dockerfile`
+- `docker compose up -d`
 
 ---
 

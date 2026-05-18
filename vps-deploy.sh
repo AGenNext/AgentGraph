@@ -22,7 +22,7 @@ mkdir -p /opt/agennext
 cd /opt/agennext
 
 # Clone from GitHub
-git clone -b feature/complete-platform https://github.com/AGenNext/AgentGraph.git .
+git clone https://github.com/AGenNext/Agent-Graph.git .
 
 # Build and start
 docker compose up -d --build

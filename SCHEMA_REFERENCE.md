@@ -1,4 +1,4 @@
-# AgentGraph Schema Reference
+# AGenNext Schema Reference
 
 This repo uses the unified schema from AGenNext-Enterprise.
 

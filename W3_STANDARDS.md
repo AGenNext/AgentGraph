@@ -19,11 +19,11 @@
 
 | W3 Standard | Schema.org Files | Notes |
 |--------------|-----------------|-------|
-| JSON-LD | schema_org.py | Primary format |
-| Dublin Core | knowledge_graph.py | Metadata fields |
-| FOAF | person_organization.py | Person identity |
-| SKOS | government_codes.py | Tax codes |
-| OWL | schema_org.py | Type definitions |
+| JSON-LD | surreal/schema/schemaorg-current-https.jsonld | Source vocabulary dump |
+| Dublin Core | surreal/schema/schemaorg-vocabulary.surql | Metadata fields |
+| FOAF | surreal/runtime-schema.surql | Person identity |
+| SKOS | surreal/schema/schemaorg-vocabulary.surql | Tax codes |
+| OWL | surreal/schema/schemaorg-vocabulary.surql | Type definitions |
 
 ## Schema.org + W3 Stack
 
@@ -41,9 +41,9 @@ Schema.org (V30.0, 2026)
 
 | File | W3 Standard Used |
 |------|-----------------|
-| schema_org.py | JSON-LD |
+| surreal/schema/schemaorg-current-https.jsonld | JSON-LD source |
 | surreal/schema/schemaorg-vocabulary.surql | RDF-derived vocabulary graph |
-| CONNECTION_MAP.md | RDF relationships |
-| SCHEMA_WIRING.md | Full wiring |
+| surreal/runtime-schema.surql | Runtime relations |
+| surreal/README.md | Full wiring |
 
 Reference: https://www.w3.org/ | https://schema.org/docs/full.html

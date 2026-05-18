@@ -2,7 +2,7 @@
 
 > Comprehensive enterprise AI agent management with multiple specialized agent types, chat UI, channel integrations, and multimodal support.
 
-[![Platform](https://img.shields.io/badge/AGenNext-1.0.0-blue)](https://github.com/AGenNext/AgentGraph)
+[![Platform](https://img.shields.io/badge/AGenNext-1.0.0-blue)](https://github.com/AGenNext/Agent-Graph)
 [![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.11+-yellow)](https://python.org)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org)
@@ -53,8 +53,8 @@ python server.py
 docker compose up -d
 
 # Or from GitHub
-git clone -b feature/complete-platform https://github.com/AGenNext/AgentGraph.git
-cd AgentGraph
+git clone https://github.com/AGenNext/Agent-Graph.git
+cd Agent-Graph
 docker compose up -d
 ```
 
@@ -74,9 +74,9 @@ See [VPS-DEPLOY.md](./VPS-DEPLOY.md) for production deployment to VPS.
  
 ### SurrealDB Schema
 
-- Metamodel: [surreal/schema/schema-meta.surql](/Users/apple/Agent-Graph/surreal/schema/schema-meta.surql:1)
-- Canonical vocabulary import: [surreal/schema/schemaorg-vocabulary.surql](/Users/apple/Agent-Graph/surreal/schema/schemaorg-vocabulary.surql:1)
-- Source dump and generator notes: [surreal/README.md](/Users/apple/Agent-Graph/surreal/README.md:1)
+- Metamodel: [`surreal/schema/schema-meta.surql`](surreal/schema/schema-meta.surql)
+- Canonical vocabulary import: [`surreal/schema/schemaorg-vocabulary.surql`](surreal/schema/schemaorg-vocabulary.surql)
+- Source dump and generator notes: [`surreal/README.md`](surreal/README.md)
 
 ```bash
 # Apply schema changes with SurrealKit
@@ -105,13 +105,14 @@ surrealkit sync
 ### Key Files
 
 ```
-schema_org.py              # Core Schema.org implementation
-schema_org_graph.py        # Graph relationships
-surreal/schema/           # Native SurrealDB schema assets
-time_search.py           # Time-based search
-schema_org_utils.py      # Utilities
-action_mapper.py         # Action mappings
-skill_action_tool_map.py # Skill → Action → Tool mapping
+surreal/schema/            # Native SurrealDB schema assets
+surreal/runtime-schema.surql
+surreal/runtime-functions.surql
+surreal/runtime-events.surql
+surreal/generate_schemaorg_surql.py
+time_search.py             # Time-based search
+action_mapper.py           # Action mappings
+skill_action_tool_map.py   # Skill → Action → Tool mapping
 ```
 
 ### Database Mappings

@@ -1,6 +1,9 @@
 """UI Tests with Playwright - Test AGenNext UI Components"""
 import pytest
-from playwright.sync_api import sync_playwright, expect
+
+playwright_sync = pytest.importorskip("playwright.sync_api")
+sync_playwright = playwright_sync.sync_playwright
+expect = playwright_sync.expect
 
 
 @pytest.fixture(scope="module")

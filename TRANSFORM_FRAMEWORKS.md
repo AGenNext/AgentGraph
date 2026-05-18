@@ -345,7 +345,7 @@ def transform_framework_to_schema(framework: str, data: dict) -> dict:
 | Cloud | WebAPI, Service | CLOUD_PROVIDERS.md |
 | Agent Runtime | SoftwareApplication, RuntimePlatform | AGENT_RUNTIME_REPOS.md |
 | Programming Runtime | RuntimePlatform | RUNTIME_REPOS.md |
-| Database | (properties only) | SURREALDB_WIRING.md |
+| Database | (properties only) | surreal/README.md |
 | W3 Standards | StructuredValue, MediaType | W3_STANDARDS.md |
 | Linux | Person, Action, Service, Thing | LINUX_INSIGHTS.md |
 | Time | Date, DateTime, Duration | time_search.py |

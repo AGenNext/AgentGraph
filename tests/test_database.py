@@ -15,5 +15,6 @@ class TestSurrealSchema:
 
     def test_schema_contains_table_definitions(self):
         schema = SCHEMA_PATH.read_text(encoding="utf-8")
-        assert "DEFINE TABLE schema_term" in schema
-        assert schema.count("DEFINE TABLE ") > 5
+        assert schema.startswith("-- Generated from the official Schema.org JSON-LD vocabulary dump.")
+        assert "UPSERT schema_term:" in schema
+        assert schema.count("UPSERT schema_term:") > 100

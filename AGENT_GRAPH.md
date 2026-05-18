@@ -1,10 +1,10 @@
-# AgentGraph Alternative: Multi-Agent System
+# AGenNext Alternative: Multi-Agent System
 
 ## Reference: https://github.com/keta1930/agent-graph
 
-### What is AgentGraph?
+### What is Agent-Graph?
 
-**AgentGraph** = Multi-Agent System with:
+**Agent-Graph** = Multi-Agent System with:
 - Sub-agent orchestration
 - Long-term Memory
 - MCP (Model Context Protocol)
@@ -19,7 +19,7 @@ Reference: https://github.com/langchain-ai/langgraph
 
 ### LangGraph Features
 
-| Feature | AgentGraph | LangGraph |
+| Feature | Agent-Graph | LangGraph |
 |---------|----------|----------|
 | Multi-agent | ✅ | ✅ |
 | Graph-based | ✅ | ✅ |
