@@ -8,6 +8,7 @@ SCHEMA_PATH = Path(__file__).resolve().parents[1] / "surreal" / "schema" / "sche
 KNOWLEDGE_GRAPH_PATH = Path(__file__).resolve().parents[1] / "surreal" / "knowledge-graph.surql"
 PATHS_PATH = Path(__file__).resolve().parents[1] / "surreal" / "schema" / "schemaorg-paths.surql"
 PATHS_SUMMARY_PATH = Path(__file__).resolve().parents[1] / "surreal" / "schema" / "schemaorg-paths-summary.json"
+VALIDATION_PATH = Path(__file__).resolve().parents[1] / "surreal" / "validation" / "graph-validation.surql"
 
 
 class TestSurrealSchema:
@@ -68,3 +69,16 @@ class TestSchemaPathsAsset:
         paths = PATHS_PATH.read_text(encoding="utf-8")
         assert "UPSERT schema_path:" in paths
         assert '"route": ["domain_includes"]' in paths or '"route": ["subclass_of"]' in paths
+
+
+class TestValidationBlocks:
+    """Test the SurrealDB-native validation blocks."""
+
+    def test_validation_file_exists(self):
+        assert VALIDATION_PATH.exists()
+
+    def test_validation_file_defines_functions(self):
+        validation = VALIDATION_PATH.read_text(encoding="utf-8")
+        assert "DEFINE FUNCTION OVERWRITE fn::validation::relation_summary" in validation
+        assert "DEFINE FUNCTION OVERWRITE fn::validation::schema_paths" in validation
+        assert "DEFINE FUNCTION OVERWRITE fn::validation::knowledge_graph" in validation

@@ -21,6 +21,7 @@ Keep the repository source of truth in git, and keep the generated SurrealDB ass
 | `surreal/schema/schema-meta.surql` | Schema term definitions and relation tables |
 | `surreal/schema/schemaorg-vocabulary.surql` | Generated Schema.org vocabulary |
 | `surreal/schema/schemaorg-paths.surql` | Generated multi-step relation paths |
+| `surreal/validation/graph-validation.surql` | SurrealDB-native validation blocks |
 | `surreal/knowledge-graph.surql` | Repository knowledge graph seed |
 | `tests/test_database.py` | Static asset validation |
 | `tests/test_surrealdb_integration.py` | Disposable SurrealDB integration validation |
@@ -69,8 +70,7 @@ If SurrealKit is used, validate the wrapper scripts first:
 
 ## Notes
 
-- The integration harness currently validates Schema.org relation tables and path materialization in a disposable SurrealDB container.
-- Knowledge graph validation is a separate concern and may require its own targeted test if the schema changes.
+- The integration harness now validates Schema.org relation tables, path materialization, and the repository knowledge graph through SurrealDB-native validation blocks in a disposable container.
 - Keep repo documentation aligned with the current SurrealDB-native layout.
 
 *Last updated: 2026-05-17*

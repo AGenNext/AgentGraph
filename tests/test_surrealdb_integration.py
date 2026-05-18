@@ -22,6 +22,7 @@ SCHEMA_META_PATH = SURREAL_DIR / "schema" / "schema-meta.surql"
 SCHEMA_VOCABULARY_PATH = SURREAL_DIR / "schema" / "schemaorg-vocabulary.surql"
 SCHEMA_PATHS_PATH = SURREAL_DIR / "schema" / "schemaorg-paths.surql"
 KNOWLEDGE_GRAPH_PATH = SURREAL_DIR / "knowledge-graph.surql"
+GRAPH_VALIDATION_PATH = SURREAL_DIR / "validation" / "graph-validation.surql"
 RUNTIME_SCHEMA_PATH = SURREAL_DIR / "runtime-schema.surql"
 RUNTIME_FUNCTIONS_PATH = SURREAL_DIR / "runtime-functions.surql"
 RUNTIME_EVENTS_PATH = SURREAL_DIR / "runtime-events.surql"
@@ -42,13 +43,6 @@ SCHEMAORG_RELATION_TABLES = {
     "equivalent_to",
     "exact_match",
 }
-
-
-class RelationRow(BaseModel):
-    model_config = ConfigDict(extra="ignore")
-
-    in_: str = Field(alias="in")
-    out: str
 
 
 class SchemaPathRow(BaseModel):
@@ -275,17 +269,20 @@ def _apply_sql_file(
         _sql_request(client, base_url, "\n".join(batch), headers=headers)
 
 
-@pytest.fixture(scope="module")
-def surrealdb_runtime():
-    if not RUN_INTEGRATION:
-        pytest.skip("Set RUN_SURREALDB_INTEGRATION=1 to run SurrealDB integration tests.")
+def _call_validation(
+    client: httpx.Client,
+    base_url: str,
+    function_name: str,
+    payload,
+) -> None:
+    _sql_request(client, base_url, f"RETURN {function_name}({_surql_literal(payload)});")
 
-    files = [
-        SCHEMA_META_PATH,
-        SCHEMA_VOCABULARY_PATH,
-        RUNTIME_SCHEMA_PATH,
-        SCHEMA_PATHS_PATH,
-    ]
+
+def _chunked(items: list, size: int) -> list[list]:
+    return [items[index : index + size] for index in range(0, len(items), size)]
+
+
+def _boot_surrealdb(files: list[Path]):
     for path in files:
         assert path.exists(), path
 
@@ -311,6 +308,36 @@ def surrealdb_runtime():
             client.close()
 
 
+@pytest.fixture(scope="module")
+def surrealdb_runtime():
+    if not RUN_INTEGRATION:
+        pytest.skip("Set RUN_SURREALDB_INTEGRATION=1 to run SurrealDB integration tests.")
+
+    files = [
+        SCHEMA_META_PATH,
+        SCHEMA_VOCABULARY_PATH,
+        RUNTIME_SCHEMA_PATH,
+        SCHEMA_PATHS_PATH,
+        GRAPH_VALIDATION_PATH,
+    ]
+    yield from _boot_surrealdb(files)
+
+
+@pytest.fixture(scope="module")
+def surrealdb_knowledge_graph_runtime():
+    if not RUN_INTEGRATION:
+        pytest.skip("Set RUN_SURREALDB_INTEGRATION=1 to run SurrealDB integration tests.")
+
+    files = [
+        SCHEMA_META_PATH,
+        SCHEMA_VOCABULARY_PATH,
+        RUNTIME_SCHEMA_PATH,
+        KNOWLEDGE_GRAPH_PATH,
+        GRAPH_VALIDATION_PATH,
+    ]
+    yield from _boot_surrealdb(files)
+
+
 class TestSurrealdbIntegration:
     def test_schema_term_count_matches_generated_summary(self, surrealdb_runtime):
         client, base_url = surrealdb_runtime
@@ -322,32 +349,32 @@ class TestSurrealdbIntegration:
         expected_edges = _parse_relation_edges(SCHEMA_VOCABULARY_PATH)
 
         for relation, expected_count in SCHEMA_SUMMARY["edge_counts"].items():
-            rows = _sql_result(client, base_url, f"SELECT * FROM {relation};")
-            validated_rows = [RelationRow.model_validate(row) for row in rows]
-            actual_edges = {(row.in_, row.out) for row in validated_rows}
-
-            assert len(validated_rows) == expected_count
-            assert actual_edges == expected_edges[relation]
+            edges = [{"in": left, "out": right} for left, right in sorted(expected_edges[relation])]
+            for batch_index, batch in enumerate(_chunked(edges, 100)):
+                payload = {
+                    "table": relation,
+                    "expected_count": expected_count if batch_index == 0 else 0,
+                    "edges": batch,
+                }
+                _call_validation(client, base_url, "fn::validation::relation_summary", payload)
 
     def test_schema_path_rows_match_generated_routes(self, surrealdb_runtime):
         client, base_url = surrealdb_runtime
-        expected_rows = _parse_schema_paths(SCHEMA_PATHS_PATH)
+        expected_rows = list(_parse_schema_paths(SCHEMA_PATHS_PATH).values())
+        for batch_index, batch in enumerate(_chunked([expected_row.model_dump() for expected_row in expected_rows], 100)):
+            payload = {
+                "expected_count": PATHS_SUMMARY["path_counts"]["total"] if batch_index == 0 else 0,
+                "paths": batch,
+            }
+            _call_validation(client, base_url, "fn::validation::schema_paths", payload)
 
-        rows = _sql_result(
-            client,
-            base_url,
-            (
-                "SELECT path_key, relation, source_id, target_id, hop_count, route, path, "
-                "via_source_ids, source_record, target_record, generated_from FROM schema_path;"
-            ),
-        )
-        actual_rows = {
-            SchemaPathRow.model_validate(row).path_key: SchemaPathRow.model_validate(row)
-            for row in rows
-        }
+    def test_schemaorg_validation_file_is_loaded(self, surrealdb_runtime):
+        client, base_url = surrealdb_runtime
+        result = _sql_result(client, base_url, "RETURN fn::validation::assert(true, 'ok');")
+        assert result is True
 
-        assert len(actual_rows) == PATHS_SUMMARY["path_counts"]["total"]
-        assert actual_rows.keys() == expected_rows.keys()
 
-        for path_key, expected_row in expected_rows.items():
-            assert actual_rows[path_key].model_dump() == expected_row.model_dump()
+class TestKnowledgeGraphValidation:
+    def test_knowledge_graph_seed_validates_inside_surrealdb(self, surrealdb_knowledge_graph_runtime):
+        client, base_url = surrealdb_knowledge_graph_runtime
+        _call_validation(client, base_url, "fn::validation::knowledge_graph", {})
