@@ -11,6 +11,8 @@ SCHEMA_DIR = ROOT / "schema"
 INPUT_JSONLD = SCHEMA_DIR / "schemaorg-current-https.jsonld"
 OUTPUT_SURQL = SCHEMA_DIR / "schemaorg-vocabulary.surql"
 OUTPUT_SUMMARY = SCHEMA_DIR / "schemaorg-summary.json"
+OUTPUT_PATHS_SURQL = SCHEMA_DIR / "schemaorg-paths.surql"
+OUTPUT_PATHS_SUMMARY = SCHEMA_DIR / "schemaorg-paths-summary.json"
 
 
 def as_list(value):
@@ -202,6 +204,7 @@ def relate(edge_table: str, from_id: str, to_id: str, metadata: dict | None = No
 
 
 edge_lines = []
+direct_edges = []
 edge_counters = {
     "subclass_of": 0,
     "subproperty_of": 0,
@@ -220,24 +223,28 @@ for term in terms:
             line = relate("subclass_of", source_id, parent_id, {"source": "rdfs:subClassOf"})
             if line:
                 edge_lines.append(line)
+                direct_edges.append(("subclass_of", source_id, parent_id))
                 edge_counters["subclass_of"] += 1
     elif term["term_kind"] == "property":
         for parent_id in term["parent_source_ids"]:
             line = relate("subproperty_of", source_id, parent_id, {"source": "rdfs:subPropertyOf"})
             if line:
                 edge_lines.append(line)
+                direct_edges.append(("subproperty_of", source_id, parent_id))
                 edge_counters["subproperty_of"] += 1
 
     for domain_id in term["domain_source_ids"]:
         line = relate("domain_includes", source_id, domain_id, {"source": "schema:domainIncludes"})
         if line:
             edge_lines.append(line)
+            direct_edges.append(("domain_includes", source_id, domain_id))
             edge_counters["domain_includes"] += 1
 
     for range_id in term["range_source_ids"]:
         line = relate("range_includes", source_id, range_id, {"source": "schema:rangeIncludes"})
         if line:
             edge_lines.append(line)
+            direct_edges.append(("range_includes", source_id, range_id))
             edge_counters["range_includes"] += 1
 
     inverse_id = scalar_id(by_id[source_id].get("schema:inverseOf")) if source_id in by_id else None
@@ -245,12 +252,14 @@ for term in terms:
         line = relate("inverse_of", source_id, inverse_id, {"source": "schema:inverseOf"})
         if line:
             edge_lines.append(line)
+            direct_edges.append(("inverse_of", source_id, inverse_id))
             edge_counters["inverse_of"] += 1
 
     for superseded_id in term["superseded_by_source_ids"]:
         line = relate("superseded_by", source_id, superseded_id, {"source": "schema:supersededBy"})
         if line:
             edge_lines.append(line)
+            direct_edges.append(("superseded_by", source_id, superseded_id))
             edge_counters["superseded_by"] += 1
 
     if source_id in by_id:
@@ -259,6 +268,7 @@ for term in terms:
             line = relate("equivalent_to", source_id, equivalent_id, {"source": "owl:equivalent"})
             if line:
                 edge_lines.append(line)
+                direct_edges.append(("equivalent_to", source_id, equivalent_id))
                 edge_counters["equivalent_to"] += 1
 
         for exact_id in term["exact_match_urls"]:
@@ -266,6 +276,7 @@ for term in terms:
                 line = relate("exact_match", source_id, exact_id, {"source": "skos:exactMatch"})
                 if line:
                     edge_lines.append(line)
+                    direct_edges.append(("exact_match", source_id, exact_id))
                     edge_counters["exact_match"] += 1
 
 term_lines = [emit_term(term) for term in sorted(terms, key=lambda x: (x["term_kind"], x["source_id"]))]
@@ -296,3 +307,210 @@ summary = {
     "edge_counts": edge_counters,
 }
 OUTPUT_SUMMARY.write_text(json.dumps(summary, indent=2, sort_keys=True), encoding="utf-8")
+
+
+def _path_record_id(relation: str, route: list[str], path: list[str]) -> str:
+    import hashlib
+
+    digest = hashlib.sha1(
+        "|".join([relation, *route, *path]).encode("utf-8")
+    ).hexdigest()[:16]
+    return f"path_{slugify(relation)}_{digest}"
+
+
+def _path_key(relation: str, route: list[str], path: list[str]) -> str:
+    return " | ".join([relation, " -> ".join(route), " -> ".join(path)])
+
+
+def _all_paths(start_id: str, parent_map: dict[str, list[str]], relation_name: str) -> list[tuple[list[str], list[str]]]:
+    results: list[tuple[list[str], list[str]]] = []
+
+    def walk(node_id: str, node_path: list[str], route_path: list[str], visited: set[str]) -> None:
+        for parent_id in parent_map.get(node_id, []):
+            if parent_id in visited:
+                continue
+            next_nodes = node_path + [parent_id]
+            next_route = route_path + [relation_name]
+            results.append((next_route, next_nodes))
+            walk(parent_id, next_nodes, next_route, visited | {parent_id})
+
+    walk(start_id, [start_id], [], {start_id})
+    return results
+
+
+class_parent_paths = {
+    source_id: _all_paths(source_id, parents_map, "subclass_of")
+    for source_id in class_ids
+}
+
+property_parent_map = {
+    source_id: id_list(by_id[source_id].get("rdfs:subPropertyOf"))
+    if source_id in by_id
+    else []
+    for source_id in property_ids
+}
+
+property_parent_paths = {
+    source_id: _all_paths(source_id, property_parent_map, "subproperty_of")
+    for source_id in property_ids
+}
+
+
+def _make_path_entries() -> list[dict]:
+    entries: list[dict] = []
+    seen: set[str] = set()
+
+    def add_entry(relation: str, route: list[str], path: list[str], source_id: str, target_id: str, via: list[str]) -> None:
+        source_term = term_by_source.get(source_id)
+        target_term = term_by_source.get(target_id)
+        if not source_term or not target_term:
+            return
+        record_id = _path_record_id(relation, route, path)
+        if record_id in seen:
+            return
+        seen.add(record_id)
+        entries.append(
+            {
+                "record_id": record_id,
+                "path_key": _path_key(relation, route, path),
+                "relation": relation,
+                "source_id": source_id,
+                "target_id": target_id,
+                "hop_count": max(len(path) - 1, 1),
+                "route": route,
+                "path": path,
+                "via_source_ids": via,
+                "source_record": source_term["record_id"],
+                "target_record": target_term["record_id"],
+                "generated_from": "schemaorg-current-https.jsonld",
+            }
+        )
+
+    for relation, source_id, target_id in direct_edges:
+        if source_id in term_by_source and target_id in term_by_source:
+            add_entry(
+                relation=f"{relation}_path",
+                route=[relation],
+                path=[source_id, target_id],
+                source_id=source_id,
+                target_id=target_id,
+                via=[],
+            )
+
+    for source_id, paths in class_parent_paths.items():
+        for route, node_path in paths:
+            add_entry(
+                relation="subclass_of_path",
+                route=route,
+                path=node_path,
+                source_id=source_id,
+                target_id=node_path[-1],
+                via=[term_by_source[node]["record_id"] for node in node_path[1:-1] if node in term_by_source],
+            )
+
+    for source_id, property_paths in property_parent_paths.items():
+        for prop_route, prop_path in property_paths:
+            prop_tail = prop_path[-1]
+            inherited_props = [prop_tail, *prop_path[1:-1]]
+            # The path above walks source -> ancestor properties. We want each
+            # property in the chain, including the ancestor that supplies the
+            # domain/range.
+            property_chain = [source_id, *prop_path[1:]]
+            for property_node in property_chain:
+                direct_domains = id_list(by_id.get(property_node, {}).get("schema:domainIncludes"))
+                direct_ranges = id_list(by_id.get(property_node, {}).get("schema:rangeIncludes"))
+
+                for domain_id in direct_domains:
+                    domain_paths = class_parent_paths.get(domain_id, [])
+                    if not domain_paths:
+                        add_entry(
+                            relation="domain_includes_path",
+                            route=prop_route + ["domain_includes"],
+                            path=property_chain + [domain_id],
+                            source_id=source_id,
+                            target_id=domain_id,
+                            via=[term_by_source[node]["record_id"] for node in property_chain[1:-1] if node in term_by_source],
+                        )
+                    for class_route, class_path in domain_paths:
+                        add_entry(
+                            relation="domain_includes_path",
+                            route=prop_route + ["domain_includes", *class_route],
+                            path=property_chain + [domain_id, *class_path[1:]],
+                            source_id=source_id,
+                            target_id=class_path[-1],
+                            via=[term_by_source[node]["record_id"] for node in property_chain[1:-1] if node in term_by_source]
+                            + [term_by_source[node]["record_id"] for node in class_path[1:-1] if node in term_by_source],
+                        )
+
+                for range_id in direct_ranges:
+                    range_paths = class_parent_paths.get(range_id, [])
+                    if not range_paths:
+                        add_entry(
+                            relation="range_includes_path",
+                            route=prop_route + ["range_includes"],
+                            path=property_chain + [range_id],
+                            source_id=source_id,
+                            target_id=range_id,
+                            via=[term_by_source[node]["record_id"] for node in property_chain[1:-1] if node in term_by_source],
+                        )
+                    for class_route, class_path in range_paths:
+                        add_entry(
+                            relation="range_includes_path",
+                            route=prop_route + ["range_includes", *class_route],
+                            path=property_chain + [range_id, *class_path[1:]],
+                            source_id=source_id,
+                            target_id=class_path[-1],
+                            via=[term_by_source[node]["record_id"] for node in property_chain[1:-1] if node in term_by_source]
+                            + [term_by_source[node]["record_id"] for node in class_path[1:-1] if node in term_by_source],
+                        )
+
+    return entries
+
+
+def _emit_path(entry: dict) -> str:
+    content = {
+        "path_key": entry["path_key"],
+        "relation": entry["relation"],
+        "source_id": entry["source_id"],
+        "target_id": entry["target_id"],
+        "hop_count": entry["hop_count"],
+        "route": entry["route"],
+        "path": entry["path"],
+        "via_source_ids": entry["via_source_ids"],
+        "source_record": entry["source_record"],
+        "target_record": entry["target_record"],
+        "generated_from": entry["generated_from"],
+        "created_at": None,
+        "updated_at": None,
+    }
+    return f"UPSERT schema_path:{entry['record_id']} CONTENT {json.dumps(content, ensure_ascii=False)};"
+
+
+path_entries = _make_path_entries()
+path_lines = [ _emit_path(entry) for entry in sorted(path_entries, key=lambda x: x["path_key"]) ]
+
+OUTPUT_PATHS_SURQL.write_text(
+    "\n".join(
+        [
+            "-- Generated multi-step Schema.org relation paths.",
+            "-- Source: https://schema.org/version/latest/schemaorg-current-https.jsonld",
+            *path_lines,
+            "",
+        ]
+    ),
+    encoding="utf-8",
+)
+
+path_summary = {
+    "source": "https://schema.org/version/latest/schemaorg-current-https.jsonld",
+    "path_counts": {
+        "total": len(path_entries),
+        "direct": sum(1 for entry in path_entries if entry["hop_count"] == 1),
+        "multi_step": sum(1 for entry in path_entries if entry["hop_count"] > 1),
+        "subclass_of_path": sum(1 for entry in path_entries if entry["relation"] == "subclass_of_path"),
+        "subproperty_of_path": sum(1 for entry in path_entries if entry["relation"] == "subproperty_of_path"),
+        "domain_includes_path": sum(1 for entry in path_entries if entry["relation"] == "domain_includes_path"),
+        "range_includes_path": sum(1 for entry in path_entries if entry["relation"] == "range_includes_path"),
+    },
+}
+OUTPUT_PATHS_SUMMARY.write_text(json.dumps(path_summary, indent=2, sort_keys=True), encoding="utf-8")

@@ -78,6 +78,28 @@ DEFINE INDEX entity_name ON TABLE entity FIELDS name;
 DEFINE TABLE entity_kind TYPE RELATION IN entity OUT schema_term SCHEMAFULL;
 DEFINE FIELD source ON TABLE entity_kind TYPE string;
 
+DEFINE TABLE schema_path SCHEMAFULL;
+
+DEFINE FIELD path_key ON TABLE schema_path TYPE string;
+DEFINE FIELD relation ON TABLE schema_path TYPE string;
+DEFINE FIELD source_id ON TABLE schema_path TYPE string;
+DEFINE FIELD target_id ON TABLE schema_path TYPE string;
+DEFINE FIELD hop_count ON TABLE schema_path TYPE int;
+DEFINE FIELD route ON TABLE schema_path TYPE array<string>;
+DEFINE FIELD path ON TABLE schema_path TYPE array<string>;
+DEFINE FIELD via_source_ids ON TABLE schema_path TYPE array<record<schema_term>>;
+DEFINE FIELD source_record ON TABLE schema_path TYPE option<record<schema_term>>;
+DEFINE FIELD target_record ON TABLE schema_path TYPE option<record<schema_term>>;
+DEFINE FIELD generated_from ON TABLE schema_path TYPE option<string>;
+DEFINE FIELD created_at ON TABLE schema_path TYPE option<datetime>;
+DEFINE FIELD updated_at ON TABLE schema_path TYPE option<datetime>;
+
+DEFINE INDEX schema_path_path_key ON TABLE schema_path FIELDS path_key UNIQUE;
+DEFINE INDEX schema_path_relation ON TABLE schema_path FIELDS relation;
+DEFINE INDEX schema_path_source_id ON TABLE schema_path FIELDS source_id;
+DEFINE INDEX schema_path_target_id ON TABLE schema_path FIELDS target_id;
+DEFINE INDEX schema_path_hop_count ON TABLE schema_path FIELDS hop_count;
+
 DEFINE TABLE human SCHEMAFULL;
 
 DEFINE FIELD identity_type ON TABLE human TYPE string DEFAULT "human";

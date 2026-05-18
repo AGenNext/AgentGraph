@@ -81,7 +81,10 @@ See [VPS-DEPLOY.md](./VPS-DEPLOY.md) for production deployment to VPS.
 ```bash
 # Apply schema changes with SurrealKit
 cargo install surrealkit
-surrealkit sync
+SURREALDB_URL=... SURREALDB_DATABASE=... SURREALDB_NAMESPACE=... SURREALDB_USER=... SURREALDB_PASS=... \
+  ./scripts/surrealkit-lint.sh
+SURREALDB_URL=... SURREALDB_DATABASE=... SURREALDB_NAMESPACE=... SURREALDB_USER=... SURREALDB_PASS=... \
+  ./scripts/surrealkit-apply.sh
 ```
 
 ## Documentation
@@ -109,6 +112,8 @@ surreal/schema/            # Native SurrealDB schema assets
 surreal/runtime-schema.surql
 surreal/runtime-functions.surql
 surreal/runtime-events.surql
+surreal/schema/schemaorg-paths.surql
+surreal/knowledge-graph.surql
 surreal/generate_schemaorg_surql.py
 time_search.py             # Time-based search
 action_mapper.py           # Action mappings

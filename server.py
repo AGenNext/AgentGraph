@@ -86,6 +86,8 @@ SURREAL_DIR = Path(__file__).resolve().parent / "surreal"
 RUNTIME_SCHEMA_PATH = SURREAL_DIR / "runtime-schema.surql"
 RUNTIME_FUNCTIONS_PATH = SURREAL_DIR / "runtime-functions.surql"
 RUNTIME_EVENTS_PATH = SURREAL_DIR / "runtime-events.surql"
+SCHEMA_PATHS_PATH = SURREAL_DIR / "schema" / "schemaorg-paths.surql"
+KNOWLEDGE_GRAPH_PATH = SURREAL_DIR / "knowledge-graph.surql"
 _runtime_schema_initialized = False
 
 DEFAULT_AGENTS = [
@@ -413,7 +415,13 @@ async def _apply_runtime_schema() -> None:
     if _runtime_schema_initialized:
         return
 
-    for path in (RUNTIME_SCHEMA_PATH, RUNTIME_FUNCTIONS_PATH, RUNTIME_EVENTS_PATH):
+    for path in (
+        RUNTIME_SCHEMA_PATH,
+        RUNTIME_FUNCTIONS_PATH,
+        RUNTIME_EVENTS_PATH,
+        SCHEMA_PATHS_PATH,
+        KNOWLEDGE_GRAPH_PATH,
+    ):
         query = path.read_text(encoding="utf-8")
         await _surreal_query(query)
 

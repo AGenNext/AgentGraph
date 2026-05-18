@@ -123,6 +123,8 @@ Python should own:
 - `runtime-schema.surql`: runtime structure
 - `runtime-functions.surql`: reusable runtime operations
 - `runtime-events.surql`: mutation side effects and history behavior
+- `schema/schemaorg-paths.surql`: materialized direct and multi-step relation paths
+- `knowledge-graph.surql`: seeded semantic graph for the repository
 - `schema/schema-meta.surql`: Schema.org metamodel
 - `schema/schemaorg-vocabulary.surql`: generated vocabulary graph
 

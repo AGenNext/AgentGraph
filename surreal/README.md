@@ -133,6 +133,15 @@ This is where to define:
 - timestamp/default behavior
 - other mutation-driven rules that belong inside the database transaction
 
+### `knowledge-graph.surql`
+
+Seeded semantic graph for the repository.
+
+This file connects repository concepts into a durable SurrealDB graph using
+the runtime tables and relation types defined above. It is the canonical
+starting point for local graph bootstrap and repository-level semantic
+navigation.
+
 ## Working Rules
 
 1. Do not put core runtime rules in `server.py` if they can live in SurrealQL.
@@ -162,6 +171,15 @@ When applying assets, use this order:
 3. `runtime-schema.surql`
 4. `runtime-functions.surql`
 5. `runtime-events.surql`
+6. `schema/schemaorg-paths.surql`
+7. `knowledge-graph.surql`
+
+Use the SurrealKit wrappers in `scripts/` to lint and apply the directory:
+
+```bash
+SURREALDB_URL=... SURREALDB_DATABASE=... SURREALDB_NAMESPACE=... SURREALDB_USER=... SURREALDB_PASS=... ./scripts/surrealkit-lint.sh
+SURREALDB_URL=... SURREALDB_DATABASE=... SURREALDB_NAMESPACE=... SURREALDB_USER=... SURREALDB_PASS=... ./scripts/surrealkit-apply.sh
+```
 
 ## Tooling Guidance
 

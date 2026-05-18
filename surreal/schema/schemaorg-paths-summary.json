@@ -1,0 +1,12 @@
+{
+  "path_counts": {
+    "direct": 5752,
+    "domain_includes_path": 3864,
+    "multi_step": 4634,
+    "range_includes_path": 2151,
+    "subclass_of_path": 3802,
+    "subproperty_of_path": 210,
+    "total": 10386
+  },
+  "source": "https://schema.org/version/latest/schemaorg-current-https.jsonld"
+}
