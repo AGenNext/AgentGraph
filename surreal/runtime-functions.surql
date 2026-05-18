@@ -197,6 +197,147 @@ DEFINE FUNCTION OVERWRITE fn::runtime::identity::list(
     ORDER BY updated_at DESC;
 };
 
+DEFINE FUNCTION OVERWRITE fn::runtime::identity::oidc::discover($issuer_url: string) -> object {
+    LET $discovery_url = $issuer_url + "/.well-known/openid-configuration";
+    RETURN http::get($discovery_url);
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::identity::oidc::upsert(
+    $provider_key: string,
+    $issuer_url: string,
+    $configuration: object,
+    $issuer_vendor: option<string>
+) -> object {
+    LET $record = type::record("oidc_provider", $provider_key);
+    LET $discovery_url = $configuration.discovery_url ?? ($issuer_url + "/.well-known/openid-configuration");
+
+    RETURN UPSERT ONLY $record CONTENT {
+        provider_key: $provider_key,
+        issuer_vendor: $issuer_vendor ?? "generic",
+        issuer_url: $issuer_url,
+        discovery_url: $discovery_url,
+        jwks_uri: $configuration.jwks_uri ?? NONE,
+        authorization_endpoint: $configuration.authorization_endpoint ?? NONE,
+        token_endpoint: $configuration.token_endpoint ?? NONE,
+        userinfo_endpoint: $configuration.userinfo_endpoint ?? NONE,
+        end_session_endpoint: $configuration.end_session_endpoint ?? NONE,
+        scopes_supported: $configuration.scopes_supported ?? [],
+        response_types_supported: $configuration.response_types_supported ?? [],
+        grant_types_supported: $configuration.grant_types_supported ?? [],
+        id_token_signing_alg_values_supported: $configuration.id_token_signing_alg_values_supported ?? [],
+        claims_supported: $configuration.claims_supported ?? [],
+        subject_types_supported: $configuration.subject_types_supported ?? [],
+        discovery_document: $configuration,
+        status: "active",
+        last_discovered_at: time::now(),
+        refreshed_at: time::now(),
+        created_at: time::now(),
+        updated_at: time::now()
+    };
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::identity::oidc::get($provider_key: string) -> option<object> {
+    RETURN SELECT * FROM ONLY type::record("oidc_provider", $provider_key);
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::identity::oidc::list($status: option<string>) -> array<object> {
+    RETURN SELECT * FROM oidc_provider
+    WHERE type::is_none($status) OR $status = "" OR status = $status
+    ORDER BY updated_at DESC;
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::identity::oidc::sync(
+    $provider_key: string,
+    $issuer_url: string,
+    $issuer_vendor: option<string>
+) -> object {
+    LET $configuration = fn::runtime::identity::oidc::discover($issuer_url);
+    RETURN fn::runtime::identity::oidc::upsert($provider_key, $issuer_url, $configuration, $issuer_vendor);
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::identity::oidc::access_profile(
+    $provider_key: string
+) -> option<object> {
+    LET $provider = SELECT * FROM ONLY type::record("oidc_provider", $provider_key);
+
+    IF !($provider) {
+        RETURN NONE;
+    };
+
+    RETURN {
+        access_name: "oidc_" + $provider.provider_key,
+        issuer_vendor: $provider.issuer_vendor,
+        issuer_label: IF $provider.issuer_vendor = "waltid" {
+            "WaltID"
+        } ELSE {
+            "OpenID Connect"
+        },
+        issuer_url: $provider.issuer_url,
+        discovery_url: $provider.discovery_url,
+        jwks_uri: $provider.jwks_uri,
+        token_endpoint: $provider.token_endpoint,
+        validation_mode: IF type::is_none($provider.jwks_uri) {
+            "pending_discovery"
+        } ELSE {
+            "jwks_uri"
+        },
+        claims: {
+            issuer: "iss",
+            subject: "sub",
+            audience: "aud",
+            expiry: "exp",
+            not_before: "nbf",
+            token_id: "jti"
+        },
+        surreal: {
+            token_access: "DEFINE ACCESS ... TYPE JWT URL <jwks_uri>",
+            subject_table: "identity_ref",
+            session_table: "auth_session",
+            validation_table: "oidc_validation"
+        }
+    };
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::identity::oidc::waltid::profile(
+    $provider_key: string,
+    $issuer_url: string
+) -> object {
+    RETURN {
+        provider_key: $provider_key,
+        issuer_vendor: "waltid",
+        issuer_label: "WaltID",
+        issuer_url: $issuer_url,
+        discovery_url: $issuer_url + "/.well-known/openid-configuration",
+        jwks_uri: NONE,
+        authorization_endpoint: NONE,
+        token_endpoint: NONE,
+        userinfo_endpoint: NONE,
+        end_session_endpoint: NONE,
+        scopes_supported: ["openid", "profile", "email"],
+        response_types_supported: ["code"],
+        grant_types_supported: ["authorization_code", "refresh_token"],
+        id_token_signing_alg_values_supported: ["RS256"],
+        claims_supported: ["iss", "sub", "aud", "exp", "nbf", "iat", "jti", "email", "name"],
+        subject_types_supported: ["public"],
+        validation_mode: "jwks_uri",
+        surreal: {
+            provider_table: "oidc_provider",
+            validation_table: "oidc_validation",
+            session_table: "auth_session",
+            access_name: "oidc_" + $provider_key,
+            access_definition: "DEFINE ACCESS ... TYPE JWT URL <jwks_uri>"
+        }
+    };
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::identity::oidc::waltid::sync(
+    $provider_key: string,
+    $issuer_url: string
+) -> object {
+    LET $configuration = fn::runtime::identity::oidc::discover($issuer_url);
+    RETURN fn::runtime::identity::oidc::upsert($provider_key, $issuer_url, $configuration, "waltid");
+};
+
 DEFINE FUNCTION OVERWRITE fn::runtime::auth::session::upsert($session: object) -> object {
     LET $record = type::record("auth_session", <string>$session.id);
     RETURN UPSERT ONLY $record CONTENT $session;
@@ -228,6 +369,63 @@ DEFINE FUNCTION OVERWRITE fn::runtime::auth::session::revoke($session_id: string
         state = "revoked",
         revoked_at = time::now(),
         updated_at = time::now();
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::auth::session::record_oidc_validation(
+    $session_id: string,
+    $validation_id: string,
+    $provider_key: string,
+    $issuer_vendor: string,
+    $subject_ref: option<string>,
+    $claims: object,
+    $headers: object,
+    $token_issuer: option<string>,
+    $token_subject: option<string>,
+    $token_audience: array<string>,
+    $token_kid: option<string>,
+    $token_algorithm: option<string>,
+    $validation_status: string,
+    $validation_reason: option<string>
+) -> object {
+    LET $session_record = type::record("auth_session", $session_id);
+    LET $provider_record = type::record("oidc_provider", $provider_key);
+    LET $validation_record = type::record("oidc_validation", $validation_id);
+
+    LET $validation = UPSERT ONLY $validation_record CONTENT {
+        provider_ref: $provider_record,
+        issuer_vendor: $issuer_vendor,
+        session_ref: $session_record,
+        subject_ref: $subject_ref,
+        token_issuer: $token_issuer,
+        token_subject: $token_subject,
+        token_audience: $token_audience,
+        token_kid: $token_kid,
+        token_algorithm: $token_algorithm,
+        validation_status: $validation_status,
+        validation_reason: $validation_reason,
+        claims: $claims,
+        headers: $headers,
+        validated_at: time::now(),
+        created_at: time::now(),
+        updated_at: time::now()
+    };
+
+    UPDATE ONLY $session_record SET
+        provider_ref = $provider_record,
+        issuer_vendor = $issuer_vendor,
+        auth_method = "oidc-jwt",
+        token_issuer = $token_issuer,
+        token_subject = $token_subject,
+        token_audience = $token_audience,
+        token_kid = $token_kid,
+        token_algorithm = $token_algorithm,
+        validation_status = $validation_status,
+        validation_reason = $validation_reason,
+        validated_at = time::now(),
+        claims = $claims,
+        updated_at = time::now();
+
+    RETURN $validation;
 };
 
 DEFINE FUNCTION OVERWRITE fn::runtime::auth::session::authorize(

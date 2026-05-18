@@ -60,3 +60,15 @@ DEFINE EVENT OVERWRITE secret_ref_timestamps ON TABLE secret_ref
     THEN {
         UPDATE ONLY $value.id SET updated_at = time::now();
     };
+
+DEFINE EVENT OVERWRITE oidc_provider_timestamps ON TABLE oidc_provider
+    WHEN $event = "CREATE" OR $event = "UPDATE"
+    THEN {
+        UPDATE ONLY $value.id SET updated_at = time::now();
+    };
+
+DEFINE EVENT OVERWRITE oidc_validation_timestamps ON TABLE oidc_validation
+    WHEN $event = "CREATE" OR $event = "UPDATE"
+    THEN {
+        UPDATE ONLY $value.id SET updated_at = time::now();
+    };

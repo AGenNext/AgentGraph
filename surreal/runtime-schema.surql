@@ -234,17 +234,59 @@ DEFINE INDEX identity_ref_subject_ref ON TABLE identity_ref FIELDS subject_ref;
 DEFINE INDEX identity_ref_did ON TABLE identity_ref FIELDS did UNIQUE;
 DEFINE INDEX identity_ref_status ON TABLE identity_ref FIELDS status;
 
+DEFINE TABLE oidc_provider SCHEMAFULL;
+
+DEFINE FIELD provider_key ON TABLE oidc_provider TYPE string;
+DEFINE FIELD issuer_vendor ON TABLE oidc_provider TYPE string DEFAULT "generic";
+DEFINE FIELD issuer_url ON TABLE oidc_provider TYPE string;
+DEFINE FIELD discovery_url ON TABLE oidc_provider TYPE option<string>;
+DEFINE FIELD jwks_uri ON TABLE oidc_provider TYPE option<string>;
+DEFINE FIELD authorization_endpoint ON TABLE oidc_provider TYPE option<string>;
+DEFINE FIELD token_endpoint ON TABLE oidc_provider TYPE option<string>;
+DEFINE FIELD userinfo_endpoint ON TABLE oidc_provider TYPE option<string>;
+DEFINE FIELD end_session_endpoint ON TABLE oidc_provider TYPE option<string>;
+DEFINE FIELD scopes_supported ON TABLE oidc_provider TYPE array<string> DEFAULT [];
+DEFINE FIELD response_types_supported ON TABLE oidc_provider TYPE array<string> DEFAULT [];
+DEFINE FIELD grant_types_supported ON TABLE oidc_provider TYPE array<string> DEFAULT [];
+DEFINE FIELD id_token_signing_alg_values_supported ON TABLE oidc_provider TYPE array<string> DEFAULT [];
+DEFINE FIELD claims_supported ON TABLE oidc_provider TYPE array<string> DEFAULT [];
+DEFINE FIELD subject_types_supported ON TABLE oidc_provider TYPE array<string> DEFAULT [];
+DEFINE FIELD discovery_document ON TABLE oidc_provider TYPE object FLEXIBLE DEFAULT {};
+DEFINE FIELD status ON TABLE oidc_provider TYPE string DEFAULT "active";
+DEFINE FIELD last_discovered_at ON TABLE oidc_provider TYPE option<datetime>;
+DEFINE FIELD refreshed_at ON TABLE oidc_provider TYPE option<datetime>;
+DEFINE FIELD world_location ON TABLE oidc_provider TYPE object FLEXIBLE DEFAULT {};
+DEFINE FIELD created_at ON TABLE oidc_provider TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated_at ON TABLE oidc_provider TYPE datetime DEFAULT time::now();
+
+DEFINE INDEX oidc_provider_key ON TABLE oidc_provider FIELDS provider_key UNIQUE;
+DEFINE INDEX oidc_provider_issuer_vendor ON TABLE oidc_provider FIELDS issuer_vendor;
+DEFINE INDEX oidc_provider_issuer_url ON TABLE oidc_provider FIELDS issuer_url UNIQUE;
+DEFINE INDEX oidc_provider_discovery_url ON TABLE oidc_provider FIELDS discovery_url;
+DEFINE INDEX oidc_provider_jwks_uri ON TABLE oidc_provider FIELDS jwks_uri;
+DEFINE INDEX oidc_provider_status ON TABLE oidc_provider FIELDS status;
+
 DEFINE TABLE auth_session SCHEMAFULL;
 
 DEFINE FIELD session_key ON TABLE auth_session TYPE string;
 DEFINE FIELD subject_ref ON TABLE auth_session TYPE option<string>;
 DEFINE FIELD agent_ref ON TABLE auth_session TYPE option<string>;
+DEFINE FIELD provider_ref ON TABLE auth_session TYPE option<record<oidc_provider>>;
+DEFINE FIELD issuer_vendor ON TABLE auth_session TYPE string DEFAULT "generic";
 DEFINE FIELD auth_method ON TABLE auth_session TYPE string;
 DEFINE FIELD scopes ON TABLE auth_session TYPE array<string>;
 DEFINE FIELD state ON TABLE auth_session TYPE string DEFAULT "active";
 DEFINE FIELD issued_at ON TABLE auth_session TYPE datetime DEFAULT time::now();
 DEFINE FIELD expires_at ON TABLE auth_session TYPE option<datetime>;
 DEFINE FIELD revoked_at ON TABLE auth_session TYPE option<datetime>;
+DEFINE FIELD token_issuer ON TABLE auth_session TYPE option<string>;
+DEFINE FIELD token_subject ON TABLE auth_session TYPE option<string>;
+DEFINE FIELD token_audience ON TABLE auth_session TYPE array<string> DEFAULT [];
+DEFINE FIELD token_kid ON TABLE auth_session TYPE option<string>;
+DEFINE FIELD token_algorithm ON TABLE auth_session TYPE option<string>;
+DEFINE FIELD validation_status ON TABLE auth_session TYPE string DEFAULT "pending";
+DEFINE FIELD validation_reason ON TABLE auth_session TYPE option<string>;
+DEFINE FIELD validated_at ON TABLE auth_session TYPE option<datetime>;
 DEFINE FIELD claims ON TABLE auth_session TYPE object FLEXIBLE DEFAULT {};
 DEFINE FIELD world_location ON TABLE auth_session TYPE object FLEXIBLE DEFAULT {};
 DEFINE FIELD created_at ON TABLE auth_session TYPE datetime DEFAULT time::now();
@@ -253,6 +295,8 @@ DEFINE FIELD updated_at ON TABLE auth_session TYPE datetime DEFAULT time::now();
 DEFINE INDEX auth_session_key ON TABLE auth_session FIELDS session_key UNIQUE;
 DEFINE INDEX auth_session_subject_ref ON TABLE auth_session FIELDS subject_ref;
 DEFINE INDEX auth_session_state ON TABLE auth_session FIELDS state;
+DEFINE INDEX auth_session_provider_ref ON TABLE auth_session FIELDS provider_ref;
+DEFINE INDEX auth_session_validation_status ON TABLE auth_session FIELDS validation_status;
 
 DEFINE TABLE secret_ref SCHEMAFULL;
 
@@ -338,9 +382,39 @@ DEFINE TABLE auth_session_subject TYPE RELATION IN auth_session OUT agent|human|
 DEFINE FIELD created_at ON TABLE auth_session_subject TYPE datetime;
 DEFINE FIELD source ON TABLE auth_session_subject TYPE string;
 
+DEFINE TABLE auth_session_provider TYPE RELATION IN auth_session OUT oidc_provider SCHEMAFULL;
+DEFINE FIELD created_at ON TABLE auth_session_provider TYPE datetime;
+DEFINE FIELD source ON TABLE auth_session_provider TYPE string;
+
 DEFINE TABLE auth_session_authorizes TYPE RELATION IN auth_session OUT agent|human|entity|artifact_ref|memory_object SCHEMAFULL;
 DEFINE FIELD created_at ON TABLE auth_session_authorizes TYPE datetime;
 DEFINE FIELD source ON TABLE auth_session_authorizes TYPE string;
+
+DEFINE TABLE oidc_validation SCHEMAFULL;
+
+DEFINE FIELD provider_ref ON TABLE oidc_validation TYPE record<oidc_provider>;
+DEFINE FIELD issuer_vendor ON TABLE oidc_validation TYPE string DEFAULT "generic";
+DEFINE FIELD session_ref ON TABLE oidc_validation TYPE option<record<auth_session>>;
+DEFINE FIELD subject_ref ON TABLE oidc_validation TYPE option<string>;
+DEFINE FIELD token_issuer ON TABLE oidc_validation TYPE option<string>;
+DEFINE FIELD token_subject ON TABLE oidc_validation TYPE option<string>;
+DEFINE FIELD token_audience ON TABLE oidc_validation TYPE array<string> DEFAULT [];
+DEFINE FIELD token_kid ON TABLE oidc_validation TYPE option<string>;
+DEFINE FIELD token_algorithm ON TABLE oidc_validation TYPE option<string>;
+DEFINE FIELD validation_status ON TABLE oidc_validation TYPE string;
+DEFINE FIELD validation_reason ON TABLE oidc_validation TYPE option<string>;
+DEFINE FIELD claims ON TABLE oidc_validation TYPE object FLEXIBLE DEFAULT {};
+DEFINE FIELD headers ON TABLE oidc_validation TYPE object FLEXIBLE DEFAULT {};
+DEFINE FIELD world_location ON TABLE oidc_validation TYPE object FLEXIBLE DEFAULT {};
+DEFINE FIELD validated_at ON TABLE oidc_validation TYPE datetime DEFAULT time::now();
+DEFINE FIELD created_at ON TABLE oidc_validation TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated_at ON TABLE oidc_validation TYPE datetime DEFAULT time::now();
+
+DEFINE INDEX oidc_validation_provider_ref ON TABLE oidc_validation FIELDS provider_ref;
+DEFINE INDEX oidc_validation_session_ref ON TABLE oidc_validation FIELDS session_ref;
+DEFINE INDEX oidc_validation_subject_ref ON TABLE oidc_validation FIELDS subject_ref;
+DEFINE INDEX oidc_validation_status ON TABLE oidc_validation FIELDS validation_status;
+DEFINE INDEX oidc_validation_validated_at ON TABLE oidc_validation FIELDS validated_at;
 
 DEFINE TABLE caused_by TYPE RELATION IN audit_event OUT audit_event SCHEMAFULL;
 DEFINE FIELD created_at ON TABLE caused_by TYPE datetime;
@@ -349,3 +423,11 @@ DEFINE FIELD source ON TABLE caused_by TYPE string;
 DEFINE TABLE acted_on TYPE RELATION IN audit_event OUT agent|human|entity|artifact_ref|secret_ref|memory_object SCHEMAFULL;
 DEFINE FIELD created_at ON TABLE acted_on TYPE datetime;
 DEFINE FIELD source ON TABLE acted_on TYPE string;
+
+DEFINE TABLE oidc_validation_provider TYPE RELATION IN oidc_validation OUT oidc_provider SCHEMAFULL;
+DEFINE FIELD created_at ON TABLE oidc_validation_provider TYPE datetime;
+DEFINE FIELD source ON TABLE oidc_validation_provider TYPE string;
+
+DEFINE TABLE oidc_validation_session TYPE RELATION IN oidc_validation OUT auth_session SCHEMAFULL;
+DEFINE FIELD created_at ON TABLE oidc_validation_session TYPE datetime;
+DEFINE FIELD source ON TABLE oidc_validation_session TYPE string;
