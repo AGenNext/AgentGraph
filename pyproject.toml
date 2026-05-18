@@ -3,30 +3,20 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "content-writing-team"
+name = "agent-graph-sdk"
 version = "0.1.0"
-description = "Multi-Agent Content Writing Team with A2A Protocol"
+description = "Python SDK for the Agent-Graph API"
 readme = "README.md"
+license = { text = "Proprietary - All Rights Reserved" }
 requires-python = ">=3.10"
 dependencies = [
-    "langgraph>=0.2.0",
-    "langchain-core>=0.3.0",
-    "langchain-openai>=0.2.0",
     "pydantic>=2.6.0",
-    "aiohttp>=3.9.0",
-    "openai>=1.35.0",
-    "google-generativeai>=0.8.0",
-    "azure-ai-openai>=0.2.0",
-    "simple-salesforce>=1.2.0",
-    "surrealdb>=1.0.0",
+    "httpx>=0.27.0",
 ]
-
-[project.scripts]
-content-team = "main:main"
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 python_files = "test_*.py"
 
 [tool.hatch.build.targets.wheel]
-packages = ["."]
+packages = ["agent_graph_sdk"]

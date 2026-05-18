@@ -3,7 +3,7 @@
 > Comprehensive enterprise AI agent management with multiple specialized agent types, chat UI, channel integrations, and multimodal support.
 
 [![Platform](https://img.shields.io/badge/AGenNext-1.0.0-blue)](https://github.com/AGenNext/Agent-Graph)
-[![License](https://img.shields.io/badge/License-MIT-green)](LICENSE)
+[![License](https://img.shields.io/badge/License-Proprietary-orange)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.11+-yellow)](https://python.org)
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org)
 
@@ -220,7 +220,7 @@ Thing (root)
 
 ## License
 
-MIT License - See LICENSE file
+Proprietary software. All rights reserved by OpenAutonomyx(OPC) Private Limited. See `LICENSE` for distribution terms.
 
 ## References
 
