@@ -266,6 +266,27 @@ DEFINE INDEX oidc_provider_discovery_url ON TABLE oidc_provider FIELDS discovery
 DEFINE INDEX oidc_provider_jwks_uri ON TABLE oidc_provider FIELDS jwks_uri;
 DEFINE INDEX oidc_provider_status ON TABLE oidc_provider FIELDS status;
 
+DEFINE TABLE oidc_binding SCHEMAFULL;
+
+DEFINE FIELD binding_key ON TABLE oidc_binding TYPE string;
+DEFINE FIELD provider_ref ON TABLE oidc_binding TYPE record<oidc_provider>;
+DEFINE FIELD issuer_vendor ON TABLE oidc_binding TYPE string DEFAULT "generic";
+DEFINE FIELD issuer_url ON TABLE oidc_binding TYPE string;
+DEFINE FIELD discovery_url ON TABLE oidc_binding TYPE option<string>;
+DEFINE FIELD jwks_uri ON TABLE oidc_binding TYPE option<string>;
+DEFINE FIELD access_name ON TABLE oidc_binding TYPE string;
+DEFINE FIELD access_definition ON TABLE oidc_binding TYPE option<string>;
+DEFINE FIELD status ON TABLE oidc_binding TYPE string DEFAULT "active";
+DEFINE FIELD source ON TABLE oidc_binding TYPE option<string>;
+DEFINE FIELD selected_at ON TABLE oidc_binding TYPE option<datetime>;
+DEFINE FIELD world_location ON TABLE oidc_binding TYPE object FLEXIBLE DEFAULT {};
+DEFINE FIELD created_at ON TABLE oidc_binding TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated_at ON TABLE oidc_binding TYPE datetime DEFAULT time::now();
+
+DEFINE INDEX oidc_binding_key ON TABLE oidc_binding FIELDS binding_key UNIQUE;
+DEFINE INDEX oidc_binding_provider_ref ON TABLE oidc_binding FIELDS provider_ref;
+DEFINE INDEX oidc_binding_status ON TABLE oidc_binding FIELDS status;
+
 DEFINE TABLE auth_session SCHEMAFULL;
 
 DEFINE FIELD session_key ON TABLE auth_session TYPE string;

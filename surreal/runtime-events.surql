@@ -72,3 +72,9 @@ DEFINE EVENT OVERWRITE oidc_validation_timestamps ON TABLE oidc_validation
     THEN {
         UPDATE ONLY $value.id SET updated_at = time::now();
     };
+
+DEFINE EVENT OVERWRITE oidc_binding_timestamps ON TABLE oidc_binding
+    WHEN $event = "CREATE" OR $event = "UPDATE"
+    THEN {
+        UPDATE ONLY $value.id SET updated_at = time::now();
+    };

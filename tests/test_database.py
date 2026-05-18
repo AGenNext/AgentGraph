@@ -123,6 +123,7 @@ class TestOidcRuntime:
             encoding="utf-8"
         )
         assert "DEFINE TABLE oidc_provider SCHEMAFULL;" in runtime_schema
+        assert "DEFINE TABLE oidc_binding SCHEMAFULL;" in runtime_schema
         assert "DEFINE TABLE oidc_validation SCHEMAFULL;" in runtime_schema
         assert "DEFINE FIELD issuer_vendor ON TABLE oidc_provider TYPE string DEFAULT \"generic\";" in runtime_schema
         assert "DEFINE FIELD issuer_vendor ON TABLE auth_session TYPE string DEFAULT \"generic\";" in runtime_schema
@@ -130,6 +131,7 @@ class TestOidcRuntime:
         assert "DEFINE FIELD provider_ref ON TABLE auth_session TYPE option<record<oidc_provider>>;" in runtime_schema
         assert "DEFINE FIELD validation_status ON TABLE auth_session TYPE string DEFAULT \"pending\";" in runtime_schema
         assert "DEFINE INDEX oidc_provider_issuer_url ON TABLE oidc_provider FIELDS issuer_url UNIQUE;" in runtime_schema
+        assert "DEFINE INDEX oidc_binding_key ON TABLE oidc_binding FIELDS binding_key UNIQUE;" in runtime_schema
 
     def test_runtime_functions_define_oidc_discovery_and_validation_helpers(self):
         runtime_functions = (Path(__file__).resolve().parents[1] / "surreal" / "runtime-functions.surql").read_text(
@@ -140,6 +142,8 @@ class TestOidcRuntime:
         assert "DEFINE FUNCTION OVERWRITE fn::runtime::identity::oidc::access_profile" in runtime_functions
         assert "DEFINE FUNCTION OVERWRITE fn::runtime::identity::oidc::waltid::profile" in runtime_functions
         assert "DEFINE FUNCTION OVERWRITE fn::runtime::identity::oidc::waltid::sync" in runtime_functions
+        assert "DEFINE FUNCTION OVERWRITE fn::runtime::identity::oidc::binding::upsert" in runtime_functions
+        assert "DEFINE FUNCTION OVERWRITE fn::runtime::identity::oidc::binding::materialize" in runtime_functions
         assert "DEFINE FUNCTION OVERWRITE fn::runtime::auth::session::record_oidc_validation" in runtime_functions
         assert "http::get($discovery_url)" in runtime_functions
 
@@ -149,3 +153,4 @@ class TestOidcRuntime:
         )
         assert "DEFINE EVENT OVERWRITE oidc_provider_timestamps ON TABLE oidc_provider" in runtime_events
         assert "DEFINE EVENT OVERWRITE oidc_validation_timestamps ON TABLE oidc_validation" in runtime_events
+        assert "DEFINE EVENT OVERWRITE oidc_binding_timestamps ON TABLE oidc_binding" in runtime_events

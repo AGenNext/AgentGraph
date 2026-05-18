@@ -338,6 +338,78 @@ DEFINE FUNCTION OVERWRITE fn::runtime::identity::oidc::waltid::sync(
     RETURN fn::runtime::identity::oidc::upsert($provider_key, $issuer_url, $configuration, "waltid");
 };
 
+DEFINE FUNCTION OVERWRITE fn::runtime::identity::oidc::binding::upsert(
+    $binding_key: string,
+    $provider_key: string,
+    $issuer_vendor: option<string>,
+    $source: option<string>
+) -> option<object> {
+    LET $provider = SELECT * FROM ONLY type::record("oidc_provider", $provider_key);
+
+    IF !($provider) {
+        RETURN NONE;
+    };
+
+    LET $record = type::record("oidc_binding", $binding_key);
+    LET $access_name = "oidc_" + $binding_key;
+    LET $access_definition = IF $provider.jwks_uri {
+        "DEFINE ACCESS " + $access_name + " ON DATABASE TYPE JWT URL " + $provider.jwks_uri
+    } ELSE {
+        NONE
+    };
+
+    RETURN UPSERT ONLY $record CONTENT {
+        binding_key: $binding_key,
+        provider_ref: type::record("oidc_provider", $provider_key),
+        issuer_vendor: $issuer_vendor ?? $provider.issuer_vendor ?? "generic",
+        issuer_url: $provider.issuer_url,
+        discovery_url: $provider.discovery_url,
+        jwks_uri: $provider.jwks_uri,
+        access_name: $access_name,
+        access_definition: $access_definition,
+        status: IF $provider.jwks_uri { "active" } ELSE { "pending" },
+        source: $source,
+        selected_at: time::now(),
+        world_location: {},
+        created_at: time::now(),
+        updated_at: time::now()
+    };
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::identity::oidc::binding::get($binding_key: string) -> option<object> {
+    RETURN SELECT * FROM ONLY type::record("oidc_binding", $binding_key);
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::identity::oidc::binding::list(
+    $status: option<string>
+) -> array<object> {
+    RETURN SELECT * FROM oidc_binding
+    WHERE type::is_none($status) OR $status = "" OR status = $status
+    ORDER BY updated_at DESC;
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::identity::oidc::binding::materialize(
+    $binding_key: string
+) -> option<object> {
+    LET $binding = SELECT * FROM ONLY type::record("oidc_binding", $binding_key);
+
+    IF !($binding) {
+        RETURN NONE;
+    };
+
+    RETURN {
+        binding_key: $binding.binding_key,
+        issuer_vendor: $binding.issuer_vendor,
+        issuer_url: $binding.issuer_url,
+        discovery_url: $binding.discovery_url,
+        jwks_uri: $binding.jwks_uri,
+        access_name: $binding.access_name,
+        access_definition: $binding.access_definition,
+        status: $binding.status,
+        provider_ref: $binding.provider_ref
+    };
+};
+
 DEFINE FUNCTION OVERWRITE fn::runtime::auth::session::upsert($session: object) -> object {
     LET $record = type::record("auth_session", <string>$session.id);
     RETURN UPSERT ONLY $record CONTENT $session;
