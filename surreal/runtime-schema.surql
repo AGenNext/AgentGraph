@@ -16,7 +16,7 @@ DEFINE FIELD auth_method ON TABLE agent TYPE string;
 DEFINE FIELD enable_chat ON TABLE agent TYPE bool DEFAULT true;
 DEFINE FIELD enable_rag ON TABLE agent TYPE bool DEFAULT false;
 DEFINE FIELD tools ON TABLE agent TYPE array<string>;
-DEFINE FIELD world_location ON TABLE agent TYPE object FLEXIBLE;
+DEFINE FIELD world_location ON TABLE agent TYPE object FLEXIBLE DEFAULT {};
 DEFINE FIELD valid_from ON TABLE agent TYPE option<datetime>;
 DEFINE FIELD valid_to ON TABLE agent TYPE option<datetime>;
 DEFINE FIELD created_at ON TABLE agent TYPE datetime;
@@ -65,7 +65,7 @@ DEFINE FIELD geo ON TABLE entity TYPE option<string>;
 DEFINE FIELD startDate ON TABLE entity TYPE option<string>;
 DEFINE FIELD location ON TABLE entity TYPE option<string>;
 DEFINE FIELD organizer ON TABLE entity TYPE option<string>;
-DEFINE FIELD world_location ON TABLE entity TYPE object FLEXIBLE;
+DEFINE FIELD world_location ON TABLE entity TYPE object FLEXIBLE DEFAULT {};
 DEFINE FIELD valid_from ON TABLE entity TYPE option<datetime>;
 DEFINE FIELD valid_to ON TABLE entity TYPE option<datetime>;
 DEFINE FIELD created_at ON TABLE entity TYPE option<datetime>;
@@ -108,11 +108,11 @@ DEFINE FIELD canonical_id ON TABLE human TYPE option<string>;
 DEFINE FIELD name ON TABLE human TYPE string;
 DEFINE FIELD description ON TABLE human TYPE option<string>;
 DEFINE FIELD status ON TABLE human TYPE string DEFAULT "active";
-DEFINE FIELD world_location ON TABLE human TYPE object FLEXIBLE;
+DEFINE FIELD world_location ON TABLE human TYPE object FLEXIBLE DEFAULT {};
 DEFINE FIELD valid_from ON TABLE human TYPE option<datetime>;
 DEFINE FIELD valid_to ON TABLE human TYPE option<datetime>;
-DEFINE FIELD created_at ON TABLE human TYPE datetime;
-DEFINE FIELD updated_at ON TABLE human TYPE datetime;
+DEFINE FIELD created_at ON TABLE human TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated_at ON TABLE human TYPE datetime DEFAULT time::now();
 
 DEFINE INDEX human_canonical_id ON TABLE human FIELDS canonical_id UNIQUE;
 DEFINE INDEX human_name ON TABLE human FIELDS name;
@@ -128,9 +128,9 @@ DEFINE FIELD format ON TABLE instruction_doc TYPE string DEFAULT "markdown";
 DEFINE FIELD status ON TABLE instruction_doc TYPE string DEFAULT "active";
 DEFINE FIELD valid_from ON TABLE instruction_doc TYPE option<datetime>;
 DEFINE FIELD valid_to ON TABLE instruction_doc TYPE option<datetime>;
-DEFINE FIELD world_location ON TABLE instruction_doc TYPE object FLEXIBLE;
-DEFINE FIELD created_at ON TABLE instruction_doc TYPE datetime;
-DEFINE FIELD updated_at ON TABLE instruction_doc TYPE datetime;
+DEFINE FIELD world_location ON TABLE instruction_doc TYPE object FLEXIBLE DEFAULT {};
+DEFINE FIELD created_at ON TABLE instruction_doc TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated_at ON TABLE instruction_doc TYPE datetime DEFAULT time::now();
 
 DEFINE INDEX instruction_doc_source_path ON TABLE instruction_doc FIELDS source_path;
 DEFINE INDEX instruction_doc_title ON TABLE instruction_doc FIELDS title;
@@ -146,9 +146,9 @@ DEFINE FIELD status ON TABLE policy_doc TYPE string DEFAULT "active";
 DEFINE FIELD authority ON TABLE policy_doc TYPE option<string>;
 DEFINE FIELD valid_from ON TABLE policy_doc TYPE option<datetime>;
 DEFINE FIELD valid_to ON TABLE policy_doc TYPE option<datetime>;
-DEFINE FIELD world_location ON TABLE policy_doc TYPE object FLEXIBLE;
-DEFINE FIELD created_at ON TABLE policy_doc TYPE datetime;
-DEFINE FIELD updated_at ON TABLE policy_doc TYPE datetime;
+DEFINE FIELD world_location ON TABLE policy_doc TYPE object FLEXIBLE DEFAULT {};
+DEFINE FIELD created_at ON TABLE policy_doc TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated_at ON TABLE policy_doc TYPE datetime DEFAULT time::now();
 
 DEFINE INDEX policy_doc_name ON TABLE policy_doc FIELDS name;
 DEFINE INDEX policy_doc_type ON TABLE policy_doc FIELDS policy_type;
@@ -158,7 +158,7 @@ DEFINE TABLE memory_object SCHEMAFULL;
 
 DEFINE FIELD memory_type ON TABLE memory_object TYPE string;
 DEFINE FIELD title ON TABLE memory_object TYPE option<string>;
-DEFINE FIELD content ON TABLE memory_object TYPE object FLEXIBLE;
+DEFINE FIELD content ON TABLE memory_object TYPE object FLEXIBLE DEFAULT {};
 DEFINE FIELD content_text ON TABLE memory_object TYPE option<string>;
 DEFINE FIELD modality ON TABLE memory_object TYPE string DEFAULT "text";
 DEFINE FIELD status ON TABLE memory_object TYPE string DEFAULT "active";
@@ -167,11 +167,11 @@ DEFINE FIELD source_ref ON TABLE memory_object TYPE option<string>;
 DEFINE FIELD created_by ON TABLE memory_object TYPE option<string>;
 DEFINE FIELD owner_ref ON TABLE memory_object TYPE option<string>;
 DEFINE FIELD importance ON TABLE memory_object TYPE option<number>;
-DEFINE FIELD world_location ON TABLE memory_object TYPE object FLEXIBLE;
+DEFINE FIELD world_location ON TABLE memory_object TYPE object FLEXIBLE DEFAULT {};
 DEFINE FIELD valid_from ON TABLE memory_object TYPE option<datetime>;
 DEFINE FIELD valid_to ON TABLE memory_object TYPE option<datetime>;
-DEFINE FIELD created_at ON TABLE memory_object TYPE datetime;
-DEFINE FIELD updated_at ON TABLE memory_object TYPE datetime;
+DEFINE FIELD created_at ON TABLE memory_object TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated_at ON TABLE memory_object TYPE datetime DEFAULT time::now();
 
 DEFINE INDEX memory_object_type ON TABLE memory_object FIELDS memory_type;
 DEFINE INDEX memory_object_status ON TABLE memory_object FIELDS status;
@@ -187,15 +187,72 @@ DEFINE FIELD storage_kind ON TABLE artifact_ref TYPE string;
 DEFINE FIELD status ON TABLE artifact_ref TYPE string DEFAULT "active";
 DEFINE FIELD owner_ref ON TABLE artifact_ref TYPE option<string>;
 DEFINE FIELD created_by ON TABLE artifact_ref TYPE option<string>;
-DEFINE FIELD world_location ON TABLE artifact_ref TYPE object FLEXIBLE;
+DEFINE FIELD world_location ON TABLE artifact_ref TYPE object FLEXIBLE DEFAULT {};
 DEFINE FIELD valid_from ON TABLE artifact_ref TYPE option<datetime>;
 DEFINE FIELD valid_to ON TABLE artifact_ref TYPE option<datetime>;
-DEFINE FIELD created_at ON TABLE artifact_ref TYPE datetime;
-DEFINE FIELD updated_at ON TABLE artifact_ref TYPE datetime;
+DEFINE FIELD created_at ON TABLE artifact_ref TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated_at ON TABLE artifact_ref TYPE datetime DEFAULT time::now();
 
 DEFINE INDEX artifact_ref_name ON TABLE artifact_ref FIELDS name;
 DEFINE INDEX artifact_ref_uri ON TABLE artifact_ref FIELDS uri UNIQUE;
 DEFINE INDEX artifact_ref_type ON TABLE artifact_ref FIELDS artifact_type;
+
+DEFINE TABLE protocol_doc SCHEMAFULL;
+
+DEFINE FIELD name ON TABLE protocol_doc TYPE string;
+DEFINE FIELD protocol_type ON TABLE protocol_doc TYPE string;
+DEFINE FIELD version ON TABLE protocol_doc TYPE string;
+DEFINE FIELD source_path ON TABLE protocol_doc TYPE option<string>;
+DEFINE FIELD body ON TABLE protocol_doc TYPE string;
+DEFINE FIELD status ON TABLE protocol_doc TYPE string DEFAULT "active";
+DEFINE FIELD authority ON TABLE protocol_doc TYPE option<string>;
+DEFINE FIELD capabilities ON TABLE protocol_doc TYPE array<string> DEFAULT [];
+DEFINE FIELD world_location ON TABLE protocol_doc TYPE object FLEXIBLE DEFAULT {};
+DEFINE FIELD created_at ON TABLE protocol_doc TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated_at ON TABLE protocol_doc TYPE datetime DEFAULT time::now();
+
+DEFINE INDEX protocol_doc_name ON TABLE protocol_doc FIELDS name;
+DEFINE INDEX protocol_doc_type ON TABLE protocol_doc FIELDS protocol_type;
+DEFINE INDEX protocol_doc_status ON TABLE protocol_doc FIELDS status;
+DEFINE INDEX protocol_doc_version ON TABLE protocol_doc FIELDS version;
+
+DEFINE TABLE identity_ref SCHEMAFULL;
+
+DEFINE FIELD identity_type ON TABLE identity_ref TYPE string;
+DEFINE FIELD subject_ref ON TABLE identity_ref TYPE option<string>;
+DEFINE FIELD canonical_id ON TABLE identity_ref TYPE option<string>;
+DEFINE FIELD did ON TABLE identity_ref TYPE option<string>;
+DEFINE FIELD provider ON TABLE identity_ref TYPE option<string>;
+DEFINE FIELD status ON TABLE identity_ref TYPE string DEFAULT "active";
+DEFINE FIELD claims ON TABLE identity_ref TYPE object FLEXIBLE DEFAULT {};
+DEFINE FIELD world_location ON TABLE identity_ref TYPE object FLEXIBLE DEFAULT {};
+DEFINE FIELD created_at ON TABLE identity_ref TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated_at ON TABLE identity_ref TYPE datetime DEFAULT time::now();
+
+DEFINE INDEX identity_ref_type ON TABLE identity_ref FIELDS identity_type;
+DEFINE INDEX identity_ref_subject_ref ON TABLE identity_ref FIELDS subject_ref;
+DEFINE INDEX identity_ref_did ON TABLE identity_ref FIELDS did UNIQUE;
+DEFINE INDEX identity_ref_status ON TABLE identity_ref FIELDS status;
+
+DEFINE TABLE auth_session SCHEMAFULL;
+
+DEFINE FIELD session_key ON TABLE auth_session TYPE string;
+DEFINE FIELD subject_ref ON TABLE auth_session TYPE option<string>;
+DEFINE FIELD agent_ref ON TABLE auth_session TYPE option<string>;
+DEFINE FIELD auth_method ON TABLE auth_session TYPE string;
+DEFINE FIELD scopes ON TABLE auth_session TYPE array<string>;
+DEFINE FIELD state ON TABLE auth_session TYPE string DEFAULT "active";
+DEFINE FIELD issued_at ON TABLE auth_session TYPE datetime DEFAULT time::now();
+DEFINE FIELD expires_at ON TABLE auth_session TYPE option<datetime>;
+DEFINE FIELD revoked_at ON TABLE auth_session TYPE option<datetime>;
+DEFINE FIELD claims ON TABLE auth_session TYPE object FLEXIBLE DEFAULT {};
+DEFINE FIELD world_location ON TABLE auth_session TYPE object FLEXIBLE DEFAULT {};
+DEFINE FIELD created_at ON TABLE auth_session TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated_at ON TABLE auth_session TYPE datetime DEFAULT time::now();
+
+DEFINE INDEX auth_session_key ON TABLE auth_session FIELDS session_key UNIQUE;
+DEFINE INDEX auth_session_subject_ref ON TABLE auth_session FIELDS subject_ref;
+DEFINE INDEX auth_session_state ON TABLE auth_session FIELDS state;
 
 DEFINE TABLE secret_ref SCHEMAFULL;
 
@@ -205,11 +262,11 @@ DEFINE FIELD locator ON TABLE secret_ref TYPE string;
 DEFINE FIELD policy_ref ON TABLE secret_ref TYPE option<string>;
 DEFINE FIELD owner_ref ON TABLE secret_ref TYPE option<string>;
 DEFINE FIELD status ON TABLE secret_ref TYPE string DEFAULT "active";
-DEFINE FIELD world_location ON TABLE secret_ref TYPE object FLEXIBLE;
+DEFINE FIELD world_location ON TABLE secret_ref TYPE object FLEXIBLE DEFAULT {};
 DEFINE FIELD valid_from ON TABLE secret_ref TYPE option<datetime>;
 DEFINE FIELD valid_to ON TABLE secret_ref TYPE option<datetime>;
-DEFINE FIELD created_at ON TABLE secret_ref TYPE datetime;
-DEFINE FIELD updated_at ON TABLE secret_ref TYPE datetime;
+DEFINE FIELD created_at ON TABLE secret_ref TYPE datetime DEFAULT time::now();
+DEFINE FIELD updated_at ON TABLE secret_ref TYPE datetime DEFAULT time::now();
 
 DEFINE INDEX secret_ref_name ON TABLE secret_ref FIELDS name;
 DEFINE INDEX secret_ref_locator ON TABLE secret_ref FIELDS locator UNIQUE;
@@ -234,7 +291,7 @@ DEFINE FIELD request_id ON TABLE audit_event TYPE option<string>;
 DEFINE FIELD trace_id ON TABLE audit_event TYPE option<string>;
 DEFINE FIELD payload ON TABLE audit_event TYPE object FLEXIBLE;
 DEFINE FIELD policy_context ON TABLE audit_event TYPE object FLEXIBLE;
-DEFINE FIELD world_location ON TABLE audit_event TYPE object FLEXIBLE;
+DEFINE FIELD world_location ON TABLE audit_event TYPE object FLEXIBLE DEFAULT {};
 DEFINE FIELD event_time ON TABLE audit_event TYPE datetime;
 DEFINE FIELD created_at ON TABLE audit_event TYPE datetime;
 
@@ -268,6 +325,22 @@ DEFINE FIELD source ON TABLE generated_from TYPE string;
 DEFINE TABLE references_secret TYPE RELATION IN artifact_ref|memory_object OUT secret_ref SCHEMAFULL;
 DEFINE FIELD created_at ON TABLE references_secret TYPE datetime;
 DEFINE FIELD source ON TABLE references_secret TYPE string;
+
+DEFINE TABLE protocol_applies_to TYPE RELATION IN protocol_doc OUT agent|human|entity|artifact_ref SCHEMAFULL;
+DEFINE FIELD created_at ON TABLE protocol_applies_to TYPE datetime;
+DEFINE FIELD source ON TABLE protocol_applies_to TYPE string;
+
+DEFINE TABLE identity_refers_to TYPE RELATION IN identity_ref OUT agent|human|entity SCHEMAFULL;
+DEFINE FIELD created_at ON TABLE identity_refers_to TYPE datetime;
+DEFINE FIELD source ON TABLE identity_refers_to TYPE string;
+
+DEFINE TABLE auth_session_subject TYPE RELATION IN auth_session OUT agent|human|entity SCHEMAFULL;
+DEFINE FIELD created_at ON TABLE auth_session_subject TYPE datetime;
+DEFINE FIELD source ON TABLE auth_session_subject TYPE string;
+
+DEFINE TABLE auth_session_authorizes TYPE RELATION IN auth_session OUT agent|human|entity|artifact_ref|memory_object SCHEMAFULL;
+DEFINE FIELD created_at ON TABLE auth_session_authorizes TYPE datetime;
+DEFINE FIELD source ON TABLE auth_session_authorizes TYPE string;
 
 DEFINE TABLE caused_by TYPE RELATION IN audit_event OUT audit_event SCHEMAFULL;
 DEFINE FIELD created_at ON TABLE caused_by TYPE datetime;

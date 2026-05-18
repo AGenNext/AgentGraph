@@ -1,26 +1,44 @@
+Metadata-Version: 2.4
+Name: agent-graph-sdk
+Version: 0.1.0
+Summary: Python SDK for the Agent-Graph API
+License-Expression: LicenseRef-OpenAutonomyx-All-Rights-Reserved
+Requires-Python: >=3.10
+Description-Content-Type: text/markdown
+License-File: LICENSE
+Requires-Dist: pydantic>=2.6.0
+Requires-Dist: httpx>=0.27.0
+Dynamic: license-file
+
 # AGenNext Enterprise Agent Platform
 
-> Backend schema and runtime package for AGenNext, centered on SurrealDB-compatible graph contracts, APIs, and SDK distribution.
+> Comprehensive enterprise AI agent management with multiple specialized agent types, chat UI, channel integrations, and multimodal support.
 
 [![Platform](https://img.shields.io/badge/AGenNext-1.0.0-blue)](https://github.com/AGenNext/Agent-Graph)
 [![License](https://img.shields.io/badge/License-Proprietary-orange)](LICENSE)
 [![Python](https://img.shields.io/badge/Python-3.11+-yellow)](https://python.org)
+[![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org)
 
 ## Overview
 
-AGenNext is a backend-first platform featuring:
-- SurrealDB-native graph schema and validation
-- backend APIs for agent and graph operations
-- a distributable Python SDK
-- memory, audit, and decision tracking
-- deep research and orchestration capabilities
-- Docker-ready backend deployment
+AGenNext is an enterprise-grade agent management platform featuring:
+- Multiple specialized agent types (Sales, DevOps, Research, Code, etc.)
+- Chat UI with multimodal support
+- Channel integrations (WhatsApp, Slack, Teams)
+- Memory bank & decision logging
+- Deep research capabilities
+- Docker-ready production deployment
 
 ## Quick Start
 
 ```bash
-# Backend
-pip install -r requirements.txt
+# Frontend (Next.js)
+cd agennext-ui
+npm install
+npm run dev
+
+# Backend (FastAPI)
+pip install fastapi uvicorn surrealdb
 python server.py
 ```
 
@@ -28,16 +46,17 @@ python server.py
 
 | Service | Port | Framework |
 |---------|------|-----------|
+| Frontend | 3000 | Next.js 14 |
 | Backend | 8000 | FastAPI |
-| SDK | package | Python |
 
 ## Key Features
 
-- **Schema Package**: Optional shared schema for services that want it
-- **Runtime**: SurrealDB-backed execution and enforcement
-- **SDK**: Python client for the backend API
-- **Environment Wiring**: Hosted services configured through environment variables
-- **Composable Services**: Bring your own schema or adopt the shared one
+- **Agent Types**: Sales, DevOps, Research, Code, Security, Multimodal
+- **Tools**: Web Search, Image Gen, TTS, STT, Code Executor
+- **Memory Bank**: Persistent knowledge with table view
+- **Decision Log**: Agent reasoning trail
+- **Deep Research**: Multi-stage research
+- **Channel Integrations**: WhatsApp, Slack, Teams
 
 ## Deployment
 
@@ -64,15 +83,6 @@ docker compose up -d
 ## Documentation
 
 See [VPS-DEPLOY.md](./VPS-DEPLOY.md) for production deployment to VPS.
-
-### Repository Split
-
-See [REPO_LAYOUT.md](./REPO_LAYOUT.md) for the boundary contract between:
-
-- `Agent-Graph`
-- `Agent-Runtime`
-- `Agent-Identity`
-- `Agent-Auth`
  
 ### SurrealDB Schema
 
@@ -140,6 +150,27 @@ Product:
   - automotive_database.py
   - realestate_database.py
 ```
+
+## Frontend
+
+### React xyflow Visualization
+
+```bash
+# Install
+npm install @xyflow/react
+
+# Use component
+import SchemaOrgHierarchy from './SchemaOrgHierarchy'
+<SchemaOrgHierarchy />
+```
+
+Reference: `SchemaOrgHierarchy.tsx`
+
+### Bolt.new Vibe Coding
+
+1. Go to https://stackblitz.com/bolt.new
+2. Paste prompt from `BOLT_NEW_PROMPT.md`
+3. Get your Schema.org UI!
 
 ## API Endpoints
 

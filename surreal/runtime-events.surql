@@ -25,7 +25,7 @@ DEFINE EVENT OVERWRITE agent_versioning ON TABLE agent
             agent_snapshot = $snapshot;
 
         IF $event != "DELETE" {
-            RELATE $version_record.id->version_of->$agent_record CONTENT {
+            RELATE $version_record->version_of->$agent_record CONTENT {
                 created_at: time::now()
             };
         };

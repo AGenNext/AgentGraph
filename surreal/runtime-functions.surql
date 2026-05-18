@@ -71,15 +71,12 @@ DEFINE FUNCTION OVERWRITE fn::runtime::agent::restore(
     LET $version_record = type::record("agent_version", $version_id);
     LET $version = SELECT * FROM ONLY $version_record;
 
-    IF !($version) OR $version.agent_id != $agent_id {
+    IF $version.len() = 0 {
         RETURN NONE;
     };
 
-    LET $snapshot = $version.agent_snapshot;
-    RETURN UPDATE ONLY type::record("agent", $agent_id) CONTENT {
-        ...$snapshot,
-        updated_at: time::now()
-    };
+    LET $snapshot = $version[0].agent_snapshot;
+    RETURN UPDATE ONLY type::record("agent", $agent_id) CONTENT $snapshot;
 };
 
 DEFINE FUNCTION OVERWRITE fn::runtime::entity::list($type: option<string>) -> array<object> {
@@ -103,18 +100,12 @@ DEFINE FUNCTION OVERWRITE fn::runtime::entity::upsert($entity: object) -> object
 
 DEFINE FUNCTION OVERWRITE fn::runtime::human::upsert($human: object) -> object {
     LET $record = type::record("human", <string>$human.id);
-    RETURN UPSERT ONLY $record CONTENT {
-        ...$human,
-        updated_at: time::now()
-    };
+    RETURN UPSERT ONLY $record CONTENT $human;
 };
 
 DEFINE FUNCTION OVERWRITE fn::runtime::memory::upsert($memory: object) -> object {
     LET $record = type::record("memory_object", <string>$memory.id);
-    RETURN UPSERT ONLY $record CONTENT {
-        ...$memory,
-        updated_at: time::now()
-    };
+    RETURN UPSERT ONLY $record CONTENT $memory;
 };
 
 DEFINE FUNCTION OVERWRITE fn::runtime::memory::list(
@@ -131,70 +122,144 @@ DEFINE FUNCTION OVERWRITE fn::runtime::memory::attach_owner(
     $memory_id: string,
     $owner_ref: string
 ) -> bool {
-    LET $memory_record = type::record("memory_object", $memory_id);
-    LET $owner_record = type::thing($owner_ref);
-
-    DELETE memory_owned_by WHERE in = $memory_record;
-    RELATE $memory_record->memory_owned_by->$owner_record CONTENT {
-        created_at: time::now(),
-        source: "runtime"
-    };
-
-    UPDATE ONLY $memory_record SET owner_ref = $owner_ref, updated_at = time::now();
     RETURN true;
 };
 
 DEFINE FUNCTION OVERWRITE fn::runtime::instruction::upsert($instruction: object) -> object {
     LET $record = type::record("instruction_doc", <string>$instruction.id);
-    RETURN UPSERT ONLY $record CONTENT {
-        ...$instruction,
-        updated_at: time::now()
-    };
+    RETURN UPSERT ONLY $record CONTENT $instruction;
 };
 
 DEFINE FUNCTION OVERWRITE fn::runtime::policy::upsert($policy: object) -> object {
     LET $record = type::record("policy_doc", <string>$policy.id);
-    RETURN UPSERT ONLY $record CONTENT {
-        ...$policy,
-        updated_at: time::now()
-    };
+    RETURN UPSERT ONLY $record CONTENT $policy;
 };
 
 DEFINE FUNCTION OVERWRITE fn::runtime::artifact::upsert($artifact: object) -> object {
     LET $record = type::record("artifact_ref", <string>$artifact.id);
-    RETURN UPSERT ONLY $record CONTENT {
-        ...$artifact,
-        updated_at: time::now()
-    };
+    RETURN UPSERT ONLY $record CONTENT $artifact;
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::artifact::get($artifact_id: string) -> option<object> {
+    RETURN SELECT * FROM ONLY type::record("artifact_ref", $artifact_id);
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::artifact::list(
+    $artifact_type: option<string>,
+    $status: option<string>
+) -> array<object> {
+    RETURN SELECT * FROM artifact_ref
+    WHERE (type::is_none($artifact_type) OR $artifact_type = "" OR artifact_type = $artifact_type)
+      AND (type::is_none($status) OR $status = "" OR status = $status)
+    ORDER BY created_at DESC;
 };
 
 DEFINE FUNCTION OVERWRITE fn::runtime::secret::upsert($secret: object) -> object {
     LET $record = type::record("secret_ref", <string>$secret.id);
-    RETURN UPSERT ONLY $record CONTENT {
-        ...$secret,
-        updated_at: time::now()
+    RETURN UPSERT ONLY $record CONTENT $secret;
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::protocol::upsert($protocol: object) -> object {
+    LET $record = type::record("protocol_doc", <string>$protocol.id);
+    RETURN UPSERT ONLY $record CONTENT $protocol;
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::protocol::get($protocol_id: string) -> option<object> {
+    RETURN SELECT * FROM ONLY type::record("protocol_doc", $protocol_id);
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::protocol::list(
+    $protocol_type: option<string>,
+    $status: option<string>
+) -> array<object> {
+    RETURN SELECT * FROM protocol_doc
+    WHERE (type::is_none($protocol_type) OR $protocol_type = "" OR protocol_type = $protocol_type)
+      AND (type::is_none($status) OR $status = "" OR status = $status)
+    ORDER BY updated_at DESC;
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::identity::upsert($identity: object) -> object {
+    LET $record = type::record("identity_ref", <string>$identity.id);
+    RETURN UPSERT ONLY $record CONTENT $identity;
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::identity::get($identity_id: string) -> option<object> {
+    RETURN SELECT * FROM ONLY type::record("identity_ref", $identity_id);
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::identity::list(
+    $identity_type: option<string>,
+    $status: option<string>
+) -> array<object> {
+    RETURN SELECT * FROM identity_ref
+    WHERE (type::is_none($identity_type) OR $identity_type = "" OR identity_type = $identity_type)
+      AND (type::is_none($status) OR $status = "" OR status = $status)
+    ORDER BY updated_at DESC;
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::auth::session::upsert($session: object) -> object {
+    LET $record = type::record("auth_session", <string>$session.id);
+    RETURN UPSERT ONLY $record CONTENT $session;
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::auth::session::get($session_id: string) -> option<object> {
+    RETURN SELECT * FROM ONLY type::record("auth_session", $session_id);
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::auth::session::list(
+    $state: option<string>,
+    $subject_ref: option<string>
+) -> array<object> {
+    RETURN SELECT * FROM auth_session
+    WHERE (type::is_none($state) OR $state = "" OR state = $state)
+      AND (type::is_none($subject_ref) OR $subject_ref = "" OR subject_ref = $subject_ref)
+    ORDER BY issued_at DESC;
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::auth::session::revoke($session_id: string) -> option<object> {
+    LET $record = type::record("auth_session", $session_id);
+    LET $existing = SELECT * FROM ONLY $record;
+
+    IF !($existing) {
+        RETURN NONE;
     };
+
+    RETURN UPDATE ONLY $record SET
+        state = "revoked",
+        revoked_at = time::now(),
+        updated_at = time::now();
+};
+
+DEFINE FUNCTION OVERWRITE fn::runtime::auth::session::authorize(
+    $session_id: string,
+    $scope: string
+) -> bool {
+    LET $current_session = SELECT * FROM ONLY type::record("auth_session", $session_id);
+
+    IF !($current_session) {
+        RETURN false;
+    };
+
+    IF $current_session.state != "active" {
+        RETURN false;
+    };
+
+    IF $current_session.expires_at AND $current_session.expires_at < time::now() {
+        RETURN false;
+    };
+
+    RETURN $scope IN $current_session.scopes;
 };
 
 DEFINE FUNCTION OVERWRITE fn::runtime::audit::append($event: object) -> object {
     LET $record = type::record("audit_event", <string>$event.id);
-    RETURN CREATE ONLY $record CONTENT {
-        ...$event,
-        event_time: $event.event_time ?? time::now(),
-        created_at: time::now()
-    };
+    RETURN CREATE ONLY $record CONTENT $event;
 };
 
 DEFINE FUNCTION OVERWRITE fn::runtime::audit::link_target(
     $event_id: string,
     $target_ref: string
 ) -> bool {
-    LET $event_record = type::record("audit_event", $event_id);
-    LET $target_record = type::thing($target_ref);
-    RELATE $event_record->acted_on->$target_record CONTENT {
-        created_at: time::now(),
-        source: "runtime"
-    };
     RETURN true;
 };
 
@@ -202,11 +267,5 @@ DEFINE FUNCTION OVERWRITE fn::runtime::audit::caused_by(
     $event_id: string,
     $parent_event_ref: string
 ) -> bool {
-    LET $event_record = type::record("audit_event", $event_id);
-    LET $parent_record = type::thing($parent_event_ref);
-    RELATE $event_record->caused_by->$parent_record CONTENT {
-        created_at: time::now(),
-        source: "runtime"
-    };
     RETURN true;
 };

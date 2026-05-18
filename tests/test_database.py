@@ -24,6 +24,15 @@ class TestSurrealSchema:
         assert "UPSERT schema_term:" in schema
         assert schema.count("UPSERT schema_term:") > 100
 
+    def test_schema_term_accepts_jsonld_text_and_relation_metadata(self):
+        schema_meta = (Path(__file__).resolve().parents[1] / "surreal" / "schema" / "schema-meta.surql").read_text(
+            encoding="utf-8"
+        )
+        assert "DEFINE FIELD label ON TABLE schema_term TYPE any;" in schema_meta
+        assert "DEFINE FIELD comment ON TABLE schema_term TYPE any;" in schema_meta
+        assert "DEFINE FIELD source ON TABLE subclass_of TYPE option<string>;" in schema_meta
+        assert "DEFINE FIELD created_at ON TABLE subclass_of TYPE option<datetime>;" in schema_meta
+
 
 class TestKnowledgeGraph:
     """Test the seeded repository knowledge graph."""
@@ -82,3 +91,25 @@ class TestValidationBlocks:
         assert "DEFINE FUNCTION OVERWRITE fn::validation::relation_summary" in validation
         assert "DEFINE FUNCTION OVERWRITE fn::validation::schema_paths" in validation
         assert "DEFINE FUNCTION OVERWRITE fn::validation::knowledge_graph" in validation
+
+
+class TestRuntimeNamespaces:
+    """Test the runtime namespace definitions."""
+
+    def test_runtime_schema_defines_artifact_protocol_identity_auth_tables(self):
+        runtime_schema = (Path(__file__).resolve().parents[1] / "surreal" / "runtime-schema.surql").read_text(
+            encoding="utf-8"
+        )
+        assert "DEFINE TABLE artifact_ref SCHEMAFULL;" in runtime_schema
+        assert "DEFINE TABLE protocol_doc SCHEMAFULL;" in runtime_schema
+        assert "DEFINE TABLE identity_ref SCHEMAFULL;" in runtime_schema
+        assert "DEFINE TABLE auth_session SCHEMAFULL;" in runtime_schema
+
+    def test_runtime_functions_define_artifact_protocol_identity_auth_namespaces(self):
+        runtime_functions = (Path(__file__).resolve().parents[1] / "surreal" / "runtime-functions.surql").read_text(
+            encoding="utf-8"
+        )
+        assert "DEFINE FUNCTION OVERWRITE fn::runtime::artifact::list" in runtime_functions
+        assert "DEFINE FUNCTION OVERWRITE fn::runtime::protocol::upsert" in runtime_functions
+        assert "DEFINE FUNCTION OVERWRITE fn::runtime::identity::upsert" in runtime_functions
+        assert "DEFINE FUNCTION OVERWRITE fn::runtime::auth::session::authorize" in runtime_functions
