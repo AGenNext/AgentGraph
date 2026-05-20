@@ -1,0 +1,21 @@
+id: ontology.relationship.tool_has_provider_offer.v1
+kind: ontology_relationship
+name: tool_has_provider_offer
+owner: Agent-Graph
+status: draft
+
+machine_verifiable: true
+
+from_entity: ontology.entity.tool.v1
+to_entity: ontology.entity.provider_offer.v1
+
+relationship_type: has_provider_offer
+
+rules:
+  - A Tool may have one or more ProviderOffer records.
+  - ProviderOffer records must conform to ontology.entity.provider_offer.v1.
+
+source_references:
+  - repository: AGenNext/Agent-Graph
+    path: ontology/README.md
+    reason: Defines Tool has ProviderOffer ontology relationship.
