@@ -1,0 +1,47 @@
+id: ontology.entity.provider_offer.v1
+kind: ontology_entity
+name: ProviderOffer
+owner: Agent-Graph
+status: draft
+
+machine_verifiable: true
+
+purpose: >
+  Defines the machine-readable ontology entity for provider offers attached
+  to Tool records.
+
+required_fields:
+  provider_id:
+    type: string
+
+  provider_canonical_id:
+    type: uri
+    description: Canonical provider identity. For now this should use the provider website URL when available.
+
+  provider_type:
+    type: taxonomy_ref
+    vocabulary: Agent-Vocabulary
+    taxonomy: provider_type
+
+optional_fields:
+  install_strategy:
+    type: string
+
+  protocol:
+    type: string
+
+  access_url:
+    type: uri
+
+rules:
+  - Provider type is taxonomy.
+  - Provider identity is not taxonomy.
+  - Provider canonical identity should use provider website URL when available.
+
+source_references:
+  - repository: AGenNext/Agent-Graph
+    path: ontology/README.md
+    reason: Human-readable ontology ownership and provider relationship rules.
+  - repository: AGenNext/Agent-Vocabulary
+    path: vocabularies/tool-registry-taxonomy.v1.yaml
+    reason: Defines provider_type taxonomy classes and provider identity boundary.
