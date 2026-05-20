@@ -3,6 +3,17 @@
 -- Artifact repositories define their native record schemas.
 -- Agent-Grammar validates records.
 -- Agent-Review gates publication.
+--
+-- Load order:
+--   1. Agent-Grammar surreal rules and seed data
+--   2. Artifact repository source schemas
+--   3. Agent-Graph import pipeline
+--
+-- Required dependencies:
+--   grammar_context
+--   artifact_kind
+--   blueprint_entity_type
+--   blueprint_objective
 
 DEFINE TABLE artifact_import_job_v1 SCHEMAFULL;
 DEFINE FIELD artifact_kind ON TABLE artifact_import_job_v1 TYPE record<artifact_kind>;
@@ -21,9 +32,7 @@ DEFINE FIELD updated_at ON TABLE artifact_import_job_v1 TYPE datetime DEFAULT ti
 DEFINE INDEX artifact_import_job_v1_kind ON TABLE artifact_import_job_v1 FIELDS artifact_kind;
 DEFINE INDEX artifact_import_job_v1_source ON TABLE artifact_import_job_v1 FIELDS source_repository, source_path, source_commit_sha;
 
-DEFINE EVENT artifact_import_job_v1_touch ON TABLE artifact_import_job_v1 WHEN $event = "UPDATE" THEN (
-  UPDATE $after.id SET updated_at = time::now()
-);
+-- updated_at is managed by ingestion/update pipelines.
 
 -- -----------------------------------------------------------------------------
 -- Mapping helpers
@@ -63,9 +72,10 @@ DEFINE FUNCTION fn::map_skill_import_v1($doc: object, $source: object) {
     published_structured_data_context: fn::artifact_published_context(),
     source_repository: $source.repository,
     source_path: $source.path,
+    source_format: $source.format,
     source_commit_sha: $source.commit_sha,
     source_hash: $source.hash,
-    date_created: time::now(),
+    date_created: IF $doc.dateCreated != NONE THEN <datetime>($doc.dateCreated + "T00:00:00Z") ELSE time::now() END,
     date_modified: time::now()
   };
 };
@@ -106,6 +116,7 @@ DEFINE FUNCTION fn::map_blueprint_import_v1($doc: object, $source: object) {
     changelog: $doc.changelog,
     source_repository: $source.repository,
     source_path: $source.path,
+    source_format: $source.format,
     source_commit_sha: $source.commit_sha,
     source_hash: $source.hash
   };
@@ -132,6 +143,9 @@ DEFINE FUNCTION fn::map_artifact_import_v1($artifact_kind: record<artifact_kind>
 
   RETURN IF $kind.key = "skill" THEN fn::map_skill_import_v1($doc, $source)
     ELSE IF $kind.key = "blueprint" THEN fn::map_blueprint_import_v1($doc, $source)
-    ELSE THROW "Unsupported artifact kind for import mapping"
+    ELSE {
+      error: true,
+      message: "Unsupported artifact kind for import mapping"
+    }
   END;
 };
