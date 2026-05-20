@@ -1,0 +1,62 @@
+id: ontology.entity.capability.v1
+kind: ontology_entity
+name: Capability
+owner: Agent-Graph
+status: draft
+
+machine_verifiable: true
+
+purpose: >
+  Defines the machine-readable ontology entity for capabilities.
+  Capabilities describe what a tool, skill, blueprint, agent, or workflow can do.
+  Capability identity is resolved through Agent-Graph ontology before grammar acceptance.
+
+record_owner: Agent-Graph
+record_kind: capability
+
+required_fields:
+  canonical_id:
+    type: string
+    description: Stable semantic capability identifier.
+
+  type:
+    type: string
+    const: capability
+
+  name:
+    type: string
+
+  description:
+    type: string
+
+optional_fields:
+  domain:
+    type: taxonomy_ref
+    vocabulary: Agent-Vocabulary
+    taxonomy: capability_domain
+
+  sameAs:
+    type: array
+    items:
+      type: uri
+
+  aliases:
+    type: array
+    items:
+      type: string
+
+rules:
+  - Capability defines semantic ability, not implementation identity.
+  - Tool records may reference capabilities but must not define capability ontology inline.
+  - Capability domain is taxonomy and must reference Agent-Vocabulary when present.
+
+source_references:
+  - repository: AGenNext/Agent-Graph
+    path: ontology/README.md
+    reason: Human-readable ontology states that Tool implements Capability.
+  - repository: AGenNext/Agent-Graph
+    path: ontology/relationships/tool-implements-capability.v1.yaml
+    reason: Relationship points to this Capability ontology entity.
+  - repository: AGenNext/Agent-Vocabulary
+    path: vocabularies/artifact-taxonomy.v1.yaml
+    reason: Defines capability-related taxonomy classes.
