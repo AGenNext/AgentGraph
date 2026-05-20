@@ -1,0 +1,102 @@
+id: ontology.entity.tool.v1
+kind: ontology_entity
+name: Tool
+owner: Agent-Graph
+status: draft
+
+machine_verifiable: true
+
+purpose: >
+  Defines the machine-readable ontology entity for registered tools.
+  Tool records are owned by Tool-Registry and must conform to this ontology
+  before they can be accepted by grammar or review.
+
+record_owner: Tool-Registry
+record_kind: tool
+
+required_fields:
+  canonical_id:
+    type: string
+    description: Stable AGenNext registry identity for the tool.
+
+  did:
+    type: string
+    description: Decentralized identifier for the registered tool record.
+
+  type:
+    type: string
+    const: tool
+
+  name:
+    type: string
+
+  registry_status:
+    type: taxonomy_ref
+    vocabulary: Agent-Vocabulary
+    taxonomy: lifecycle_status
+
+  registry_version:
+    type: string
+    description: Version controlled by Tool-Registry Git/review/CI/release process.
+
+  capabilities:
+    type: array
+    items:
+      type: relationship_ref
+      relationship: ontology.relationship.tool_implements_capability.v1
+
+  author:
+    type: object
+
+  publisher:
+    type: object
+
+  provider_offers:
+    type: array
+    items:
+      type: entity_ref
+      entity: ontology.entity.provider_offer.v1
+
+optional_fields:
+  upstream_version:
+    type: string
+
+  sameAs:
+    type: array
+    items:
+      type: uri
+
+  aliases:
+    type: array
+    items:
+      type: string
+
+  tool_type:
+    type: taxonomy_ref
+    vocabulary: Agent-Vocabulary
+    taxonomy: tool_type
+
+  supported_consumers:
+    type: array
+    items:
+      type: taxonomy_ref
+      vocabulary: Agent-Vocabulary
+      taxonomy: supported_consumer
+
+rules:
+  - Tool identity belongs in Tool-Registry.
+  - Tool type is taxonomy and must reference Agent-Vocabulary when present.
+  - Consumer class is taxonomy and must reference Agent-Vocabulary when present.
+  - Provider identity must not be modeled as taxonomy.
+  - Provider offers must conform to ontology.entity.provider_offer.v1.
+
+source_references:
+  - repository: AGenNext/Agent-Graph
+    path: ontology/README.md
+    reason: Human-readable ontology ownership and contributor boundary.
+  - repository: AGenNext/Agent-Vocabulary
+    path: vocabularies/tool-registry-taxonomy.v1.yaml
+    reason: Defines tool_type, supported_consumer, and provider_type taxonomy classes.
+  - repository: AGenNext/Tool-Registry
+    path: README.md
+    reason: Defines Tool-Registry ownership of tool records, canonical_id, did, and registry_version.
