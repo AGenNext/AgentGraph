@@ -1,0 +1,25 @@
+id: ontology.relationship.tool_implements_capability.v1
+kind: ontology_relationship
+name: tool_implements_capability
+owner: Agent-Graph
+status: draft
+
+machine_verifiable: true
+
+from_entity: ontology.entity.tool.v1
+to_entity: ontology.entity.capability.v1
+
+relationship_type: implements
+
+rules:
+  - Tool records may reference one or more capability identifiers.
+  - Capability identifiers must resolve through Agent-Graph ontology before grammar acceptance.
+  - Tool records must not define capability ontology inline.
+
+source_references:
+  - repository: AGenNext/Agent-Graph
+    path: ontology/README.md
+    reason: Human-readable ontology states that Tool implements Capability.
+  - repository: AGenNext/Agent-Graph
+    path: ontology/entities/tool.v1.yaml
+    reason: Tool ontology references this relationship from the capabilities field.
