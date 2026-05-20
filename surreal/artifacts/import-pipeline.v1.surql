@@ -35,6 +35,31 @@ DEFINE INDEX artifact_import_job_v1_source ON TABLE artifact_import_job_v1 FIELD
 -- updated_at is managed by ingestion/update pipelines.
 
 -- -----------------------------------------------------------------------------
+-- Import job helpers
+-- -----------------------------------------------------------------------------
+
+DEFINE FUNCTION fn::artifact_import_job_mark_mapped($job: record<artifact_import_job_v1>, $mapped_record: any) {
+  RETURN UPDATE $job SET
+    status = "mapped",
+    mapped_record = $mapped_record,
+    updated_at = time::now();
+};
+
+DEFINE FUNCTION fn::artifact_import_job_mark_validated($job: record<artifact_import_job_v1>, $validation_report: object) {
+  RETURN UPDATE $job SET
+    status = "validated",
+    validation_report = $validation_report,
+    updated_at = time::now();
+};
+
+DEFINE FUNCTION fn::artifact_import_job_mark_failed($job: record<artifact_import_job_v1>, $error: string) {
+  RETURN UPDATE $job SET
+    status = "failed",
+    error = $error,
+    updated_at = time::now();
+};
+
+-- -----------------------------------------------------------------------------
 -- Mapping helpers
 -- -----------------------------------------------------------------------------
 
